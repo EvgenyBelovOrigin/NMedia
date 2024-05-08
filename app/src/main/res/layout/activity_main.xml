@@ -88,7 +88,7 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="tvContent" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/ivLikes"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
@@ -108,7 +108,7 @@
         app:layout_constraintTop_toTopOf="@id/ivLikes"
         tools:text="@sample/posts.json/data/likesCount" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/ivShares"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
