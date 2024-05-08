@@ -16,7 +16,7 @@
         app:layout_constraintBottom_toTopOf="@id/barrier1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@sample/posts.json/data/authorAvatar" />
+        app:srcCompat="@drawable/avatar" />
 
     <TextView
         android:id="@+id/tvAuthor"
@@ -89,7 +89,7 @@
         app:constraint_referenced_ids="tvContent" />
 
     <ImageButton
-        android:id="@+id/ivLikes"
+        android:id="@+id/ibLikes"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
         android:layout_marginTop="@dimen/common_spacing"
@@ -103,30 +103,30 @@
         android:id="@+id/tvLikesCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/ivLikes"
-        app:layout_constraintStart_toEndOf="@id/ivLikes"
-        app:layout_constraintTop_toTopOf="@id/ivLikes"
+        app:layout_constraintBottom_toBottomOf="@id/ibLikes"
+        app:layout_constraintStart_toEndOf="@id/ibLikes"
+        app:layout_constraintTop_toTopOf="@id/ibLikes"
         tools:text="@sample/posts.json/data/likesCount" />
 
     <ImageButton
-        android:id="@+id/ivShares"
+        android:id="@+id/ibShares"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
         android:layout_marginStart="@dimen/common_spacing"
         android:background="@android:color/transparent"
         android:importantForAccessibility="no"
-        app:layout_constraintBottom_toBottomOf="@id/ivLikes"
+        app:layout_constraintBottom_toBottomOf="@id/ibLikes"
         app:layout_constraintStart_toEndOf="@id/tvLikesCount"
-        app:layout_constraintTop_toTopOf="@id/ivLikes"
+        app:layout_constraintTop_toTopOf="@id/ibLikes"
         app:srcCompat="@drawable/shares" />
 
     <TextView
         android:id="@+id/tvSharesCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/ivShares"
-        app:layout_constraintStart_toEndOf="@id/ivShares"
-        app:layout_constraintTop_toTopOf="@id/ivShares"
+        app:layout_constraintBottom_toBottomOf="@id/ibShares"
+        app:layout_constraintStart_toEndOf="@id/ibShares"
+        app:layout_constraintTop_toTopOf="@id/ibShares"
         tools:text="@sample/posts.json/data/sharesCount" />
 
     <ImageView
