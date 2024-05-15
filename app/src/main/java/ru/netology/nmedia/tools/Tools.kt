@@ -1,15 +1,6 @@
-package ru.netology.nmedia
+package ru.netology.nmedia.tools
 
-data class Post(
-    val id: Long,
-    val author: String,
-    val content: String,
-    val published: String,
-    var likedByMe: Boolean = false,
-    var likesCount: Long,
-    var sharesCount: Long,
-    var viewsCount: Long
-) {
+class Tools {
     fun getShortCountTypeValue(count: Long): String {
         when {
             count >= 1_100_000 -> return "${(count / 100_000).toDouble() / 10}M"
@@ -18,6 +9,5 @@ data class Post(
             count >= 1000 -> return "1K"
         }
         return "$count"
-
     }
 }
