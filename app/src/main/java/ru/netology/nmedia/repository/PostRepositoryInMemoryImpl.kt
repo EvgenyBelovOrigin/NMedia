@@ -16,6 +16,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
         sharesCount = 535,
         viewsCount = 9900
     )
+
     private val data = MutableLiveData(post)
 
     override fun get(): LiveData<Post> = data
