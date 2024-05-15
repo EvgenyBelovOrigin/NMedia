@@ -39,10 +39,17 @@ class MainActivity : AppCompatActivity() {
                 )
                 if (post.likedByMe) post.likesCount++ else post.likesCount--
                 tvLikesCount.text = post.getShortCountTypeValue(post.likesCount)
+                println("like")
             }
             ibShares.setOnClickListener {
                 post.sharesCount++
                 tvSharesCount.text = post.getShortCountTypeValue(post.sharesCount)
+            }
+            root.setOnClickListener {
+                println("root")
+            }
+            ivAvatar.setOnClickListener {
+                println("avatar")
             }
         }
 
