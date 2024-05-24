@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         val tools = Tools()
         val viewModel: PostViewModel by viewModels()
         viewModel.data.observe(this) { posts ->
+            binding.container.removeAllViews()
             posts.map { post ->
                 CardPostBinding.inflate(layoutInflater, binding.container, true).apply {
                     tvAuthor.text = post.author
@@ -28,7 +29,9 @@ class MainActivity : AppCompatActivity() {
                     tvSharesCount.text = tools.getShortCountTypeValue(post.sharesCount)
                     tvViewsCount.text = tools.getShortCountTypeValue(post.viewsCount)
                     ibLikes.setImageResource(if (post.likedByMe) R.drawable.clicked_likes else R.drawable.likes)
-                    ibLikes.setOnClickListener { viewModel.likeById(post.id) }
+                    ibLikes.setOnClickListener {
+                        viewModel.likeById(post.id)
+                    }
                     ibShares.setOnClickListener { viewModel.shareById(post.id) }
                 }.root
 
