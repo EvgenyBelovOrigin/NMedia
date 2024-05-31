@@ -21,7 +21,8 @@ class MainActivity : AppCompatActivity() {
             viewModel.likeById(it.id)
         }, {
             viewModel.shareById(it.id)
-        })
+        },
+            { viewModel.removeById(it.id) })
         binding.list.adapter = adapter
         viewModel.data.observe(this) { posts ->
             adapter.submitList(posts)

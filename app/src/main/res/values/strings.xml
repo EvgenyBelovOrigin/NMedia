@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">NMedia</string>
     <string name="welcome_words">NMedia!</string>
+    <string name="menu_remove">Remove</string>
 </resources>
