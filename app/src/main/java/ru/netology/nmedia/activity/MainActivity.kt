@@ -1,6 +1,7 @@
 package ru.netology.nmedia.activity
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val viewModel: PostViewModel by viewModels()
+
 
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
@@ -68,19 +70,41 @@ class MainActivity : AppCompatActivity() {
                 AndroidUtils.hideKeyboard(this)
 
             }
+            with(binding) {
+                groupEditPost.visibility = View.GONE
+                editedPostText.setText("")
+            }
+
+        }
+        binding.close.setOnClickListener {
+
+            with(binding.content) {
+                setText("")
+                clearFocus()
+                AndroidUtils.hideKeyboard(this)
+            }
+
+            with(binding) {
+                groupEditPost.visibility = View.GONE
+                editedPostText.setText("")
+            }
 
 
         }
         viewModel.edited.observe(this) { post ->
             if (post.id == 0L) {
+
                 return@observe
             }
+            binding.groupEditPost.visibility = View.VISIBLE
+            binding.editedPostText.setText(post.content)
             with(binding.content) {
                 requestFocus()
                 setText(post.content)
                 setSelection(post.content.length)
 
             }
+
 
         }
         viewModel.isAdded.observe(this) { isAdded ->

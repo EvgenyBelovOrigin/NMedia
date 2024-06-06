@@ -6,4 +6,5 @@
     <string name="user_name" translatable="false">Evgeny</string>
     <string name="error_empty_content">Content can not be empty</string>
     <string name="menu_edit">Edit</string>
+    <string name="edit_post">Edit Post</string>
 </resources>

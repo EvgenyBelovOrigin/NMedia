@@ -100,7 +100,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
     )
 
     private val data = MutableLiveData(posts)
-    private val isAdded = MutableLiveData<Boolean>()
+    private val isAdded = MutableLiveData<Boolean>(false)
 
 
     override fun getAll(): LiveData<List<Post>> = data
