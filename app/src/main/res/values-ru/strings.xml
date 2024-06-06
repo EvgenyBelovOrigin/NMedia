@@ -3,4 +3,7 @@
     <string name="app_name">НМедиа</string>
     <string name="welcome_words">НМедиа!</string>
     <string name="menu_remove">Удалить</string>
+    <string name="post_text">Введите текст</string>
+    <string name="error_empty_content">Поле ввода не может быть пустым</string>
+    <string name="menu_edit">Редактировать</string>
 </resources>

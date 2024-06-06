@@ -1,5 +1,9 @@
 package ru.netology.nmedia.tools
 
+import android.content.Context
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+
 class Tools {
     fun getShortCountTypeValue(count: Long): String {
         when {
@@ -10,4 +14,13 @@ class Tools {
         }
         return "$count"
     }
+}
+
+object AndroidUtils {
+    fun hideKeyboard(view: View) {
+        val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+
 }

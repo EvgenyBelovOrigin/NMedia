@@ -14,16 +14,30 @@ import ru.netology.nmedia.tools.Tools
 typealias OnLikeListener = (post: Post) -> Unit
 typealias OnShareListener = (post: Post) -> Unit
 typealias OnRemoveListener = (post: Post) -> Unit
+typealias OnEditListener = (post: Post) -> Unit
 
+interface OnInteractionListener {
+    fun onLike(post: Post) {}
+    fun onEdit(post: Post) {}
+    fun onRemove(post: Post) {}
+    fun onShare(post: Post) {}
+}
 class PostsAdapter(
     private val onLikeListener: OnLikeListener,
     private val onShareListener: OnShareListener,
-    private val onRemoveListener: OnRemoveListener
+    private val onRemoveListener: OnRemoveListener,
+    private val onEditListener: OnEditListener
 ) : ListAdapter<Post, PostViewHolder>(PostDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PostViewHolder(binding, onLikeListener, onShareListener, onRemoveListener)
+        return PostViewHolder(
+            binding,
+            onLikeListener,
+            onShareListener,
+            onRemoveListener,
+            onEditListener
+        )
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
@@ -37,7 +51,8 @@ class PostViewHolder(
     private val binding: CardPostBinding,
     private val onLikeListener: OnLikeListener,
     private val onShareListener: OnShareListener,
-    private val onRemoveListener: OnRemoveListener
+    private val onRemoveListener: OnRemoveListener,
+    private val onEditListener: OnEditListener
 ) : RecyclerView.ViewHolder(binding.root) {
     val tools = Tools()
     fun bind(post: Post) {
@@ -58,6 +73,11 @@ class PostViewHolder(
                         when (item.itemId) {
                             R.id.remove -> {
                                 onRemoveListener(post)
+                                true
+                            }
+
+                            R.id.edit -> {
+                                onEditListener(post)
                                 true
                             }
 
