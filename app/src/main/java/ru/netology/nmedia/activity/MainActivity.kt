@@ -5,8 +5,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import ru.netology.nmedia.R
+import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.ActivityMainBinding
+import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.tools.AndroidUtils
 import ru.netology.nmedia.viemodel.PostViewModel
 
@@ -20,19 +22,30 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel: PostViewModel by viewModels()
 
-        val adapter = PostsAdapter({
-            viewModel.likeById(it.id)
-        }, {
-            viewModel.shareById(it.id)
-        },
-            { viewModel.removeById(it.id) },
-            { viewModel.edit(it) })
+        val adapter = PostsAdapter(object : OnInteractionListener {
+            override fun onLike(post: Post) {
+                viewModel.likeById(post.id)
+            }
+
+            override fun onShare(post: Post) {
+                viewModel.shareById(post.id)
+            }
+
+            override fun onRemove(post: Post) {
+                viewModel.removeById(post.id)
+            }
+
+            override fun onEdit(post: Post) {
+                viewModel.edit(post)
+            }
+        }
+        )
 
         binding.list.adapter = adapter
 
         viewModel.data.observe(this) { posts ->
 
-        adapter.submitList(posts)
+            adapter.submitList(posts)
 
         }
 
