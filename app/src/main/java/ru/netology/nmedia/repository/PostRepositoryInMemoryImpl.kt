@@ -100,11 +100,9 @@ class PostRepositoryInMemoryImpl : PostRepository {
     )
 
     private val data = MutableLiveData(posts)
-    private val isAdded = MutableLiveData<Boolean>(false)
 
 
     override fun getAll(): LiveData<List<Post>> = data
-    override fun getIsAdded(): LiveData<Boolean> = isAdded
 
 
     override fun save(post: Post) {
@@ -117,7 +115,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
                     published = "now"//todo
                 )
             ) + posts
-            isAdded.value = true
+
         } else {
 
             posts = posts.map {
@@ -125,7 +123,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
             }
         }
         data.value = posts
-        isAdded.value = false
+
     }
 
     override fun likeById(id: Long) {

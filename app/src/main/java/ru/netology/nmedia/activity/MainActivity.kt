@@ -46,8 +46,11 @@ class MainActivity : AppCompatActivity() {
         binding.list.adapter = adapter
 
         viewModel.data.observe(this) { posts ->
-
+            val newPost = posts.size > adapter.currentList.size
             adapter.submitList(posts)
+            if (newPost) {
+                binding.list.smoothScrollToPosition(0)
+            }
 
         }
 
@@ -77,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 
         }
         binding.close.setOnClickListener {
-
+            viewModel.empty()
             with(binding.content) {
                 setText("")
                 clearFocus()
@@ -88,9 +91,8 @@ class MainActivity : AppCompatActivity() {
                 groupEditPost.visibility = View.GONE
                 editedPostText.setText("")
             }
-
-
         }
+
         viewModel.edited.observe(this) { post ->
             if (post.id == 0L) {
 
@@ -104,15 +106,14 @@ class MainActivity : AppCompatActivity() {
                 setSelection(post.content.length)
 
             }
-
-
         }
-        viewModel.isAdded.observe(this) { isAdded ->
-            if (isAdded) {
-                binding.list.smoothScrollToPosition(0)
-            }
 
-        }
+//        viewModel.isAdded.observe(this) { isAdded ->
+//            if (isAdded) {
+//                binding.list.smoothScrollToPosition(0)
+//            }
+//
+//        }
 
 
     }
