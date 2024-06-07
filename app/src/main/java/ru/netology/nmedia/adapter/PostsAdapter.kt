@@ -50,7 +50,7 @@ class PostViewHolder(
             tvLikesCount.text = tools.getShortCountTypeValue(post.likesCount)
             tvSharesCount.text = tools.getShortCountTypeValue(post.sharesCount)
             tvViewsCount.text = tools.getShortCountTypeValue(post.viewsCount)
-            ibLikes.setImageResource(if (post.likedByMe) R.drawable.clicked_likes else R.drawable.likes)
+            ibLikes.isChecked = post.likedByMe
             ibLikes.setOnClickListener { onInteractionListener.onLike(post) }
             ibShares.setOnClickListener { onInteractionListener.onShare(post) }
             ibMenu.setOnClickListener {

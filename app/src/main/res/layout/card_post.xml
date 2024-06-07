@@ -88,7 +88,18 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="tvContent" />
 
-    <ImageButton
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/ibLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@drawable/ic_like_selector"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrier2"
+        style="@style/Widget.AppTheme.LikeCheckBox" />
+
+
+    <!--ImageButton
         android:id="@+id/ibLikes"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
@@ -97,7 +108,7 @@
         android:importantForAccessibility="no"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier2"
-        app:srcCompat="@drawable/likes" />
+        app:srcCompat="@drawable/likes" /-->
 
     <TextView
         android:id="@+id/tvLikesCount"

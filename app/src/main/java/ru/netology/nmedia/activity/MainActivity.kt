@@ -108,13 +108,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        viewModel.isAdded.observe(this) { isAdded ->
-//            if (isAdded) {
-//                binding.list.smoothScrollToPosition(0)
-//            }
-//
-//        }
-
 
     }
 }
