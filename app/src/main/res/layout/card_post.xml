@@ -89,14 +89,16 @@
         app:constraint_referenced_ids="tvContent" />
 
 
-    <com.google.android.material.checkbox.MaterialCheckBox
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/ibLikes"
+        style="@style/Widget.AppTheme.LikeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:button="@drawable/ic_like_selector"
+        android:checkable="true"
+        app:icon="@drawable/ic_like_selector"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier2"
-        style="@style/Widget.AppTheme.LikeCheckBox" />
+        tools:text="@sample/posts.json/data/likesCount" />
 
 
     <!--ImageButton
@@ -110,14 +112,14 @@
         app:layout_constraintTop_toBottomOf="@id/barrier2"
         app:srcCompat="@drawable/likes" /-->
 
-    <TextView
+    <!--TextView
         android:id="@+id/tvLikesCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@id/ibLikes"
         app:layout_constraintStart_toEndOf="@id/ibLikes"
         app:layout_constraintTop_toTopOf="@id/ibLikes"
-        tools:text="@sample/posts.json/data/likesCount" />
+        tools:text="@sample/posts.json/data/likesCount" /-->
 
     <ImageButton
         android:id="@+id/ibShares"
@@ -127,7 +129,7 @@
         android:background="@android:color/transparent"
         android:importantForAccessibility="no"
         app:layout_constraintBottom_toBottomOf="@id/ibLikes"
-        app:layout_constraintStart_toEndOf="@id/tvLikesCount"
+        app:layout_constraintStart_toEndOf="@id/ibLikes"
         app:layout_constraintTop_toTopOf="@id/ibLikes"
         app:srcCompat="@drawable/shares" />
 

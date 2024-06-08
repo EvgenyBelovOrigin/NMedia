@@ -47,10 +47,11 @@ class PostViewHolder(
             tvAuthor.text = post.author
             tvPublished.text = post.published
             tvContent.text = post.content
-            tvLikesCount.text = tools.getShortCountTypeValue(post.likesCount)
+//            tvLikesCount.text = tools.getShortCountTypeValue(post.likesCount)
             tvSharesCount.text = tools.getShortCountTypeValue(post.sharesCount)
             tvViewsCount.text = tools.getShortCountTypeValue(post.viewsCount)
             ibLikes.isChecked = post.likedByMe
+            ibLikes.text = tools.getShortCountTypeValue(post.likesCount)
             ibLikes.setOnClickListener { onInteractionListener.onLike(post) }
             ibShares.setOnClickListener { onInteractionListener.onShare(post) }
             ibMenu.setOnClickListener {
