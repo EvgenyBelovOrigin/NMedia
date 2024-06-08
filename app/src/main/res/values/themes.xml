@@ -26,6 +26,15 @@
         <item name="android:minHeight">@dimen/icon_button_min_size</item>
         <item name="backgroundTint">@android:color/transparent</item>
         <item name="android:textSize">@dimen/icon_button_text_size</item>
-        <item name="android:textColor">?attr/colorPrimaryDark</item>
+        <item name="android:textColor">?attr/colorControlNormal</item>
+    </style>
+
+    <style name="Widget.AppTheme.IconButton" parent="Widget.Material3.Button.TextButton.Icon">
+        <item name="android:minWidth">@dimen/icon_button_min_size</item>
+        <item name="android:minHeight">@dimen/icon_button_min_size</item>
+        <item name="android:textSize">@dimen/icon_button_text_size</item>
+        <item name="android:textColor">?attr/colorControlNormal</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="iconTint">?attr/colorControlNormal</item>
     </style>
 </resources>
