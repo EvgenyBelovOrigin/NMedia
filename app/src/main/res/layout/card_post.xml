@@ -49,17 +49,16 @@
         app:layout_constraintTop_toBottomOf="@id/tvAuthor"
         tools:text="@sample/posts.json/data/published" />
 
-    <ImageButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/ibMenu"
-        android:layout_width="@dimen/posts_avatar_size"
-        android:layout_height="@dimen/posts_avatar_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/common_spacing"
-        android:adjustViewBounds="false"
-        android:background="@android:color/transparent"
         android:importantForAccessibility="no"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/menu" />
+        app:icon="@drawable/menu"
+        style="@style/Widget.AppTheme.IconButton" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier1"
@@ -88,45 +87,29 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="tvContent" />
 
-    <ImageButton
-        android:id="@+id/ibLikes"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-        android:layout_marginTop="@dimen/common_spacing"
-        android:background="@android:color/transparent"
-        android:importantForAccessibility="no"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barrier2"
-        app:srcCompat="@drawable/likes" />
 
-    <TextView
-        android:id="@+id/tvLikesCount"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ibLikes"
+        style="@style/Widget.AppTheme.LikeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:checkable="true"
+        app:icon="@drawable/ic_like_selector"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrier2"
+        tools:text="@sample/posts.json/data/likesCount" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ibShares"
+        style="@style/Widget.AppTheme.IconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_spacing"
+        android:importantForAccessibility="no"
+        app:icon="@drawable/shares"
         app:layout_constraintBottom_toBottomOf="@id/ibLikes"
         app:layout_constraintStart_toEndOf="@id/ibLikes"
         app:layout_constraintTop_toTopOf="@id/ibLikes"
-        tools:text="@sample/posts.json/data/likesCount" />
-
-    <ImageButton
-        android:id="@+id/ibShares"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-        android:layout_marginStart="@dimen/common_spacing"
-        android:background="@android:color/transparent"
-        android:importantForAccessibility="no"
-        app:layout_constraintBottom_toBottomOf="@id/ibLikes"
-        app:layout_constraintStart_toEndOf="@id/tvLikesCount"
-        app:layout_constraintTop_toTopOf="@id/ibLikes"
-        app:srcCompat="@drawable/shares" />
-
-    <TextView
-        android:id="@+id/tvSharesCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/ibShares"
-        app:layout_constraintStart_toEndOf="@id/ibShares"
-        app:layout_constraintTop_toTopOf="@id/ibShares"
         tools:text="@sample/posts.json/data/sharesCount" />
 
     <ImageView
