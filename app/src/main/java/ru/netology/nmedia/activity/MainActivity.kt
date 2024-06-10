@@ -1,8 +1,10 @@
 package ru.netology.nmedia.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.launch
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import ru.netology.nmedia.R
@@ -23,6 +25,13 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel: PostViewModel by viewModels()
 
+        val intentHandler = intent?.getStringExtra(Intent.EXTRA_TEXT)
+        if (intentHandler !== null) {
+            viewModel.intentHandler()
+            viewModel.changeContent(intentHandler.toString())
+            viewModel.save()
+        }
+
 
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
@@ -30,7 +39,17 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onShare(post: Post) {
-                viewModel.shareById(post.id)
+
+                val intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, post.content)
+                    type = "text/plain"
+                }
+
+                val shareIntent =
+                    Intent.createChooser(intent, getString(R.string.chooser_share_post))
+                startActivity(shareIntent)
+                viewModel.shareById(post.id)// todo - need to change count after sharing done
             }
 
             override fun onRemove(post: Post) {
@@ -53,6 +72,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
 
         binding.save.setOnClickListener {
             with(binding.content) {
@@ -93,19 +113,33 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+        val newPostLauncher =
+            registerForActivityResult(NewPostResultContract()) { result ->
+                result ?: return@registerForActivityResult
+                viewModel.changeContent(result)
+                viewModel.save()
+            }
+        binding.fab.setOnClickListener {
+            newPostLauncher.launch()
+
+        }
+        val editPostLauncher =
+            registerForActivityResult(EditPostResultContract()) { result ->
+                if (result == null) {
+                    viewModel.empty()
+                    return@registerForActivityResult
+                }
+                viewModel.changeContent(result)
+                viewModel.save()
+            }
         viewModel.edited.observe(this) { post ->
             if (post.id == 0L) {
 
                 return@observe
             }
-            binding.groupEditPost.visibility = View.VISIBLE
-            binding.editedPostText.setText(post.content)
-            with(binding.content) {
-                requestFocus()
-                setText(post.content)
-                setSelection(post.content.length)
+            editPostLauncher.launch(post.content)
 
-            }
         }
 
 

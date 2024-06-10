@@ -16,6 +16,16 @@ private val empty = Post(
     sharesCount = 0,
     viewsCount = 0
 )
+private val intentHandler = Post(
+    id = 1,
+    content = "",
+    author = "",
+    likedByMe = false,
+    published = "",
+    likesCount = 0,
+    sharesCount = 0,
+    viewsCount = 0
+)
 
 class PostViewModel : ViewModel() {
     private val repository: PostRepository = PostRepositoryInMemoryImpl()
@@ -30,6 +40,10 @@ class PostViewModel : ViewModel() {
 
     fun empty() {
         edited.value = empty
+    }
+
+    fun intentHandler() {
+        edited.value = intentHandler
     }
 
 
