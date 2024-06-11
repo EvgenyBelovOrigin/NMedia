@@ -85,13 +85,13 @@
         android:id="@+id/videoImage"
         android:layout_width="@dimen/video_image"
         android:layout_height="@dimen/video_image"
-        android:visibility="gone"
         android:importantForAccessibility="no"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/barrier2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvContent"
-        app:srcCompat="@drawable/video_image" />
+        app:srcCompat="@drawable/video_image_selector" />
 
 
     <androidx.constraintlayout.widget.Barrier

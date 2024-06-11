@@ -16,7 +16,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likesCount = 152,
             sharesCount = 1535,
             viewsCount = 1224,
-            video = "null"
+            video = null
         ),
         Post(
             id = nextId++,

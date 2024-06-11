@@ -1,6 +1,7 @@
 package ru.netology.nmedia.activity
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.launch
 import androidx.activity.viewModels
@@ -46,6 +47,8 @@ class MainActivity : AppCompatActivity() {
                 val shareIntent =
                     Intent.createChooser(intent, getString(R.string.chooser_share_post))
                 startActivity(shareIntent)
+
+
                 viewModel.shareById(post.id)// todo - need to change count after sharing done
             }
 
@@ -55,6 +58,11 @@ class MainActivity : AppCompatActivity() {
 
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
+            }
+
+            override fun onVideoPlay(post: Post) {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
+                startActivity(intent)
             }
         }
         )
@@ -101,6 +109,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         val viewModel: PostViewModel by viewModels()
@@ -110,4 +119,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.save()
 
     }
+
+
 }
+
