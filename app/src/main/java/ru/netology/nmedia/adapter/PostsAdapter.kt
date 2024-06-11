@@ -1,6 +1,7 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
@@ -32,6 +33,7 @@ class PostsAdapter(
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = getItem(position)
+
         holder.bind(post)
     }
 
@@ -73,6 +75,7 @@ class PostViewHolder(
                         }
                     }
                 }.show()
+                if (post.video !== null) videoImage.visibility = View.VISIBLE
             }
         }
     }

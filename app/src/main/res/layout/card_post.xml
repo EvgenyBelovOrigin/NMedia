@@ -51,14 +51,14 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/ibMenu"
+        style="@style/Widget.AppTheme.IconButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/common_spacing"
         android:importantForAccessibility="no"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:icon="@drawable/menu"
-        style="@style/Widget.AppTheme.IconButton" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier1"
@@ -74,18 +74,32 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_spacing"
         android:layout_marginBottom="@dimen/common_spacing"
-        app:layout_constraintBottom_toTopOf="@id/barrier2"
+        app:layout_constraintBottom_toTopOf="@id/videoImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier1"
         tools:text="@sample/posts.json/data/content" />
+
+
+    <ImageView
+        android:id="@+id/videoImage"
+        android:layout_width="@dimen/video_image"
+        android:layout_height="@dimen/video_image"
+        android:visibility="gone"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toTopOf="@id/barrier2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvContent"
+        app:srcCompat="@drawable/video_image" />
+
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="tvContent" />
+        app:constraint_referenced_ids="videoImage" />
 
 
     <com.google.android.material.button.MaterialButton
@@ -131,5 +145,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/ivViews"
         tools:text="@sample/posts.json/data/viewsCount" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

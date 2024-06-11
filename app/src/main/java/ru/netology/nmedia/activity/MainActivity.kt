@@ -2,8 +2,6 @@ package ru.netology.nmedia.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
 import androidx.activity.result.launch
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +10,6 @@ import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.ActivityMainBinding
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.tools.AndroidUtils
 import ru.netology.nmedia.viemodel.PostViewModel
 
 
@@ -25,10 +22,10 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel: PostViewModel by viewModels()
 
-        val intentHandler = intent?.getStringExtra(Intent.EXTRA_TEXT)
-        if (intentHandler !== null) {
+        val intentHandlerText = intent.getStringExtra(Intent.EXTRA_TEXT)
+        if (intentHandlerText !== null) {
             viewModel.intentHandler()
-            viewModel.changeContent(intentHandler.toString())
+            viewModel.changeContent(intentHandlerText.toString())
             viewModel.save()
         }
 
@@ -73,47 +70,6 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-
-        binding.save.setOnClickListener {
-            with(binding.content) {
-                if (text.isNullOrBlank()) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        context.getString(R.string.error_empty_content),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
-
-                viewModel.changeContent(text.toString())
-                viewModel.save()
-
-                setText("")
-                clearFocus()
-                AndroidUtils.hideKeyboard(this)
-
-            }
-            with(binding) {
-                groupEditPost.visibility = View.GONE
-                editedPostText.setText("")
-            }
-
-        }
-        binding.close.setOnClickListener {
-            viewModel.empty()
-            with(binding.content) {
-                setText("")
-                clearFocus()
-                AndroidUtils.hideKeyboard(this)
-            }
-
-            with(binding) {
-                groupEditPost.visibility = View.GONE
-                editedPostText.setText("")
-            }
-        }
-
-
         val newPostLauncher =
             registerForActivityResult(NewPostResultContract()) { result ->
                 result ?: return@registerForActivityResult
@@ -134,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                 viewModel.save()
             }
         viewModel.edited.observe(this) { post ->
-            if (post.id == 0L) {
+            if (post.id < 2L) {
 
                 return@observe
             }
@@ -142,6 +98,16 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        val viewModel: PostViewModel by viewModels()
+        val intentHandlerText = intent.getStringExtra(Intent.EXTRA_TEXT)
+        viewModel.intentHandler()
+        viewModel.changeContent(intentHandlerText.toString())
+        viewModel.save()
 
     }
 }

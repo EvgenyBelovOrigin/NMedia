@@ -14,7 +14,8 @@ private val empty = Post(
     published = "",
     likesCount = 0,
     sharesCount = 0,
-    viewsCount = 0
+    viewsCount = 0,
+    video = null
 )
 private val intentHandler = Post(
     id = 1,
@@ -24,7 +25,8 @@ private val intentHandler = Post(
     published = "",
     likesCount = 0,
     sharesCount = 0,
-    viewsCount = 0
+    viewsCount = 0,
+    video = null
 )
 
 class PostViewModel : ViewModel() {
