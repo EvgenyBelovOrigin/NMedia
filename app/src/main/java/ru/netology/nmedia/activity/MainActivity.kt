@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.changeContent(intentHandlerText.toString())
             viewModel.save()
         }
+        val packageManager = packageManager
 
 
         val adapter = PostsAdapter(object : OnInteractionListener {
@@ -47,9 +48,8 @@ class MainActivity : AppCompatActivity() {
                 val shareIntent =
                     Intent.createChooser(intent, getString(R.string.chooser_share_post))
                 startActivity(shareIntent)
-
-
                 viewModel.shareById(post.id)// todo - need to change count after sharing done
+
             }
 
             override fun onRemove(post: Post) {
@@ -63,6 +63,12 @@ class MainActivity : AppCompatActivity() {
             override fun onVideoPlay(post: Post) {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                 startActivity(intent)
+
+//                val resolve = intent.resolveActivity(packageManager)
+//                println("resolve ${resolve}")
+//                val resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_ALL)
+//                println("resolveInfo")
+//                println(resolveInfo)
             }
         }
         )
@@ -122,4 +128,6 @@ class MainActivity : AppCompatActivity() {
 
 
 }
+
+
 
