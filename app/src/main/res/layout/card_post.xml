@@ -91,7 +91,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvContent"
-        app:srcCompat="@drawable/video_image_selector" />
+        app:srcCompat="@drawable/video_image" />
 
 
     <androidx.constraintlayout.widget.Barrier
