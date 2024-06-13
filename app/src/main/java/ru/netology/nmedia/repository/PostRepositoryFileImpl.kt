@@ -5,13 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import ru.netology.nmedia.R
 import ru.netology.nmedia.dto.Post
 
-class PostRepositoryFileImpl(context: Context) : PostRepository {
+class PostRepositoryFileImpl(private val context: Context) : PostRepository {
     private val gson = Gson()
-    private val prefs = context.getSharedPreferences("repo", Context.MODE_PRIVATE)
     private val type = TypeToken.getParameterized(List::class.java, Post::class.java).type
-    private val key = "posts"
+    private val fileName = "posts.json"
     private var nextId: Long = 2
     private var posts = emptyList<Post>()
         private set(value) {
@@ -21,12 +21,15 @@ class PostRepositoryFileImpl(context: Context) : PostRepository {
     private val data = MutableLiveData(posts)
 
     init {
-        prefs.getString(key, null)?.let { it ->
-            posts = gson.fromJson(it, type)
-
-            nextId = posts.maxOfOrNull { it.id }?.inc() ?: 2
-
-            data.value = posts
+        val file = context.filesDir.resolve(fileName)
+        if (file.exists()) {
+            context.openFileInput(fileName).bufferedReader().use {
+                posts = gson.fromJson(it, type)
+                nextId = posts.maxOfOrNull { it.id }?.inc() ?: 2
+                data.value = posts
+            }
+        } else {
+            sync()
         }
     }
 
@@ -49,9 +52,9 @@ class PostRepositoryFileImpl(context: Context) : PostRepository {
             0L -> posts = listOf(
                 post.copy(
                     id = nextId++,
-                    author = "me",// todo
+                    author = context.getString(R.string.user_name),
                     likedByMe = false,
-                    published = "now"//todo
+                    published = "now"// todo
                 )
             ) + posts
 
@@ -96,8 +99,9 @@ class PostRepositoryFileImpl(context: Context) : PostRepository {
         data.value = posts
     }
 
-
     private fun sync() {
-        prefs.edit().putString(key, gson.toJson(posts)).apply()
+        context.openFileOutput(fileName, Context.MODE_PRIVATE).bufferedWriter().use {
+            it.write(gson.toJson(posts))
+        }
     }
 }
