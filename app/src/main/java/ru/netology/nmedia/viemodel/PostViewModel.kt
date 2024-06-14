@@ -14,13 +14,26 @@ private val empty = Post(
     published = "",
     likesCount = 0,
     sharesCount = 0,
-    viewsCount = 0
+    viewsCount = 0,
+    video = null
+)
+private val intentHandler = Post(
+    id = 1,
+    content = "",
+    author = "",
+    likedByMe = false,
+    published = "",
+    likesCount = 0,
+    sharesCount = 0,
+    viewsCount = 0,
+    video = null
 )
 
 class PostViewModel : ViewModel() {
     private val repository: PostRepository = PostRepositoryInMemoryImpl()
     val data = repository.getAll()
     val edited = MutableLiveData(empty)
+
     fun save() {
         edited.value?.let {
             repository.save(it)
@@ -30,6 +43,10 @@ class PostViewModel : ViewModel() {
 
     fun empty() {
         edited.value = empty
+    }
+
+    fun intentHandler() {
+        edited.value = intentHandler
     }
 
 

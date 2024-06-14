@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.dto.Post
 
 class PostRepositoryInMemoryImpl : PostRepository {
-    private var nextId = 1L
+    private var nextId = 2L
     private var posts = listOf(
         Post(
             id = nextId++,
@@ -15,7 +15,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe = false,
             likesCount = 152,
             sharesCount = 1535,
-            viewsCount = 1224
+            viewsCount = 1224,
+            video = null
         ),
         Post(
             id = nextId++,
@@ -25,7 +26,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe = false,
             likesCount = 1522,
             sharesCount = 2378,
-            viewsCount = 335568
+            viewsCount = 335568,
+            video = null
         ),
         Post(
             id = nextId++,
@@ -35,7 +37,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe = false,
             likesCount = 22,
             sharesCount = 1033,
-            viewsCount = 325
+            viewsCount = 325,
+            video = null
         ),
         Post(
             id = nextId++,
@@ -45,7 +48,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe = false,
             likesCount = 3788,
             sharesCount = 155558,
-            viewsCount = 65646
+            viewsCount = 65646,
+            video = null
         ),
         Post(
             id = nextId++,
@@ -55,7 +59,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe = false,
             likesCount = 1555,
             sharesCount = 225,
-            viewsCount = 255846
+            viewsCount = 255846,
+            video = null
         ),
         Post(
             id = nextId++,
@@ -65,7 +70,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe = false,
             likesCount = 328,
             sharesCount = 1535,
-            viewsCount = 11550
+            viewsCount = 11550,
+            video = null
         ),
         Post(
             id = nextId++,
@@ -75,7 +81,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe = false,
             likesCount = 225,
             sharesCount = 1200,
-            viewsCount = 1538
+            viewsCount = 1538,
+            video = null
         ),
         Post(
             id = nextId++,
@@ -85,7 +92,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe = false,
             likesCount = 322,
             sharesCount = 1978,
-            viewsCount = 152
+            viewsCount = 152,
+            video = null
         ),
         Post(
             id = nextId++,
@@ -95,7 +103,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe = false,
             likesCount = 5,
             sharesCount = 535,
-            viewsCount = 15
+            viewsCount = 15,
+            video = "https://www.youtube.com/watch?v=9Onnyfu6yvo"
         )
     )
 
@@ -106,8 +115,18 @@ class PostRepositoryInMemoryImpl : PostRepository {
 
 
     override fun save(post: Post) {
-        if (post.id == 0L) {
-            posts = listOf(
+        when (post.id) {
+
+            1L -> posts = listOf(
+                post.copy(
+                    id = nextId++,
+                    author = "?",// todo
+                    likedByMe = false,
+                    published = "now"//todo
+                )
+            ) + posts
+
+            0L -> posts = listOf(
                 post.copy(
                     id = nextId++,
                     author = "me",// todo
@@ -116,15 +135,33 @@ class PostRepositoryInMemoryImpl : PostRepository {
                 )
             ) + posts
 
-        } else {
 
-            posts = posts.map {
+            else -> posts = posts.map {
                 if (it.id != post.id) it else it.copy(content = post.content)
             }
         }
         data.value = posts
-
     }
+//        if (post.id == 0L) {
+//            posts = listOf(
+//                post.copy(
+//                    id = nextId++,
+//                    author = "me",// todo
+//                    likedByMe = false,
+//                    published = "now"//todo
+//                )
+//            ) + posts
+//            data.value = posts
+//
+//        } else {
+//
+//            posts = posts.map {
+//                if (it.id != post.id) it else it.copy(content = post.content)
+//            }
+//        }
+//        data.value = posts
+//    }
+
 
     override fun likeById(id: Long) {
         posts = posts.map {

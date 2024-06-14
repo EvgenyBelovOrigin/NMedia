@@ -7,4 +7,7 @@
     <string name="error_empty_content">Поле ввода не может быть пустым</string>
     <string name="menu_edit">Редактировать</string>
     <string name="edit_post">Редактирование</string>
+    <string name="chooser_share_post">Поделиться</string>
+    <string name="save">Сохранить</string>
+    <string name="close">Закрыть</string>
 </resources>

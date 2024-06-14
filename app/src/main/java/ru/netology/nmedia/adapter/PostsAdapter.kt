@@ -3,6 +3,7 @@ package ru.netology.nmedia.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ interface OnInteractionListener {
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
     fun onShare(post: Post) {}
+    fun onVideoPlay(post: Post) {}
 }
 
 class PostsAdapter(
@@ -34,6 +36,7 @@ class PostsAdapter(
         val post = getItem(position)
         holder.bind(post)
     }
+
 
 }
 
@@ -53,6 +56,7 @@ class PostViewHolder(
             ibLikes.text = tools.getShortCountTypeValue(post.likesCount)
             ibLikes.setOnClickListener { onInteractionListener.onLike(post) }
             ibShares.setOnClickListener { onInteractionListener.onShare(post) }
+
             ibMenu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.options_post)
@@ -73,7 +77,14 @@ class PostViewHolder(
                         }
                     }
                 }.show()
+
+
             }
+            videoImage.isVisible = !post.video.isNullOrBlank()
+//            if (!post.video.isNullOrBlank()) videoImage.visibility = View.VISIBLE
+//            videoImage.isEnabled = !post.video.isNullOrBlank()
+            videoImage.setOnClickListener { onInteractionListener.onVideoPlay((post)) }
+
         }
     }
 }
