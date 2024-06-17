@@ -40,15 +40,6 @@ class PostRepositoryFileImpl(private val context: Context) : PostRepository {
     override fun save(post: Post) {
         when (post.id) {
 
-            1L -> posts = listOf(
-                post.copy(
-                    id = nextId++,
-                    author = "?",// todo
-                    likedByMe = false,
-                    published = "now"//todo
-                )
-            ) + posts
-
             0L -> posts = listOf(
                 post.copy(
                     id = nextId++,
