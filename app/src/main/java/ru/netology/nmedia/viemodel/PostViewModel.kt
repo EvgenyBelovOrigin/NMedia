@@ -19,10 +19,20 @@ private val empty = Post(
     video = null
 )
 
+
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository = PostRepositoryFileImpl(application)
     val data = repository.getAll()
     val edited = MutableLiveData(empty)
+    val openPostId = MutableLiveData(0L)
+
+    fun openPost(post: Post) {
+        openPostId.value = post.id
+    }
+
+    fun emptyOpenPostData() {
+        openPostId.value = 0
+    }
 
     fun save() {
         edited.value?.let {

@@ -27,6 +27,10 @@ class FeedFragment : Fragment() {
         val binding = FragmentFeedBinding.inflate(inflater, container, false)
         val viewModel: PostViewModel by activityViewModels(
         )
+
+        viewModel.empty() //for backpressed only
+        viewModel.emptyOpenPostData() //for backpressed only
+
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
                 viewModel.likeById(post.id)
@@ -58,8 +62,10 @@ class FeedFragment : Fragment() {
             override fun onVideoPlay(post: Post) {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                 startActivity(intent)
+            }
 
-
+            override fun onOpenPost(post: Post) {
+                viewModel.openPost(post)
             }
         }
         )
@@ -90,6 +96,19 @@ class FeedFragment : Fragment() {
                     textArg = post.content
                 }
             )
+        }
+        viewModel.openPostId.observe(viewLifecycleOwner) { postId ->
+            if (postId == 0L) {
+                return@observe
+            }
+            findNavController().navigate(
+                R.id.openPostFragment,
+                Bundle().apply {
+                    textArg = postId.toString()
+                }
+
+            )
+
         }
         return binding.root
     }

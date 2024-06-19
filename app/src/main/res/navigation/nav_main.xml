@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_feedFragment_to_editPostFragment"
             app:destination="@id/editPostFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_openPostFragment"
+            app:destination="@id/openPostFragment" />
 
     </fragment>
     <fragment
@@ -28,4 +31,9 @@
         android:name="ru.netology.nmedia.activity.EditPostFragment"
         android:label="fragment_edit_post"
         tools:layout="@layout/fragment_edit_post" />
+    <fragment
+        android:id="@+id/openPostFragment"
+        android:name="ru.netology.nmedia.activity.OpenPostFragment"
+        android:label="fragment_open_post"
+        tools:layout="@layout/fragment_open_post" />
 </navigation>
