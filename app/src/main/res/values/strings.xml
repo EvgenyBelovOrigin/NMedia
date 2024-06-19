@@ -10,7 +10,7 @@
     <string name="chooser_share_post">Share post</string>
     <string name="save">Save</string>
     <string name="close">Close</string>
-    <string name="large_text">
+    <string name="large_text" translatable="false">
         "Material is the metaphor.\n\n"
 
         "A material metaphor is the unifying theory of a rationalized space and a system of motion."
