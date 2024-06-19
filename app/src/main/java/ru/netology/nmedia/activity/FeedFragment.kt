@@ -28,7 +28,7 @@ class FeedFragment : Fragment() {
         val viewModel: PostViewModel by activityViewModels(
         )
 
-        viewModel.empty() //for backpressed only
+//        viewModel.empty() //for backpressed only
         viewModel.emptyOpenPostData() //for backpressed only
 
         val adapter = PostsAdapter(object : OnInteractionListener {

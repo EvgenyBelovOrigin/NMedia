@@ -83,7 +83,7 @@ class PostViewHolder(
 
             }
             videoImage.isVisible = !post.video.isNullOrBlank()
-            videoImage.setOnClickListener { onInteractionListener.onVideoPlay((post)) }
+            videoImage.setOnClickListener { onInteractionListener.onVideoPlay(post) }
 
         }
     }
