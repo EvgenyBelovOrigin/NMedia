@@ -100,14 +100,7 @@ class FeedFragment : Fragment() {
             if (postId == 0L) {
                 return@observe
             }
-            findNavController().navigate(
-                R.id.openPostFragment,
-                Bundle().apply {
-                    textArg = postId.toString()
-                }
-
-            )
-
+            findNavController().navigate(R.id.openPostFragment)
         }
         return binding.root
     }
