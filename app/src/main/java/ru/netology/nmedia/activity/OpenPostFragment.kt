@@ -27,12 +27,19 @@ class OpenPostFragment : Fragment() {
         val binding = FragmentOpenPostBinding.inflate(inflater, container, false)
         val viewModel: PostViewModel by activityViewModels()
 
-        val openPostId = arguments?.textArg?.toLong()
+//        val openPostId = arguments?.textArg?.toLong()
+        var openPostId = 0L
+        viewModel.openPostId.observe(viewLifecycleOwner) {
+            openPostId = it
+        }
         val tools = Tools()
 
+
+
         viewModel.data.observe(viewLifecycleOwner) { posts ->
+
             if (posts.firstOrNull { it.id == openPostId } == null) {
-                findNavController().navigateUp()
+                //    findNavController().navigateUp()
                 return@observe
             }
 
@@ -69,6 +76,7 @@ class OpenPostFragment : Fragment() {
                                 when (item.itemId) {
                                     R.id.remove -> {
                                         viewModel.removeById(post.id)
+                                        findNavController().navigateUp()
                                         true
                                     }
 
