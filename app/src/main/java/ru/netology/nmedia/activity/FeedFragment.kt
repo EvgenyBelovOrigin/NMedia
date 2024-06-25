@@ -28,8 +28,6 @@ class FeedFragment : Fragment() {
         val viewModel: PostViewModel by activityViewModels(
         )
 
-        viewModel.emptyOpenPostData() //for backpressed only
-
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
                 viewModel.likeById(post.id)

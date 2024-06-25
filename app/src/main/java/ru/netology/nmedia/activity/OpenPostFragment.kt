@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -31,6 +32,10 @@ class OpenPostFragment : Fragment() {
             openPostId = it
         }
         val tools = Tools()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            viewModel.emptyOpenPostData()
+            findNavController().navigateUp()
+        }
 
         viewModel.data.observe(viewLifecycleOwner) { posts ->
 
@@ -74,11 +79,10 @@ class OpenPostFragment : Fragment() {
 
                                 R.id.edit -> {
                                     viewModel.edit(post)
+                                    viewModel.emptyOpenPostData()
                                     findNavController().navigateUp()
                                     true
                                 }
-
-
                                 else -> false
                             }
                         }

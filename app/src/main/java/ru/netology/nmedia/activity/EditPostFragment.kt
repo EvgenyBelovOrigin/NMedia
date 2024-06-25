@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,10 @@ class EditPostFragment : Fragment() {
         val binding = FragmentEditPostBinding.inflate(inflater, container, false)
         val viewModel: PostViewModel by activityViewModels()
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            viewModel.empty()
+            findNavController().navigateUp()
+        }
 
         val text = arguments?.textArg
 
