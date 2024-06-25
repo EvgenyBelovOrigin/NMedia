@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositoryFileImpl
-import ru.netology.nmedia.repository.PostRepositorySharedPrefsImpl
 
 private val empty = Post(
     id = 0,
@@ -19,22 +18,21 @@ private val empty = Post(
     viewsCount = 0,
     video = null
 )
-private val intentHandler = Post(
-    id = 1,
-    content = "",
-    author = "",
-    likedByMe = false,
-    published = "",
-    likesCount = 0,
-    sharesCount = 0,
-    viewsCount = 0,
-    video = null
-)
+
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository = PostRepositoryFileImpl(application)
     val data = repository.getAll()
     val edited = MutableLiveData(empty)
+    val openPostId = MutableLiveData(0L)
+
+    fun openPost(post: Post) {
+        openPostId.value = post.id
+    }
+
+    fun emptyOpenPostData() {
+        openPostId.value = 0
+    }
 
     fun save() {
         edited.value?.let {
@@ -46,11 +44,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun empty() {
         edited.value = empty
     }
-
-    fun intentHandler() {
-        edited.value = intentHandler
-    }
-
 
     fun edit(post: Post) {
         edited.value = post

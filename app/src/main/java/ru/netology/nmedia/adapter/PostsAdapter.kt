@@ -19,6 +19,7 @@ interface OnInteractionListener {
     fun onRemove(post: Post) {}
     fun onShare(post: Post) {}
     fun onVideoPlay(post: Post) {}
+    fun onOpenPost(post: Post) {}
 }
 
 class PostsAdapter(
@@ -56,6 +57,7 @@ class PostViewHolder(
             ibLikes.text = tools.getShortCountTypeValue(post.likesCount)
             ibLikes.setOnClickListener { onInteractionListener.onLike(post) }
             ibShares.setOnClickListener { onInteractionListener.onShare(post) }
+            binding.root.setOnClickListener { onInteractionListener.onOpenPost(post) }
 
             ibMenu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
@@ -81,9 +83,7 @@ class PostViewHolder(
 
             }
             videoImage.isVisible = !post.video.isNullOrBlank()
-//            if (!post.video.isNullOrBlank()) videoImage.visibility = View.VISIBLE
-//            videoImage.isEnabled = !post.video.isNullOrBlank()
-            videoImage.setOnClickListener { onInteractionListener.onVideoPlay((post)) }
+            videoImage.setOnClickListener { onInteractionListener.onVideoPlay(post) }
 
         }
     }

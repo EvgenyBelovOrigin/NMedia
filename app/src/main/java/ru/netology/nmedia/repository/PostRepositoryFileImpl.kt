@@ -12,7 +12,7 @@ class PostRepositoryFileImpl(private val context: Context) : PostRepository {
     private val gson = Gson()
     private val type = TypeToken.getParameterized(List::class.java, Post::class.java).type
     private val fileName = "posts.json"
-    private var nextId: Long = 2
+    private var nextId: Long = 1
     private var posts = emptyList<Post>()
         private set(value) {
             field = value
@@ -25,7 +25,7 @@ class PostRepositoryFileImpl(private val context: Context) : PostRepository {
         if (file.exists()) {
             context.openFileInput(fileName).bufferedReader().use {
                 posts = gson.fromJson(it, type)
-                nextId = posts.maxOfOrNull { it.id }?.inc() ?: 2
+                nextId = posts.maxOfOrNull { it.id }?.inc() ?: 1
                 data.value = posts
             }
         } else {
@@ -39,15 +39,6 @@ class PostRepositoryFileImpl(private val context: Context) : PostRepository {
 
     override fun save(post: Post) {
         when (post.id) {
-
-            1L -> posts = listOf(
-                post.copy(
-                    id = nextId++,
-                    author = "?",// todo
-                    likedByMe = false,
-                    published = "now"//todo
-                )
-            ) + posts
 
             0L -> posts = listOf(
                 post.copy(
