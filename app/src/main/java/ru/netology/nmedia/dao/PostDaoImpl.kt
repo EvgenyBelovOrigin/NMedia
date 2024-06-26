@@ -3,7 +3,6 @@ package ru.netology.nmedia.dao
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import ru.netology.nmedia.R
 import ru.netology.nmedia.dto.Post
 
 class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
@@ -69,7 +68,7 @@ class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
     override fun save(post: Post): Post {
         val values = ContentValues().apply {
             // TODO: remove hardcoded values
-            put(PostColumns.COLUMN_AUTHOR, R.string.user_name)
+            put(PostColumns.COLUMN_AUTHOR, "me")
             put(PostColumns.COLUMN_CONTENT, post.content)
             put(PostColumns.COLUMN_PUBLISHED, "now")
         }
