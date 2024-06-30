@@ -87,7 +87,6 @@ class FeedFragment : Fragment() {
             if (post.id == 0L) {
                 return@observe
             }
-
             findNavController().navigate(
                 R.id.editPostFragment,
                 Bundle().apply {
@@ -103,8 +102,6 @@ class FeedFragment : Fragment() {
         }
         return binding.root
     }
-
-
 }
 
 
