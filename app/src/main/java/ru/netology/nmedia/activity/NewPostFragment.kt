@@ -24,12 +24,12 @@ class NewPostFragment : Fragment() {
     ): View {
         val binding = FragmentNewPostBinding.inflate(inflater, container, false)
 
-        val viewModel: PostViewModel by activityViewModels(
-        )
+        val viewModel: PostViewModel by activityViewModels()
 
-        arguments?.textArg?.let(binding.edit::setText)
 
         binding.edit.setText(viewModel.edited.value?.content)
+        arguments?.textArg?.let(binding.edit::setText)
+
         binding.edit.requestFocus()
         binding.ok.setOnClickListener {
             val intent = Intent()
