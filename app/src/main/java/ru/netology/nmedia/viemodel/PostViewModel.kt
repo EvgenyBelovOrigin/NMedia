@@ -28,6 +28,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val data = repository.getAll()
     val edited = MutableLiveData(empty)
     val openPostId = MutableLiveData(0L)
+    var isNewPost: Boolean = false
 
     fun openPost(post: Post) {
         openPostId.value = post.id
