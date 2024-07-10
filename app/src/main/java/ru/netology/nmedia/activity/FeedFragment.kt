@@ -70,15 +70,17 @@ class FeedFragment : Fragment() {
         binding.list.adapter = adapter
 
         viewModel.data.observe(viewLifecycleOwner) { posts ->
-            val newPost = posts.size > adapter.currentList.size
+            val newPost = viewModel.isNewPost
             adapter.submitList(posts)
             if (newPost) {
                 binding.list.smoothScrollToPosition(0)
             }
+            viewModel.isNewPost = false
 
         }
 
         binding.fab.setOnClickListener {
+
             findNavController().navigate(R.id.newPostFragment)
 
         }
