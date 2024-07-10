@@ -74,7 +74,6 @@ class FeedFragment : Fragment() {
             adapter.submitList(posts)
             if (newPost) {
                 binding.list.smoothScrollToPosition(0)
-
             }
             viewModel.isNewPost = false
 
@@ -82,7 +81,7 @@ class FeedFragment : Fragment() {
 
         binding.fab.setOnClickListener {
 
-        findNavController().navigate(R.id.newPostFragment)
+            findNavController().navigate(R.id.newPostFragment)
 
         }
 
