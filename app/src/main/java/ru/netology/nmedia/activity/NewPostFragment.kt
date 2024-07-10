@@ -1,6 +1,5 @@
 package ru.netology.nmedia.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,7 +31,6 @@ class NewPostFragment : Fragment() {
 
         binding.edit.requestFocus()
         binding.ok.setOnClickListener {
-            val intent = Intent()
             if (binding.edit.text.isNullOrBlank()) {
                 Toast.makeText(
                     activity,
