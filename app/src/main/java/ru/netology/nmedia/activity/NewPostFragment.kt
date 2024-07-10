@@ -41,10 +41,7 @@ class NewPostFragment : Fragment() {
                 viewModel.changeContent(binding.edit.text.toString())
                 viewModel.save()
             }
-            viewModel.isNewPost = true
             findNavController().navigateUp()
-
-
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             viewModel.changeContent(binding.edit.text.toString())
