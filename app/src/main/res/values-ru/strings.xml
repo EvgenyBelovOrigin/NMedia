@@ -10,4 +10,9 @@
     <string name="chooser_share_post">Поделиться</string>
     <string name="save">Сохранить</string>
     <string name="close">Закрыть</string>
+    <string name="channel_remote_name">Сообщение от сервера</string>
+    <string name="channel_remote_description">Сообщение от удаленного сервера</string>
+    <string name="notification_user_liked">Пользователь %1$s поставил лайк посту %2$s</string>
+    <string name="notification_user_new_post">Пользователь %1$s опубликовал новый пост</string>
+    <string name="notification_illegal_argument_exception">Получено неизвестное уведомление. Попробуйте обновить Ваше приложение</string>
 </resources>

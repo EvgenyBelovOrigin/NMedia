@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id 'org.jetbrains.kotlin.kapt'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -53,6 +54,9 @@ dependencies {
     implementation libs.androidx.navigation.ui.ktx
     implementation libs.androidx.room.runtime
     kapt "androidx.room:room-compiler:$room_version"
+    implementation platform(libs.firebase.bom)
+    implementation libs.firebase.messaging.ktx
+    implementation libs.play.services.base
 
 
     testImplementation libs.junit
