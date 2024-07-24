@@ -40,6 +40,7 @@ android {
 dependencies {
     def room_version = "2.6.1"
 
+
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material
@@ -57,6 +58,7 @@ dependencies {
     implementation platform(libs.firebase.bom)
     implementation libs.firebase.messaging.ktx
     implementation libs.play.services.base
+    implementation libs.okhttp
 
 
     testImplementation libs.junit
