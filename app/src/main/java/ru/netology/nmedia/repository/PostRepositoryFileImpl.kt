@@ -65,12 +65,12 @@ class PostRepositoryFileImpl(private val context: Context) : PostRepository {
                 when (it.likedByMe) {
                     true -> it.copy(
                         likedByMe = !it.likedByMe,
-                        likes = it.likes - 1
+                        likesCount = it.likesCount - 1
                     )
 
                     else -> it.copy(
                         likedByMe = !it.likedByMe,
-                        likes = it.likes + 1
+                        likesCount = it.likesCount + 1
                     )
                 }
             }

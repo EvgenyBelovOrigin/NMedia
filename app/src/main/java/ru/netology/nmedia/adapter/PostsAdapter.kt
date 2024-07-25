@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.util.Tools
+import ru.netology.nmedia.tools.Tools
 
 
 interface OnInteractionListener {
@@ -18,6 +18,8 @@ interface OnInteractionListener {
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
     fun onShare(post: Post) {}
+    fun onVideoPlay(post: Post) {}
+    fun onOpenPost(post: Post) {}
 }
 
 class PostsAdapter(
@@ -49,13 +51,13 @@ class PostViewHolder(
             tvAuthor.text = post.author
             tvPublished.text = post.published
             tvContent.text = post.content
-//            ibShares.text = tools.getShortCountTypeValue(post.sharesCount)
-//            tvViewsCount.text = tools.getShortCountTypeValue(post.viewsCount)
+            ibShares.text = tools.getShortCountTypeValue(post.sharesCount)
+            tvViewsCount.text = tools.getShortCountTypeValue(post.viewsCount)
             ibLikes.isChecked = post.likedByMe
-            ibLikes.text = tools.getShortCountTypeValue(post.likes)
+            ibLikes.text = tools.getShortCountTypeValue(post.likesCount)
             ibLikes.setOnClickListener { onInteractionListener.onLike(post) }
             ibShares.setOnClickListener { onInteractionListener.onShare(post) }
-//            binding.root.setOnClickListener { onInteractionListener.onOpenPost(post) }
+            binding.root.setOnClickListener { onInteractionListener.onOpenPost(post) }
 
             ibMenu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
@@ -80,8 +82,8 @@ class PostViewHolder(
 
 
             }
-//            videoImage.isVisible = !post.video.isNullOrBlank()
-//            videoImage.setOnClickListener { onInteractionListener.onVideoPlay(post) }
+            videoImage.isVisible = !post.video.isNullOrBlank()
+            videoImage.setOnClickListener { onInteractionListener.onVideoPlay(post) }
 
         }
     }

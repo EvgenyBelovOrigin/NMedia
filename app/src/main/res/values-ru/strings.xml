@@ -15,7 +15,4 @@
     <string name="notification_user_liked">Пользователь %1$s поставил лайк посту %2$s</string>
     <string name="notification_user_new_post">Пользователь %1$s опубликовал новый пост</string>
     <string name="notification_illegal_argument_exception">Получено неизвестное уведомление. Попробуйте обновить Ваше приложение</string>
-    <string name="empty_posts">Постов нет.\nЕсли Вы создадите новый по пост, он появится здесь</string>
-    <string name="error_loading">Что-то пошло не так. Повторите попытку позже</string>
-    <string name="retry_loading">Повторить</string>
 </resources>

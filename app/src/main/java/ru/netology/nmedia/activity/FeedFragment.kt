@@ -44,6 +44,7 @@ class FeedFragment : Fragment() {
                 val shareIntent =
                     Intent.createChooser(intent, getString(R.string.chooser_share_post))
                 startActivity(shareIntent)
+                viewModel.shareById(post.id)// todo - need to change count after sharing done
 
             }
 
@@ -56,11 +57,12 @@ class FeedFragment : Fragment() {
             }
 
             override fun onVideoPlay(post: Post) {
-                // nothing
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
+                startActivity(intent)
             }
 
             override fun onOpenPost(post: Post) {
-//                viewModel.openPost(post)
+                viewModel.openPost(post)
             }
         }
         )
