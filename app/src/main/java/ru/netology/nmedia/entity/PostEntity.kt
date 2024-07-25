@@ -28,7 +28,7 @@ data class PostEntity(
                 dto.content,
                 dto.published,
                 dto.likedByMe,
-                dto.likesCount,
+                dto.likes,
                 dto.sharesCount,
                 dto.viewsCount,
                 dto.video

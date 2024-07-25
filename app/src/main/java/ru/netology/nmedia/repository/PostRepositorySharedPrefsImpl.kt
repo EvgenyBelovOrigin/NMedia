@@ -71,12 +71,12 @@ class PostRepositorySharedPrefsImpl(context: Context) : PostRepository {
                 when (it.likedByMe) {
                     true -> it.copy(
                         likedByMe = !it.likedByMe,
-                        likesCount = it.likesCount - 1
+                        likes = it.likes - 1
                     )
 
                     else -> it.copy(
                         likedByMe = !it.likedByMe,
-                        likesCount = it.likesCount + 1
+                        likes = it.likes + 1
                     )
                 }
             }

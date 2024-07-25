@@ -14,7 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentOpenPostBinding
-import ru.netology.nmedia.tools.Tools
+import ru.netology.nmedia.util.Tools
 import ru.netology.nmedia.viemodel.PostViewModel
 
 class OpenPostFragment : Fragment() {
