@@ -10,17 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE
-import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.messaging.FirebaseMessaging
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
-import ru.netology.nmedia.databinding.ActivityAppBinding
 
-class AppActivity : AppCompatActivity() {
+class AppActivity : AppCompatActivity(R.layout.activity_app) {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityAppBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         requestNotificationsPermission()
 
@@ -30,25 +27,35 @@ class AppActivity : AppCompatActivity() {
             }
 
             val text = it.getStringExtra(Intent.EXTRA_TEXT)
-            if (text.isNullOrBlank()) {
-                Snackbar.make(binding.root, R.string.error_empty_content, LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok) {
-                        finish()
-                    }
-                    .show()
+            if (text?.isNotBlank() != true) {
                 return@let
             }
-            findNavController(R.id.nav_host).navigate(
-                R.id.newPostFragment,
-                Bundle().apply {
-                    textArg = text
 
-                }
-
-            )
+            intent.removeExtra(Intent.EXTRA_TEXT)
+            findNavController(R.id.nav_host_fragment)
+                .navigate(
+                    R.id.action_feedFragment_to_newPostFragment,
+                    Bundle().apply {
+                        textArg = text
+                    }
+                )
         }
-        checkGoogleApiAvailability()
 
+        checkGoogleApiAvailability()
+    }
+
+    private fun requestNotificationsPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return
+        }
+
+        val permission = Manifest.permission.POST_NOTIFICATIONS
+
+        if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
+            return
+        }
+
+        requestPermissions(arrayOf(permission), 1)
     }
 
     private fun checkGoogleApiAvailability() {
@@ -65,28 +72,8 @@ class AppActivity : AppCompatActivity() {
                 .show()
         }
 
-
-    }
-
-    private fun requestNotificationsPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            return
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            println(it)
         }
-
-        val permission = Manifest.permission.POST_NOTIFICATIONS
-
-        if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-
-        requestPermissions(arrayOf(permission), 1)
     }
 }
-
-
-
-
-
-
-
-

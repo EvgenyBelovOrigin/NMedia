@@ -1,150 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/common_spacing">
+    >
 
-    <ImageView
-        android:id="@+id/ivAvatar"
-        android:layout_width="@dimen/posts_avatar_size"
-        android:layout_height="@dimen/posts_avatar_size"
-        android:layout_marginBottom="@dimen/common_spacing"
-        android:importantForAccessibility="no"
-        app:layout_constraintBottom_toTopOf="@id/barrier1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/avatar" />
-
-    <TextView
-        android:id="@+id/tvAuthor"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/common_spacing"
-        android:layout_marginEnd="@dimen/common_spacing"
-        android:ellipsize="end"
-        android:importantForAccessibility="no"
-        android:singleLine="true"
-        app:layout_constraintBottom_toTopOf="@+id/tvPublished"
-        app:layout_constraintEnd_toStartOf="@id/ibMenu"
-        app:layout_constraintStart_toEndOf="@id/ivAvatar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:text="@sample/posts.json/data/author" />
+        android:padding="@dimen/common_spacing">
 
-    <TextView
-        android:id="@+id/tvPublished"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/common_spacing"
-        android:layout_marginEnd="@dimen/common_spacing"
-        android:layout_marginBottom="@dimen/common_spacing"
-        android:ellipsize="end"
-        android:singleLine="true"
-        app:layout_constraintBottom_toTopOf="@id/barrier1"
-        app:layout_constraintEnd_toStartOf="@id/ibMenu"
-        app:layout_constraintStart_toEndOf="@id/ivAvatar"
-        app:layout_constraintTop_toBottomOf="@id/tvAuthor"
-        tools:text="@sample/posts.json/data/published" />
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/posts_avatar_size"
+            android:layout_height="@dimen/posts_avatar_size"
+            android:layout_marginBottom="@dimen/common_spacing"
+            android:contentDescription="@string/description_post_author_avatar"
+            app:layout_constraintBottom_toBottomOf="@id/header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@sample/posts.json/data/authorAvatar" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/ibMenu"
-        style="@style/Widget.AppTheme.IconButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/common_spacing"
-        android:importantForAccessibility="no"
-        app:icon="@drawable/menu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_spacing"
+            android:layout_marginEnd="@dimen/common_spacing"
+            android:ellipsize="end"
+            android:singleLine="true"
+            app:layout_constraintBottom_toTopOf="@+id/published"
+            app:layout_constraintEnd_toStartOf="@id/menu"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="@sample/posts.json/data/author" />
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="ivAvatar,tvPublished,ibMenu" />
+        <TextView
+            android:id="@+id/published"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_spacing"
+            android:layout_marginEnd="@dimen/common_spacing"
+            android:layout_marginBottom="@dimen/common_spacing"
+            app:layout_constraintBottom_toBottomOf="@id/header"
+            app:layout_constraintEnd_toStartOf="@id/menu"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/author"
+            tools:text="@sample/posts.json/data/published" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/common_spacing"
+            android:contentDescription="@string/description_post_menu"
+            app:icon="@drawable/ic_more_vert_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            style="@style/Widget.AppTheme.IconButton"
+            />
 
-    <TextView
-        android:id="@+id/tvContent"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_spacing"
-        android:layout_marginBottom="@dimen/common_spacing"
-        app:layout_constraintBottom_toTopOf="@id/videoImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barrier1"
-        tools:text="@sample/posts.json/data/content" />
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="avatar,published,menu" />
 
-    <ImageView
-        android:id="@+id/videoImage"
-        android:layout_width="@dimen/video_image"
-        android:layout_height="@dimen/video_image"
-        android:importantForAccessibility="no"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/barrier2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvContent"
-        app:srcCompat="@drawable/video_image" />
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:lineSpacingMultiplier="1.5"
+            android:paddingTop="@dimen/common_spacing"
+            android:paddingBottom="@dimen/common_spacing"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header"
+            tools:text="@sample/posts.json/data/content" />
 
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/footer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="content" />
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="videoImage" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:contentDescription="@string/description_post_like"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/footer"
+            app:icon="@drawable/ic_like_24dp"
+            tools:checked="@sample/posts.json/data/likedByMe"
+            tools:text="@sample/posts.json/data/likes"
+            style="@style/Widget.AppTheme.LikeCheckBox"
+            />
 
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/ibLikes"
-        style="@style/Widget.AppTheme.LikeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checkable="true"
-        app:icon="@drawable/ic_like_selector"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barrier2"
-        tools:text="@sample/posts.json/data/likesCount" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/ibShares"
-        style="@style/Widget.AppTheme.IconButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/common_spacing"
-        android:importantForAccessibility="no"
-        app:icon="@drawable/shares"
-        app:layout_constraintBottom_toBottomOf="@id/ibLikes"
-        app:layout_constraintStart_toEndOf="@id/ibLikes"
-        app:layout_constraintTop_toTopOf="@id/ibLikes"
-        tools:text="@sample/posts.json/data/sharesCount" />
-
-    <ImageView
-        android:id="@+id/ivViews"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-        android:layout_marginTop="@dimen/common_spacing"
-        android:background="@android:color/transparent"
-        android:importantForAccessibility="no"
-        app:layout_constraintEnd_toStartOf="@id/tvViewsCount"
-        app:layout_constraintTop_toBottomOf="@id/barrier2"
-        app:srcCompat="@drawable/views" />
-
-    <TextView
-        android:id="@+id/tvViewsCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/ivViews"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ivViews"
-        tools:text="@sample/posts.json/data/viewsCount" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_spacing"
+            android:contentDescription="@string/description_post_share"
+            app:layout_constraintStart_toEndOf="@+id/like"
+            app:layout_constraintTop_toBottomOf="@id/footer"
+            app:icon="@drawable/ic_share_24"
+            style="@style/Widget.AppTheme.IconButton"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

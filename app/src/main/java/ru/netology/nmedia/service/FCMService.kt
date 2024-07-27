@@ -15,11 +15,13 @@ import com.google.gson.Gson
 import ru.netology.nmedia.R
 import kotlin.random.Random
 
+
 class FCMService : FirebaseMessagingService() {
     private val action = "action"
     private val content = "content"
     private val channelId = "remote"
     private val gson = Gson()
+
     override fun onCreate() {
         super.onCreate()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -37,74 +39,29 @@ class FCMService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
 
         message.data[action]?.let {
-            try {
-                when (Action.valueOf(it)) {
-                    Action.LIKE -> handleLike(
-                        gson.fromJson(
-                            message.data[content],
-                            Like::class.java
-                        )
-                    )
-
-                    Action.NEWPOST -> handleNewPost(
-                        gson.fromJson(
-                            message.data[content],
-                            NewPost::class.java
-                        )
-                    )
-                }
-            } catch (e: IllegalArgumentException) {
-                handleIllegalArgumentException()
-
-            }
+           when (Action.valueOf(it)) {
+              Action.LIKE -> handleLike(gson.fromJson(message.data[content], Like::class.java))
+           }
         }
+    }
 
+    override fun onNewToken(token: String) {
+        println(token)
     }
 
     private fun handleLike(content: Like) {
         val notification = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentText(
+            .setContentTitle(
                 getString(
                     R.string.notification_user_liked,
                     content.userName,
                     content.postAuthor,
                 )
             )
-            .setStyle(NotificationCompat.BigTextStyle())
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
-        notify(notification)
-    }
 
-    private fun handleNewPost(content: NewPost) {
-        val notification = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(
-                getString(
-                    R.string.notification_user_new_post,
-                    content.userName,
-                )
-            )
-            .setContentText(content.postText)
-            .setStyle(NotificationCompat.BigTextStyle())
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
-        notify(notification)
-    }
-
-    private fun handleIllegalArgumentException() {
-        val notification = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentText(
-                getString(
-                    R.string.notification_illegal_argument_exception,
-                )
-            )
-            .setStyle(NotificationCompat.BigTextStyle())
-
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
         notify(notification)
     }
 
@@ -119,15 +76,10 @@ class FCMService : FirebaseMessagingService() {
                 .notify(Random.nextInt(100_000), notification)
         }
     }
-
-    override fun onNewToken(token: String) {
-        println("token $token")
-    }
 }
 
 enum class Action {
     LIKE,
-    NEWPOST,
 }
 
 data class Like(
@@ -137,8 +89,3 @@ data class Like(
     val postAuthor: String,
 )
 
-data class NewPost(
-    val userId: Long,
-    val userName: String,
-    val postText: String,
-)
