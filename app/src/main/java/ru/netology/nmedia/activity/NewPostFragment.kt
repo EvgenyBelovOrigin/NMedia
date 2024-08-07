@@ -34,19 +34,19 @@ class NewPostFragment : Fragment() {
 
         arguments?.textArg
             ?.let(binding.edit::setText)
-
+        
         binding.ok.setOnClickListener {
             viewModel.changeContent(binding.edit.text.toString())
             viewModel.save()
             AndroidUtils.hideKeyboard(requireView())
             binding.ok.isVisible = false
             binding.progress.isVisible = true
-
         }
         viewModel.postCreated.observe(viewLifecycleOwner) {
             viewModel.loadPosts()
             findNavController().navigateUp()
         }
+
 
         return binding.root
     }

@@ -6,11 +6,12 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.internal.EMPTY_REQUEST
 import ru.netology.nmedia.dto.Post
 import java.util.concurrent.TimeUnit
 
 
-class PostRepositoryImpl: PostRepository {
+class PostRepositoryImpl : PostRepository {
     private val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
         .build()
@@ -35,8 +36,15 @@ class PostRepositoryImpl: PostRepository {
             }
     }
 
-    override fun likeById(id: Long) {
-        // TODO: do this in homework
+    override fun likeById(id: Long): Post {
+        val request: Request = Request.Builder()
+            .post(EMPTY_REQUEST)
+            .url("${BASE_URL}/api/posts/$id/likes")
+            .build()
+        return client.newCall(request)
+            .execute()
+            .let { it.body?.string() ?: throw RuntimeException("body is null") }
+            .let { gson.fromJson(it, Post::class.java) }
     }
 
     override fun save(post: Post) {
@@ -60,4 +68,17 @@ class PostRepositoryImpl: PostRepository {
             .execute()
             .close()
     }
+
+    override fun disLikeById(id: Long): Post {
+        val request: Request = Request.Builder()
+            .delete()
+            .url("${BASE_URL}/api/posts/$id/likes")
+            .build()
+        return client.newCall(request)
+            .execute()
+            .let { it.body?.string() ?: throw RuntimeException("body is null") }
+            .let { gson.fromJson(it, Post::class.java) }
+    }
 }
+
+
