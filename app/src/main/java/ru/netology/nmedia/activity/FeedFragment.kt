@@ -71,6 +71,14 @@ class FeedFragment : Fragment() {
             viewModel.loadPosts()
             binding.swiperefresh.isRefreshing = false
         }
+        viewModel.edited.observe(viewLifecycleOwner) { post ->
+            if (post.id == 0L) {
+                return@observe
+            }
+            findNavController().navigate(
+                R.id.newPostFragment,
+            )
+        }
 
         return binding.root
     }

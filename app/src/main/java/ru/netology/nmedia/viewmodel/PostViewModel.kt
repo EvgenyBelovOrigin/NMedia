@@ -86,7 +86,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun likeById(post: Post) {
 
         thread {
-//            val oldPosts = _data.value?.posts.orEmpty()
             try {
                 val postUpdated =
                     if (!post.likedByMe) {
