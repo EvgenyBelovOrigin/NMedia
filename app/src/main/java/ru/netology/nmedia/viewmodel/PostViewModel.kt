@@ -1,10 +1,13 @@
 package ru.netology.nmedia.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModel
-import ru.netology.nmedia.repository.*
+import ru.netology.nmedia.repository.PostRepository
+import ru.netology.nmedia.repository.PostRepositoryImpl
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.IOException
 import kotlin.concurrent.thread
@@ -37,14 +40,24 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         thread {
             // Начинаем загрузку
             _data.postValue(FeedModel(loading = true))
-            try {
+//            try {
+//                // Данные успешно получены
+//                val posts = repository.getAll()
+//                FeedModel(posts = posts, empty = posts.isEmpty())
+//            } catch (e: IOException) {
+//                // Получена ошибка
+//                FeedModel(error = true)
+//            }.also(_data::postValue)
+            val feedModel = try {
                 // Данные успешно получены
                 val posts = repository.getAll()
                 FeedModel(posts = posts, empty = posts.isEmpty())
             } catch (e: IOException) {
                 // Получена ошибка
                 FeedModel(error = true)
-            }.also(_data::postValue)
+            }
+            _data.postValue(feedModel)
+
         }
     }
 
@@ -70,8 +83,29 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value = edited.value?.copy(content = text)
     }
 
-    fun likeById(id: Long) {
-        thread { repository.likeById(id) }
+    fun likeById(post: Post) {
+
+        thread {
+            try {
+                val postUpdated =
+                    if (!post.likedByMe) {
+                        repository.likeById(post.id)
+                    } else {
+                        repository.disLikeById(post.id)
+                    }
+
+                val newPosts = _data.value?.posts.orEmpty().map {
+                    if (it.id == post.id) {
+                        postUpdated
+                    } else {
+                        it
+                    }
+                }
+                _data.postValue(_data.value?.copy(posts = newPosts))
+            } catch (e: Exception) {
+                loadPosts()
+            }
+        }
     }
 
     fun removeById(id: Long) {
