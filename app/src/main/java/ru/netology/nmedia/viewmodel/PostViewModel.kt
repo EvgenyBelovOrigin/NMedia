@@ -54,10 +54,13 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun save() {
         edited.value?.let {
-            thread {
-                repository.save(it)
-                _postCreated.postValue(Unit)
-            }
+            repository.save(it, object : PostRepository.GetCallback<Post> {
+                override fun onSuccess(value: Post) {}
+                override fun onError(exceptiin: Exception) {
+                    _data.postValue(FeedModel(error = true))
+                }
+            })
+            _postCreated.postValue(Unit)
         }
         edited.value = empty
     }

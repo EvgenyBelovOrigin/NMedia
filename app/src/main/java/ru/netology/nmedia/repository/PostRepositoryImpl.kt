@@ -50,27 +50,42 @@ class PostRepositoryImpl : PostRepository {
             })
     }
 
-    override fun likeById(id: Long): Post {
-        val request: Request = Request.Builder()
-            .post(EMPTY_REQUEST)
-            .url("${BASE_URL}/api/posts/$id/likes")
-            .build()
-        return client.newCall(request)
-            .execute()
-            .let { it.body?.string() ?: throw RuntimeException("body is null") }
-            .let { gson.fromJson(it, Post::class.java) }
-    }
-
-    override fun save(post: Post) {
+    override fun save(post: Post, callback: PostRepository.GetCallback<Post>) {
         val request: Request = Request.Builder()
             .post(gson.toJson(post).toRequestBody(jsonType))
             .url("${BASE_URL}/api/slow/posts")
             .build()
 
         client.newCall(request)
-            .execute()
-            .close()
+            .enqueue(object : Callback {
+
+                override fun onResponse(call: Call, response: Response) {
+                    val body = response.body?.string() ?: throw RuntimeException("body is null")
+                    try {
+                        callback.onSuccess(gson.fromJson(body, typeToken.type))
+                    } catch (e: Exception) {
+                        callback.onError(e)
+                    }
+                }
+
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onError(e)
+                }
+
+
+            })
+
     }
+    //    override fun save(post: Post) {
+//        val request: Request = Request.Builder()
+//            .post(gson.toJson(post).toRequestBody(jsonType))
+//            .url("${BASE_URL}/api/slow/posts")
+//            .build()
+//
+//        client.newCall(request)
+//            .execute()
+//            .close()
+//    }
 
     override fun removeById(id: Long) {
         val request: Request = Request.Builder()
@@ -83,9 +98,21 @@ class PostRepositoryImpl : PostRepository {
             .close()
     }
 
+
     override fun disLikeById(id: Long): Post {
         val request: Request = Request.Builder()
             .delete()
+            .url("${BASE_URL}/api/posts/$id/likes")
+            .build()
+        return client.newCall(request)
+            .execute()
+            .let { it.body?.string() ?: throw RuntimeException("body is null") }
+            .let { gson.fromJson(it, Post::class.java) }
+    }
+
+    override fun likeById(id: Long): Post {
+        val request: Request = Request.Builder()
+            .post(EMPTY_REQUEST)
             .url("${BASE_URL}/api/posts/$id/likes")
             .build()
         return client.newCall(request)
