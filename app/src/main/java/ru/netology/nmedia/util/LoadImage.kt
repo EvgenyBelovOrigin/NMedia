@@ -9,8 +9,16 @@ fun ImageView.loadAvatar(url: String) {
         .load(url)
         .error(R.drawable.ic_error_100dp)
         .placeholder(R.drawable.ic_loading_100dp)
-        .timeout(35_000)
-        .fitCenter()
+        .timeout(15_000)
         .circleCrop()
+        .into(this)
+}
+
+fun ImageView.loadAttachmentView(url: String) {
+    Glide.with(this)
+        .load(url)
+        .error(R.drawable.ic_error_100dp)
+        .placeholder(R.drawable.ic_loading_100dp)
+        .timeout(15_000)
         .into(this)
 }

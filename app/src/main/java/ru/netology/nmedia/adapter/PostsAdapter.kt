@@ -3,12 +3,14 @@ package ru.netology.nmedia.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.util.loadAttachmentView
 import ru.netology.nmedia.util.loadAvatar
 
 
@@ -37,10 +39,12 @@ class PostViewHolder(
     private val binding: CardPostBinding,
     private val onInteractionListener: OnInteractionListener,
 ) : RecyclerView.ViewHolder(binding.root) {
- 
+
     fun bind(post: Post) {
         binding.apply {
             avatar.loadAvatar("http://192.168.1.36:9999/avatars/${post.authorAvatar}")
+            attachmentImage.isVisible = !post.attachment?.url.isNullOrBlank()
+            attachmentImage.loadAttachmentView("http://192.168.1.36:9999/images/${post.attachment?.url}")
             author.text = post.author
             published.text = post.published
             content.text = post.content
