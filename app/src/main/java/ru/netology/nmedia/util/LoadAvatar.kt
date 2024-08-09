@@ -10,5 +10,7 @@ fun ImageView.loadAvatar(url: String) {
         .error(R.drawable.ic_error_100dp)
         .placeholder(R.drawable.ic_loading_100dp)
         .timeout(35_000)
+        .fitCenter()
+        .circleCrop()
         .into(this)
 }
