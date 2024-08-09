@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.util.loadAvatar
+
 
 interface OnInteractionListener {
     fun onLike(post: Post) {}
@@ -35,9 +37,10 @@ class PostViewHolder(
     private val binding: CardPostBinding,
     private val onInteractionListener: OnInteractionListener,
 ) : RecyclerView.ViewHolder(binding.root) {
-
+ 
     fun bind(post: Post) {
         binding.apply {
+            avatar.loadAvatar("http://192.168.1.36:9999/avatars/${post.authorAvatar}")
             author.text = post.author
             published.text = post.published
             content.text = post.content
