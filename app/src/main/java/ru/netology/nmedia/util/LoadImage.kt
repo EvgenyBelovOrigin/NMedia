@@ -2,7 +2,9 @@ package ru.netology.nmedia.util
 
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
+
 
 fun ImageView.loadAvatar(url: String) {
     Glide.with(this)
