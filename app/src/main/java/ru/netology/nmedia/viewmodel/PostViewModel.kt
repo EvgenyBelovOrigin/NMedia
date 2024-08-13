@@ -35,6 +35,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val onLikeError: LiveData<Unit>
         get() = _onLikeError
 
+    private val _onDeleteError = SingleLiveEvent<Unit>()
+    val onDeleteError: LiveData<Unit>
+        get() = _onDeleteError
+
     init {
         loadPosts()
     }
@@ -114,6 +118,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         repository.removeById(id, object : PostRepository.GetCallback<Unit> {
             override fun onSuccess(value: Unit) {}
             override fun onError(e: Throwable) {
+                _onDeleteError.postValue(Unit)
                 _data.postValue(_data.value?.copy(posts = old))
             }
         })
