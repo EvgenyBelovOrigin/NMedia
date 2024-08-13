@@ -78,7 +78,6 @@ class PostRepositoryImpl : PostRepository {
                         )
                     } else {
                         callback.onError(RuntimeException("Bad code received"))
-
                     }
                 }
 

@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
@@ -78,6 +79,16 @@ class FeedFragment : Fragment() {
             findNavController().navigate(
                 R.id.newPostFragment,
             )
+        }
+        viewModel.onLikeError.observe(viewLifecycleOwner) {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Error")
+                .setMessage("Something goes wrong. Your like hasn't been registered. Try again later")
+                .setPositiveButton("ok", null)
+                .show()
+            binding.run {
+                this.list.adapter?.notifyDataSetChanged()
+            }
         }
 
         return binding.root
