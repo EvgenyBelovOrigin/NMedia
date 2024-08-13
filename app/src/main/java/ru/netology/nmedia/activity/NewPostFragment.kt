@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentNewPostBinding
 import ru.netology.nmedia.util.AndroidUtils
 import ru.netology.nmedia.util.StringArg
@@ -48,24 +49,20 @@ class NewPostFragment : Fragment() {
         viewModel.onSaveError.observe(viewLifecycleOwner) {
             binding.progress.isVisible = false
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Error")
-                .setMessage("Something goes wrong. Saving was cancelled.")
-                .setPositiveButton("Return to posts") { _, _
+                .setTitle(R.string.error)
+                .setMessage(R.string.error_saving)
+                .setPositiveButton(R.string.return_to_posts) { _, _
                     ->
                     findNavController().navigateUp()
                 }
-                .setNegativeButton("Try again", null)
+                .setNegativeButton(R.string.try_again, null)
                 .show()
             binding.ok.isVisible = true
         }
-
-
         viewModel.postCreated.observe(viewLifecycleOwner) {
             viewModel.loadPosts()
             findNavController().navigateUp()
         }
-
-
         return binding.root
     }
 }

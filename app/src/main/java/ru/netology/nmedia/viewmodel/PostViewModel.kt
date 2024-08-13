@@ -27,6 +27,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val data: LiveData<FeedModel>
         get() = _data
     val edited = MutableLiveData(empty)
+
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
@@ -38,6 +39,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val _onDeleteError = SingleLiveEvent<Unit>()
     val onDeleteError: LiveData<Unit>
         get() = _onDeleteError
+
     private val _onSaveError = SingleLiveEvent<Unit>()
     val onSaveError: LiveData<Unit>
         get() = _onSaveError
@@ -67,9 +69,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 override fun onError(e: Throwable) {
-//                    _onSaveError
                     _onSaveError.postValue(Unit)
-//                    error()// todo
                 }
             })
         }
@@ -138,9 +138,5 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         _data.postValue(_data.value?.copy(posts = newPosts))
-    }
-
-    fun error() {
-        _data.postValue(FeedModel(error = true))
     }
 }

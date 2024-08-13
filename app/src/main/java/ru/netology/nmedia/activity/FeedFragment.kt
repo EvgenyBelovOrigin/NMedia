@@ -83,9 +83,9 @@ class FeedFragment : Fragment() {
         }
         viewModel.onLikeError.observe(viewLifecycleOwner) {
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Error")
-                .setMessage("Something goes wrong. Your like hasn't been registered. Try again later")
-                .setPositiveButton("ok", null)
+                .setTitle(R.string.error)
+                .setMessage(R.string.error_like)
+                .setPositiveButton(R.string.ok, null)
                 .show()
             binding.run {
                 this.list.adapter?.notifyDataSetChanged()
@@ -94,7 +94,7 @@ class FeedFragment : Fragment() {
         viewModel.onDeleteError.observe(viewLifecycleOwner) {
             Toast.makeText(
                 activity,
-                "Something goes wrong. Deleting was cancelled. Try again later",
+                R.string.error_delete,
                 Toast.LENGTH_LONG
             ).show()
         }
