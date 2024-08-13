@@ -38,6 +38,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val _onDeleteError = SingleLiveEvent<Unit>()
     val onDeleteError: LiveData<Unit>
         get() = _onDeleteError
+    private val _onSaveError = SingleLiveEvent<Unit>()
+    val onSaveError: LiveData<Unit>
+        get() = _onSaveError
 
     init {
         loadPosts()
@@ -64,8 +67,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 override fun onError(e: Throwable) {
-                    _postCreated.postValue(Unit)
-                    error()// todo
+//                    _onSaveError
+                    _onSaveError.postValue(Unit)
+//                    error()// todo
                 }
             })
         }
