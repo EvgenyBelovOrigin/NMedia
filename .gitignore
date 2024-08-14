@@ -47,4 +47,4 @@ captures/
 !/gradle/wrapper/gradle-wrapper.jar
 
 ### Secret
-app/google-services.json
+/app/google-services.json

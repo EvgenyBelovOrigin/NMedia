@@ -81,15 +81,15 @@ class FeedFragment : Fragment() {
                 R.id.newPostFragment,
             )
         }
-        viewModel.onLikeError.observe(viewLifecycleOwner) {
+        viewModel.onLikeError.observe(viewLifecycleOwner) { id ->
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.error)
                 .setMessage(R.string.error_like)
                 .setPositiveButton(R.string.ok, null)
                 .show()
-            binding.run {
-                this.list.adapter?.notifyDataSetChanged()
-            }
+            adapter.currentList.indexOfFirst { it.id == id }
+                .takeIf { it != -1 }
+                ?.let(adapter::notifyItemChanged)
         }
         viewModel.onDeleteError.observe(viewLifecycleOwner) {
             Toast.makeText(

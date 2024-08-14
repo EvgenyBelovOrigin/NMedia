@@ -32,8 +32,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
-    private val _onLikeError = SingleLiveEvent<Unit>()
-    val onLikeError: LiveData<Unit>
+    private val _onLikeError = SingleLiveEvent<Long>()
+    val onLikeError: LiveData<Long>
         get() = _onLikeError
 
     private val _onDeleteError = SingleLiveEvent<Unit>()
@@ -96,7 +96,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 override fun onError(e: Throwable) {
-                    _onLikeError.postValue(Unit)
+                    _onLikeError.postValue(post.id)
                 }
             })
         } else {
@@ -106,7 +106,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 override fun onError(e: Throwable) {
-                    _onLikeError.postValue(Unit)
+                    _onLikeError.postValue(post.id)
                 }
             })
         }
