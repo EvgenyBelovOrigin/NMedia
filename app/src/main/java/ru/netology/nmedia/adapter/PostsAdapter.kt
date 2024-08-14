@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
@@ -40,15 +41,16 @@ class PostViewHolder(
     private val onInteractionListener: OnInteractionListener,
 ) : RecyclerView.ViewHolder(binding.root) {
 
+    private val baseUrl = BuildConfig.BASE_URL
+
     fun bind(post: Post) {
         binding.apply {
-            avatar.loadAvatar("http://192.168.1.36:9999/avatars/${post.authorAvatar}")
+            avatar.loadAvatar("$baseUrl/avatars/${post.authorAvatar}")
             attachmentImage.isVisible = !post.attachment?.url.isNullOrBlank()
-            attachmentImage.loadAttachmentView("http://192.168.1.36:9999/images/${post.attachment?.url}")
+            attachmentImage.loadAttachmentView("$baseUrl/images/${post.attachment?.url}")
             author.text = post.author
             published.text = post.published
             content.text = post.content
-            // в адаптере
             like.isChecked = post.likedByMe
             like.text = "${post.likes}"
 
@@ -61,6 +63,7 @@ class PostViewHolder(
                                 onInteractionListener.onRemove(post)
                                 true
                             }
+
                             R.id.edit -> {
                                 onInteractionListener.onEdit(post)
                                 true

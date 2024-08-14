@@ -21,4 +21,11 @@
     <string name="notification_user_liked">%1$s поставил лайк посту %2$s</string>
     <string name="channel_remote_name">Уведомления с сервера</string>
     <string name="channel_remote_description">Уведомления с удалённого сервера</string>
+    <string name="error">Ошибка</string>
+    <string name="error_saving">"Что-то пошло не так. Пост не сохранен "</string>
+    <string name="try_again">Попробовать еще</string>
+    <string name="return_to_posts">Назад к списку постов</string>
+    <string name="error_delete">Что-то пошло не так. Удаление отменено. Попробуйте повторить позже.</string>
+    <string name="error_like">Что-то пошло не так. Ваш лайк не зарегистрированю Попробуйте позже.</string>
+    <string name="ok">Хорошо</string>
 </resources>

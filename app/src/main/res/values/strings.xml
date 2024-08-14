@@ -20,4 +20,11 @@
     <string name="notification_user_liked">User %1$s liked %2$s\'s post</string>
     <string name="channel_remote_name">Server notifications</string>
     <string name="channel_remote_description">Notifications from remote server</string>
+    <string name="error">Error</string>
+    <string name="error_saving">Something goes wrong. Saving was cancelled.</string>
+    <string name="try_again">Try again</string>
+    <string name="return_to_posts">Return to posts</string>
+    <string name="error_delete">Something goes wrong. Deleting was cancelled. Try again later</string>
+    <string name="error_like">Something goes wrong. Your like hasn\'t been registered. Try again later</string>
+    <string name="ok">OK</string>
 </resources>
