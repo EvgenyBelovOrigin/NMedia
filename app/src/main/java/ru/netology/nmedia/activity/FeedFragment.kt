@@ -20,7 +20,7 @@ import ru.netology.nmedia.viewmodel.PostViewModel
 
 class FeedFragment : Fragment() {
 
-               private val viewModel: PostViewModel by activityViewModels()
+    private val viewModel: PostViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,9 +56,11 @@ class FeedFragment : Fragment() {
         binding.list.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
+            binding.emptyText.isVisible = state.empty
+        }
+        viewModel.dataState.observe(viewLifecycleOwner) { state ->
             binding.progress.isVisible = state.loading
             binding.errorGroup.isVisible = state.error
-            binding.emptyText.isVisible = state.empty
         }
 
         binding.retryButton.setOnClickListener {

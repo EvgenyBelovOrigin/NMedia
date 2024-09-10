@@ -4,8 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModel
+import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositoryImpl
 import ru.netology.nmedia.util.SingleLiveEvent
@@ -22,10 +26,18 @@ private val empty = Post(
 )
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositoryImpl()
+    private val repository: PostRepository = PostRepositoryImpl(
+        AppDb.getInstance(application).postDao()
+    )
+
     private val _data = MutableLiveData(FeedModel())
     val data: LiveData<FeedModel>
         get() = _data
+
+    private val _dataState = MutableLiveData(FeedModelState())
+    val dataState: LiveData<FeedModelState>
+        get() = _dataState
+
     val edited = MutableLiveData(empty)
 
     private val _postCreated = SingleLiveEvent<Unit>()
@@ -49,94 +61,78 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun loadPosts() {
-        _data.postValue(FeedModel(loading = true))
-        repository.getAll(object : PostRepository.GetCallback<List<Post>> {
-            override fun onSuccess(value: List<Post>) {
-                _data.postValue(FeedModel(posts = value, empty = value.isEmpty()))
+        _dataState.value = FeedModelState(loading = true)
+
+        viewModelScope.launch {
+
+            try {
+                repository.getAll()
+                _dataState.value = FeedModelState()
+
+            } catch (e: Exception) {
+                _dataState.value = FeedModelState(error = true)
             }
+        }}
 
-            override fun onError(e: Throwable) {
-                _data.postValue(FeedModel(error = true))
+        fun save() {
+            viewModelScope.launch {
+
+                edited.value?.let {
+                    repository.save(it)
+                    // todo
+                    _postCreated.value = Unit
+                }
+                edited.value = empty
             }
-        })
-    }
-
-    fun save() {
-        edited.value?.let {
-            repository.save(it, object : PostRepository.GetCallback<Post> {
-                override fun onSuccess(value: Post) {
-                    _postCreated.postValue(Unit)
-                }
-
-                override fun onError(e: Throwable) {
-                    _onSaveError.postValue(Unit)
-                }
-            })
         }
-        edited.value = empty
-    }
 
-    fun edit(post: Post) {
-        edited.value = post
-    }
-
-    fun changeContent(content: String) {
-        val text = content.trim()
-        if (edited.value?.content == text) {
-            return
+        fun edit(post: Post) {
+            edited.value = post
         }
-        edited.value = edited.value?.copy(content = text)
-    }
 
-    fun likeById(post: Post) {
-        if (!post.likedByMe) {
-            repository.likeById(post.id, object : PostRepository.GetCallback<Post> {
-                override fun onSuccess(value: Post) {
-                    onSuccessLikeById(value, post)
-                }
-
-                override fun onError(e: Throwable) {
-                    _onLikeError.postValue(post.id)
-                }
-            })
-        } else {
-            repository.disLikeById(post.id, object : PostRepository.GetCallback<Post> {
-                override fun onSuccess(value: Post) {
-                    onSuccessLikeById(value, post)
-                }
-
-                override fun onError(e: Throwable) {
-                    _onLikeError.postValue(post.id)
-                }
-            })
+        fun changeContent(content: String) {
+            val text = content.trim()
+            if (edited.value?.content == text) {
+                return
+            }
+            edited.value = edited.value?.copy(content = text)
         }
-    }
 
-    fun removeById(id: Long) {
-        val old = _data.value?.posts.orEmpty()
-        _data.postValue(
-            _data.value?.copy(posts = _data.value?.posts.orEmpty()
-                .filter { it.id != id }
+        fun likeById(post: Post) {
+            viewModelScope.launch {
+
+                if (!post.likedByMe) {
+                    repository.likeById(post.id)
+                    //todo
+                } else {
+                    repository.disLikeById(post.id)
+                    //todo
+                }
+            }
+        }
+
+        fun removeById(id: Long) {
+            val old = _data.value?.posts.orEmpty()
+            _data.postValue(
+                _data.value?.copy(posts = _data.value?.posts.orEmpty()
+                    .filter { it.id != id }
+                )
             )
-        )
-        repository.removeById(id, object : PostRepository.GetCallback<Unit> {
-            override fun onSuccess(value: Unit) {}
-            override fun onError(e: Throwable) {
-                _onDeleteError.postValue(Unit)
-                _data.postValue(_data.value?.copy(posts = old))
-            }
-        })
-    }
-
-    fun onSuccessLikeById(value: Post, post: Post) {
-        val postUpdated = value
-        val newPosts = _data.value?.posts.orEmpty().map {
-            if (it.id == post.id) {
-                postUpdated
-            } else {
-                it
+            viewModelScope.launch {
+                repository.removeById(id)
+                //todo
             }
         }
-        _data.postValue(_data.value?.copy(posts = newPosts))
+
+        fun onSuccessLikeById(value: Post, post: Post) {
+            val postUpdated = value
+            val newPosts = _data.value?.posts.orEmpty().map {
+                if (it.id == post.id) {
+                    postUpdated
+                } else {
+                    it
+                }
+            }
+            _data.postValue(_data.value?.copy(posts = newPosts))
+        }
     }
-}

@@ -9,7 +9,6 @@ data class Post(
     val likes: Int = 0,
     val authorAvatar: String?,
     val attachment: Attach?
-
 )
 
 data class Attach(val url: String, val description: String, val type: String)

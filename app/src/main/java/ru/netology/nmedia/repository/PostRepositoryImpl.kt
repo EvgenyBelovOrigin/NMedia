@@ -1,111 +1,40 @@
 package ru.netology.nmedia.repository
 
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
 import ru.netology.nmedia.api.PostsApi
+import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.entity.PostEntity
 
-class PostRepositoryImpl : PostRepository {
-
-    override fun getAll(callback: PostRepository.GetCallback<List<Post>>) {
-        PostsApi.service.getAll()
-            .enqueue(object : Callback<List<Post>> {
-                override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
-                    if (response.isSuccessful) {
-                        callback.onSuccess(
-                            response.body() ?: throw RuntimeException("body is null")
-                        )
-                    } else {
-                        callback.onError(RuntimeException("Bad code received"))
-                    }
-
-                }
-
-                override fun onFailure(call: Call<List<Post>>, e: Throwable) {
-                    callback.onError(e)
-                }
-            })
+class PostRepositoryImpl(
+    private val dao: PostDao,
+) : PostRepository {
+    override val posts: LiveData<List<Post>> = dao.getAll().map {
+        it.map(PostEntity::toDto)
     }
 
-    override fun save(post: Post, callback: PostRepository.GetCallback<Post>) {
-        PostsApi.service.save(post)
-            .enqueue(object : Callback<Post> {
-                override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                    if (response.isSuccessful) {
-                        callback.onSuccess(
-                            response.body() ?: throw RuntimeException("body is null")
-                        )
-                    } else {
-                        callback.onError(RuntimeException("Bad code received"))
-                    }
-
-                }
-
-                override fun onFailure(call: Call<Post>, e: Throwable) {
-                    callback.onError(e)
-                }
-            })
+    override suspend fun getAll() {
+        val posts = PostsApi.service.getAll()
+        dao.insert(posts.map(PostEntity::fromDto))
     }
 
-    override fun removeById(id: Long, callback: PostRepository.GetCallback<Unit>) {
-        PostsApi.service.removeById(id)
-            .enqueue(object : Callback<Unit> {
-                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                    if (response.isSuccessful) {
-                        callback.onSuccess(
-                            response.body() ?: throw RuntimeException("body is null")
-                        )
-                    } else {
-                        callback.onError(RuntimeException("Bad code received"))
-
-                    }
-                }
-
-                override fun onFailure(call: Call<Unit>, e: Throwable) {
-                    callback.onError(e)
-                }
-            })
+    override suspend fun likeById(id: Long): Post {
+        TODO("Not yet implemented")
     }
 
-    override fun disLikeById(id: Long, callback: PostRepository.GetCallback<Post>) {
-        PostsApi.service.disLikeById(id)
-            .enqueue(object : Callback<Post> {
-                override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                    if (response.isSuccessful) {
-                        callback.onSuccess(
-                            response.body() ?: throw RuntimeException("body is null")
-                        )
-                    } else {
-                        callback.onError(RuntimeException("Bad code received"))
-                    }
-                }
-
-                override fun onFailure(call: Call<Post>, e: Throwable) {
-                    callback.onError(e)
-                }
-            })
+    override suspend fun save(post: Post): Post {
+        TODO("Not yet implemented")
     }
 
-    override fun likeById(id: Long, callback: PostRepository.GetCallback<Post>) {
-        PostsApi.service.likeById(id)
-            .enqueue(object : Callback<Post> {
-                override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                    if (response.isSuccessful) {
-                        callback.onSuccess(
-                            response.body() ?: throw RuntimeException("body is null")
-                        )
-                    } else {
-                        callback.onError(RuntimeException("Bad code received"))
-
-                    }
-                }
-
-                override fun onFailure(call: Call<Post>, e: Throwable) {
-                    callback.onError(e)
-                }
-            })
+    override suspend fun removeById(id: Long) {
+        TODO("Not yet implemented")
     }
+
+    override suspend fun disLikeById(id: Long): Post {
+        TODO("Not yet implemented")
+    }
+
 }
 
 
