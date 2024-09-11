@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.db.AppDb
@@ -30,9 +31,11 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         AppDb.getInstance(application).postDao()
     )
 
-    private val _data = MutableLiveData(FeedModel())
-    val data: LiveData<FeedModel>
-        get() = _data
+
+    val data: LiveData<FeedModel> = repository.posts.map {
+        FeedModel(it, it.isEmpty())
+    }
+
 
     private val _dataState = MutableLiveData(FeedModelState())
     val dataState: LiveData<FeedModelState>
@@ -72,67 +75,85 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             } catch (e: Exception) {
                 _dataState.value = FeedModelState(error = true)
             }
-        }}
+        }
+    }
 
-        fun save() {
+    fun save() {
+        edited.value?.let {
+            _postCreated.value = Unit
             viewModelScope.launch {
-
-                edited.value?.let {
+                try {
                     repository.save(it)
-                    // todo
-                    _postCreated.value = Unit
-                }
-                edited.value = empty
-            }
-        }
-
-        fun edit(post: Post) {
-            edited.value = post
-        }
-
-        fun changeContent(content: String) {
-            val text = content.trim()
-            if (edited.value?.content == text) {
-                return
-            }
-            edited.value = edited.value?.copy(content = text)
-        }
-
-        fun likeById(post: Post) {
-            viewModelScope.launch {
-
-                if (!post.likedByMe) {
-                    repository.likeById(post.id)
-                    //todo
-                } else {
-                    repository.disLikeById(post.id)
-                    //todo
+                    _dataState.value = FeedModelState()
+                } catch (e: Exception) {
+                    _dataState.value = FeedModelState(error = true)
                 }
             }
         }
+        edited.value = empty
+    }
 
-        fun removeById(id: Long) {
-            val old = _data.value?.posts.orEmpty()
-            _data.postValue(
-                _data.value?.copy(posts = _data.value?.posts.orEmpty()
-                    .filter { it.id != id }
-                )
-            )
-            viewModelScope.launch {
-                repository.removeById(id)
+    fun edit(post: Post) {
+        edited.value = post
+    }
+
+    fun changeContent(content: String) {
+        val text = content.trim()
+        if (edited.value?.content == text) {
+            return
+        }
+        edited.value = edited.value?.copy(content = text)
+    }
+
+    fun likeById(post: Post) {
+        viewModelScope.launch {
+
+            if (!post.likedByMe) {
+                repository.likeById(post.id)
+                //todo
+            } else {
+                repository.disLikeById(post.id)
                 //todo
             }
         }
+    }
 
-        fun onSuccessLikeById(value: Post, post: Post) {
-            val postUpdated = value
-            val newPosts = _data.value?.posts.orEmpty().map {
-                if (it.id == post.id) {
-                    postUpdated
-                } else {
-                    it
-                }
+    fun refresh() {
+        _dataState.value = FeedModelState(refreshing = true)
+
+        viewModelScope.launch {
+            try {
+                repository.getAll()
+                _dataState.value = FeedModelState()
+            } catch (e: Exception) {
+                _dataState.value = FeedModelState(error = true)
             }
-            _data.postValue(_data.value?.copy(posts = newPosts))
         }
     }
+
+
+//    fun removeById(id: Long) {
+//        val old = _data.value?.posts.orEmpty()
+//        _data.postValue(
+//            _data.value?.copy(posts = _data.value?.posts.orEmpty()
+//                .filter { it.id != id }
+//            )
+//        )
+//        viewModelScope.launch {
+//            repository.removeById(id)
+//            //todo
+//        }
+//    }
+
+//    fun onSuccessLikeById(value: Post, post: Post) {
+//        val postUpdated = value
+//        val newPosts = _data.value?.posts.orEmpty().map {
+//            if (it.id == post.id) {
+//                postUpdated
+//            } else {
+//                it
+//            }
+//        }
+//        _data.postValue(_data.value?.copy(posts = newPosts))
+//    }
+}

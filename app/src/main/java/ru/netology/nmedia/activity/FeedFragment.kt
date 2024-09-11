@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
@@ -38,7 +39,7 @@ class FeedFragment : Fragment() {
             }
 
             override fun onRemove(post: Post) {
-                viewModel.removeById(post.id)
+//                viewModel.removeById(post.id)
             }
 
             override fun onShare(post: Post) {
@@ -60,19 +61,22 @@ class FeedFragment : Fragment() {
         }
         viewModel.dataState.observe(viewLifecycleOwner) { state ->
             binding.progress.isVisible = state.loading
-            binding.errorGroup.isVisible = state.error
+            if (state.error){
+                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.retry_loading){
+                        viewModel.loadPosts()
+                    }
+                    .show()
+            }
+            binding.swiperefresh.isRefreshing = state.refreshing
         }
 
-        binding.retryButton.setOnClickListener {
-            viewModel.loadPosts()
-        }
 
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }
         binding.swiperefresh.setOnRefreshListener {
-            viewModel.loadPosts()
-            binding.swiperefresh.isRefreshing = false
+            viewModel.refresh()
         }
         viewModel.edited.observe(viewLifecycleOwner) { post ->
             if (post.id == 0L) {
