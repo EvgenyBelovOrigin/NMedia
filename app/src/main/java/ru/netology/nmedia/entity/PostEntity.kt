@@ -1,9 +1,7 @@
 package ru.netology.nmedia.entity
 
-import androidx.annotation.Nullable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import ru.netology.nmedia.dto.Attach
 import ru.netology.nmedia.dto.Post
 
 @Entity

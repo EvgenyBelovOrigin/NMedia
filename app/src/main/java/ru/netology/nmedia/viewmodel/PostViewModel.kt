@@ -107,13 +107,14 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun likeById(post: Post) {
         viewModelScope.launch {
-
-            if (!post.likedByMe) {
-                repository.likeById(post.id)
-                //todo
-            } else {
-                repository.disLikeById(post.id)
-                //todo
+            try {
+                if (!post.likedByMe) {
+                    repository.likeById(post.id)
+                } else {
+                    repository.disLikeById(post.id)
+                }
+            } catch (e: Exception) {
+                _onLikeError.value = post.id
             }
         }
     }
@@ -132,28 +133,15 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-//    fun removeById(id: Long) {
-//        val old = _data.value?.posts.orEmpty()
-//        _data.postValue(
-//            _data.value?.copy(posts = _data.value?.posts.orEmpty()
-//                .filter { it.id != id }
-//            )
-//        )
-//        viewModelScope.launch {
-//            repository.removeById(id)
-//            //todo
-//        }
-//    }
+    fun removeById(id: Long) {
 
-//    fun onSuccessLikeById(value: Post, post: Post) {
-//        val postUpdated = value
-//        val newPosts = _data.value?.posts.orEmpty().map {
-//            if (it.id == post.id) {
-//                postUpdated
-//            } else {
-//                it
-//            }
-//        }
-//        _data.postValue(_data.value?.copy(posts = newPosts))
-//    }
+        viewModelScope.launch {
+            try {
+                repository.removeById(id)
+            } catch (e: Exception) {
+                _onDeleteError.value = Unit
+            }
+        }
+    }
+
 }
