@@ -52,10 +52,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val onLikeError: LiveData<Long>
         get() = _onLikeError
 
-    private val _onDeleteError = SingleLiveEvent<Unit>()
-    val onDeleteError: LiveData<Unit>
-        get() = _onDeleteError
-
     private val _onSaveError = SingleLiveEvent<Unit>()
     val onSaveError: LiveData<Unit>
         get() = _onSaveError
@@ -86,12 +82,13 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 try {
                     repository.save(it)
                     _dataState.value = FeedModelState()
+                    edited.value = empty
+
                 } catch (e: Exception) {
-                    _onSaveError.value = Unit
+                    _dataState.value = FeedModelState(onSaveError = true)
                 }
             }
         }
-        edited.value = empty
     }
 
     fun edit(post: Post) {
@@ -115,7 +112,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                     repository.disLikeById(post.id)
                 }
             } catch (e: Exception) {
-                _dataState.value=FeedModelState(onLikeError = true)
+                _onLikeError.value = post.id
             }
         }
     }
@@ -140,7 +137,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 repository.removeById(id)
             } catch (e: Exception) {
-                _onDeleteError.value = Unit
+                _dataState.value = FeedModelState(onDeleteError = true)
             }
         }
     }

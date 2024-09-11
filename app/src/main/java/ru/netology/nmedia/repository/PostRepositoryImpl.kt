@@ -27,6 +27,7 @@ class PostRepositoryImpl(
 
             val body = response.body() ?: throw ApiError(response.code(), response.message())
             dao.insert(body.map(PostEntity::fromDto))
+            dao.removeByIsSaved()
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {

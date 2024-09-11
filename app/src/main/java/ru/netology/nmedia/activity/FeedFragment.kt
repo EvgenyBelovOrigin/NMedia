@@ -32,6 +32,7 @@ class FeedFragment : Fragment() {
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
+                findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
             }
 
             override fun onLike(post: Post) {
@@ -61,30 +62,39 @@ class FeedFragment : Fragment() {
         }
         viewModel.dataState.observe(viewLifecycleOwner) { state ->
             binding.progress.isVisible = state.loading
-            if (state.error){
+            if (state.error) {
                 Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.retry_loading){
+                    .setAction(R.string.retry_loading) {
                         viewModel.loadPosts()
                     }
                     .show()
             }
+            if (state.onDeleteError) {
+                Toast.makeText(
+                    activity,
+                    R.string.error_delete,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            if (state.onSaveError) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.error)
+                    .setMessage(R.string.error_saving)
+                    .setPositiveButton(R.string.try_again) { _, _
+                        ->
+                        findNavController().navigate(R.id.newPostFragment)
+                    }
+                    .setNegativeButton(R.string.return_to_posts, null)
+                    .show()
+            }
+
             binding.swiperefresh.isRefreshing = state.refreshing
         }
-
-
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }
         binding.swiperefresh.setOnRefreshListener {
             viewModel.refresh()
-        }
-        viewModel.edited.observe(viewLifecycleOwner) { post ->
-            if (post.id == 0L) {
-                return@observe
-            }
-            findNavController().navigate(
-                R.id.newPostFragment,
-            )
         }
         viewModel.onLikeError.observe(viewLifecycleOwner) { id ->
             MaterialAlertDialogBuilder(requireContext())
@@ -96,15 +106,6 @@ class FeedFragment : Fragment() {
                 .takeIf { it != -1 }
                 ?.let(adapter::notifyItemChanged)
         }
-        viewModel.onDeleteError.observe(viewLifecycleOwner) {
-            Toast.makeText(
-                activity,
-                R.string.error_delete,
-                Toast.LENGTH_LONG
-            ).show()
-        }
-
-
         return binding.root
     }
 }

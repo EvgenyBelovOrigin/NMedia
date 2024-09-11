@@ -12,6 +12,6 @@ data class FeedModelState(
     val refreshing: Boolean = false,
     val loading: Boolean = false,
     val error: Boolean = false,
-    val onLikeError: Boolean = false,
-
-    )
+    val onDeleteError: Boolean = false,
+    val onSaveError: Boolean = false
+)
