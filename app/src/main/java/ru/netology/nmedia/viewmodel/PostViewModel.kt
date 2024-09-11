@@ -23,6 +23,7 @@ private val empty = Post(
     likes = 0,
     published = "",
     authorAvatar = "",
+    isSaved = true,
     attachment = null
 )
 
@@ -86,7 +87,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                     repository.save(it)
                     _dataState.value = FeedModelState()
                 } catch (e: Exception) {
-                    _dataState.value = FeedModelState(error = true)
+                    _onSaveError.value = Unit
                 }
             }
         }
@@ -114,7 +115,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                     repository.disLikeById(post.id)
                 }
             } catch (e: Exception) {
-                _onLikeError.value = post.id
+                _dataState.value=FeedModelState(onLikeError = true)
             }
         }
     }

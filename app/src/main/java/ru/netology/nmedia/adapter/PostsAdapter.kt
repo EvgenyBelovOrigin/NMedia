@@ -53,6 +53,7 @@ class PostViewHolder(
             content.text = post.content
             like.isChecked = post.likedByMe
             like.text = "${post.likes}"
+            saving.isVisible = !post.isSaved
 
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
