@@ -14,10 +14,10 @@ data class PostEntity(
     val likedByMe: Boolean,
     val likes: Int = 0,
     val authorAvataatar: String?,
-    val isSaved:Boolean
-//    val attachment: AttachEntity?,
+    val isSaved: Boolean,
+    val attachment: Boolean,
 
-) {
+    ) {
     fun toDto() = Post(
         id,
         author,
@@ -27,6 +27,7 @@ data class PostEntity(
         likes,
         authorAvataatar,
         isSaved,
+        attachment,
         null
     )
 
@@ -40,9 +41,21 @@ data class PostEntity(
                 dto.likedByMe,
                 dto.likes,
                 dto.authorAvatar,
-                true
+                true,
+                !dto.attachment?.url.isNullOrBlank()
             )
 
     }
 }
+@Entity
+data class AttachEntity
+    (
+    @PrimaryKey
+    val idPost: Long,
+    val url: String,
+    val description: String,
+    val type: String
+)
+
+
 
