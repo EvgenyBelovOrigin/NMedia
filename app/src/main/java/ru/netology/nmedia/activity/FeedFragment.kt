@@ -60,6 +60,11 @@ class FeedFragment : Fragment() {
             adapter.submitList(state.posts)
             binding.emptyText.isVisible = state.empty
         }
+
+        viewModel.newPostsCount.observe(viewLifecycleOwner){
+            println(it)
+        }
+
         viewModel.dataState.observe(viewLifecycleOwner) { state ->
             binding.progress.isVisible = state.loading
             if (state.error) {

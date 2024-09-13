@@ -1,6 +1,10 @@
 package ru.netology.nmedia.repository
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import ru.netology.nmedia.api.PostsApi
@@ -18,6 +22,25 @@ class PostRepositoryImpl(
     override val posts = dao.getAll().map {
         it.map(PostEntity::toDto)
     }
+
+    override fun getNewer(id: Int, size: Int): Flow<Int> = flow {
+        while (true) {
+            delay(10_000)
+            if (size == dao.count()) {
+                val response = PostsApi.service.getNewer(id.toLong())
+                if (!response.isSuccessful) {
+                    throw ApiError(response.code(), response.message())
+                }
+                val body = response.body() ?: throw ApiError(response.code(), response.message())
+                dao.insert(body.map { PostEntity.fromDto(it, true) })
+                emit(body.size)
+            }
+
+
+        }
+    }
+        .catch { it.printStackTrace() }
+
     override suspend fun getAll() {
         try {
             val response = PostsApi.service.getAll()
@@ -26,7 +49,7 @@ class PostRepositoryImpl(
             }
 
             val body = response.body() ?: throw ApiError(response.code(), response.message())
-            dao.insert(body.map(PostEntity::fromDto))
+            dao.insert(body.map{ PostEntity.fromDto(it, false) })
             dao.removeByIsSaved()
         } catch (e: IOException) {
             throw NetworkError
@@ -52,14 +75,14 @@ class PostRepositoryImpl(
 
     override suspend fun save(post: Post) {
         try {
-            dao.insert(PostEntity.fromDto(post).copy(isSaved = false))
+            dao.insert(PostEntity.fromDto(post,false).copy(isSaved = false))
             val response = PostsApi.service.save(post)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
 
             val body = response.body() ?: throw ApiError(response.code(), response.message())
-            dao.insert(PostEntity.fromDto(body))
+            dao.insert(PostEntity.fromDto(body,false))
             dao.removeByIsSaved()
         } catch (e: IOException) {
             throw NetworkError

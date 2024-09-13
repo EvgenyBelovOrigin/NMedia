@@ -15,6 +15,7 @@ data class PostEntity(
     val likes: Int = 0,
     val authorAvataatar: String?,
     val isSaved: Boolean,
+    val isNewPost: Boolean,
     val attachment: Boolean,
 
     ) {
@@ -32,7 +33,7 @@ data class PostEntity(
     )
 
     companion object {
-        fun fromDto(dto: Post) =
+        fun fromDto(dto: Post, isNewPost: Boolean) =
             PostEntity(
                 dto.id,
                 dto.author,
@@ -42,6 +43,7 @@ data class PostEntity(
                 dto.likes,
                 dto.authorAvatar,
                 true,
+                isNewPost,
                 !dto.attachment?.url.isNullOrBlank()
             )
 

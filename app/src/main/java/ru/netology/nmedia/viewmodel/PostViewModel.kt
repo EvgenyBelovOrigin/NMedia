@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -44,6 +44,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         it.printStackTrace()
     }.asLiveData(Dispatchers.Default)
 
+    val newPostsCount: LiveData<Int> = data.switchMap { feedModel ->
+        repository.getNewer(feedModel.posts.firstOrNull()?.id?.toInt() ?: 0, feedModel.posts.size)
+            .asLiveData(Dispatchers.Default, 1_000)
+    }
 
     private val _dataState = MutableLiveData(FeedModelState())
     val dataState: LiveData<FeedModelState>
