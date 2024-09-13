@@ -1,7 +1,8 @@
 package ru.netology.nmedia.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import ru.netology.nmedia.api.PostsApi
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
@@ -14,10 +15,9 @@ import java.io.IOException
 class PostRepositoryImpl(
     private val dao: PostDao,
 ) : PostRepository {
-    override val posts: LiveData<List<Post>> = dao.getAll().map {
+    override val posts = dao.getAll().map {
         it.map(PostEntity::toDto)
     }
-
     override suspend fun getAll() {
         try {
             val response = PostsApi.service.getAll()
