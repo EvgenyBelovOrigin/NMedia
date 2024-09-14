@@ -44,11 +44,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         it.printStackTrace()
     }.asLiveData(Dispatchers.Default)
 
-    val newPostsCount: LiveData<Int> = data.switchMap { feedModel ->
-        repository.getNewer(feedModel.posts.firstOrNull()?.id?.toInt() ?: 0, feedModel.posts.size)
-            .asLiveData(Dispatchers.Default, 1_000)
-    }
-
     private val _dataState = MutableLiveData(FeedModelState())
     val dataState: LiveData<FeedModelState>
         get() = _dataState
@@ -70,7 +65,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     init {
         loadPosts()
     }
-
+    val newPostsCount: LiveData<Int> = data.switchMap { feedModel ->
+        repository.getNewer(feedModel.posts.firstOrNull()?.id?.toInt() ?: 0, feedModel.posts.size)
+            .asLiveData(Dispatchers.Default, 1_000)
+    }
     fun loadPosts() {
         _dataState.value = FeedModelState(loading = true)
 

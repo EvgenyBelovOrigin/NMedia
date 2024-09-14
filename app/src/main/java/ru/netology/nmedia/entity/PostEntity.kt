@@ -49,15 +49,6 @@ data class PostEntity(
 
     }
 }
-@Entity
-data class AttachEntity
-    (
-    @PrimaryKey
-    val idPost: Long,
-    val url: String,
-    val description: String,
-    val type: String
-)
 
 
 
