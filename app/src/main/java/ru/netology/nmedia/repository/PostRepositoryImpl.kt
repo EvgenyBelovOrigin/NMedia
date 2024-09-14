@@ -19,7 +19,10 @@ import java.io.IOException
 class PostRepositoryImpl(
     private val dao: PostDao,
 ) : PostRepository {
-    override val posts = dao.getAll().map {
+    override val posts = dao.getAllWithoutNew().map {
+        it.map(PostEntity::toDto)
+    }
+    override val postsWhole = dao.getAll().map {
         it.map(PostEntity::toDto)
     }
 
@@ -41,6 +44,10 @@ class PostRepositoryImpl(
     }
         .catch { it.printStackTrace() }
 
+    override suspend fun makeOld() {
+        dao.makeOld()
+    }
+
     override suspend fun getAll() {
         try {
             val response = PostsApi.service.getAll()
@@ -49,7 +56,8 @@ class PostRepositoryImpl(
             }
 
             val body = response.body() ?: throw ApiError(response.code(), response.message())
-            dao.insert(body.map{ PostEntity.fromDto(it, false) })
+            dao.insert(body.map { PostEntity.fromDto(it, false) })
+            dao.makeOld()
             dao.removeByIsSaved()
         } catch (e: IOException) {
             throw NetworkError
@@ -75,14 +83,14 @@ class PostRepositoryImpl(
 
     override suspend fun save(post: Post) {
         try {
-            dao.insert(PostEntity.fromDto(post,false).copy(isSaved = false))
+            dao.insert(PostEntity.fromDto(post, false).copy(isSaved = false))
             val response = PostsApi.service.save(post)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
 
             val body = response.body() ?: throw ApiError(response.code(), response.message())
-            dao.insert(PostEntity.fromDto(body,false))
+            dao.insert(PostEntity.fromDto(body, false))
             dao.removeByIsSaved()
         } catch (e: IOException) {
             throw NetworkError

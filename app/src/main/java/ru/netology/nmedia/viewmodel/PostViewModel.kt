@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +45,13 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         it.printStackTrace()
     }.asLiveData(Dispatchers.Default)
 
+    private val dataWhole: LiveData<FeedModel> = repository.postsWhole.map {
+        FeedModel(it, it.isEmpty())
+    }.catch {
+        it.printStackTrace()
+    }.asLiveData(Dispatchers.Default)
+
+
     private val _dataState = MutableLiveData(FeedModelState())
     val dataState: LiveData<FeedModelState>
         get() = _dataState
@@ -65,10 +73,12 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     init {
         loadPosts()
     }
-    val newPostsCount: LiveData<Int> = data.switchMap { feedModel ->
+
+    val newPostsCount: LiveData<Int> = dataWhole.switchMap { feedModel ->
         repository.getNewer(feedModel.posts.firstOrNull()?.id?.toInt() ?: 0, feedModel.posts.size)
             .asLiveData(Dispatchers.Default, 1_000)
     }
+
     fun loadPosts() {
         _dataState.value = FeedModelState(loading = true)
 
@@ -151,4 +161,14 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun makeOld() {
+        viewModelScope.launch {
+            try {
+                repository.makeOld()
+
+            } catch (e: Exception) {
+                _dataState.value = FeedModelState(error = true)
+            }
+        }
+    }
 }

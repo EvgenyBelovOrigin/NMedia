@@ -64,6 +64,15 @@ class FeedFragment : Fragment() {
         viewModel.newPostsCount.observe(viewLifecycleOwner){
             println(it)
         }
+        viewModel.newPostsCount.observe(viewLifecycleOwner){
+            binding.refreshPosts.isVisible = true
+        }
+
+        binding.refreshPosts.setOnClickListener {
+            viewModel.makeOld()
+            binding.refreshPosts.isVisible = false
+            binding.list.smoothScrollToPosition(0)
+        }
 
         viewModel.dataState.observe(viewLifecycleOwner) { state ->
             binding.progress.isVisible = state.loading
