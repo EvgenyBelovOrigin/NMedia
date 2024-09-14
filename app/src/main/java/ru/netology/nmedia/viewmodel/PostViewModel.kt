@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -65,10 +64,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val _onLikeError = SingleLiveEvent<Long>()
     val onLikeError: LiveData<Long>
         get() = _onLikeError
-
-    private val _onSaveError = SingleLiveEvent<Unit>()
-    val onSaveError: LiveData<Unit>
-        get() = _onSaveError
 
     init {
         loadPosts()
