@@ -12,12 +12,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.viewmodel.PostViewModel
+import kotlin.concurrent.thread
 
 class FeedFragment : Fragment() {
 
@@ -57,21 +59,24 @@ class FeedFragment : Fragment() {
         })
         binding.list.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
+            val newPost = state.posts.size > adapter.currentList.size && adapter.currentList.size > 0
             adapter.submitList(state.posts)
+            if (newPost) {
+                binding.list.smoothScrollToPosition(0)
+            }
             binding.emptyText.isVisible = state.empty
         }
 
-        viewModel.newPostsCount.observe(viewLifecycleOwner){
-            println(it)
-        }
-        viewModel.newPostsCount.observe(viewLifecycleOwner){
-            binding.refreshPosts.isVisible = true
+
+        viewModel.newPostsCount.observe(viewLifecycleOwner) {
+            if (it > 0) {
+                binding.refreshPosts.isVisible = true
+            }
         }
 
         binding.refreshPosts.setOnClickListener {
             viewModel.makeOld()
             binding.refreshPosts.isVisible = false
-            binding.list.smoothScrollToPosition(0)
         }
 
         viewModel.dataState.observe(viewLifecycleOwner) { state ->
