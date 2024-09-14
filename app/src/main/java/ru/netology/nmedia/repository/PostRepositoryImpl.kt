@@ -23,7 +23,7 @@ class PostRepositoryImpl(
         it.map(PostEntity::toDto)
     }
 
-    override fun getNewer(id: Int, size: Int): Flow<Int> = flow {
+    override fun getNewer(id: Int, size: Int): Flow<Unit> = flow {
         while (true) {
             delay(10_000)
             if (size == dao.count()) {
@@ -33,7 +33,7 @@ class PostRepositoryImpl(
                 }
                 val body = response.body() ?: throw ApiError(response.code(), response.message())
                 dao.insert(body.map { PostEntity.fromDto(it, true) })
-                emit(body.size)
+                emit(Unit)
             }
 
 
