@@ -50,34 +50,25 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     val edited = MutableLiveData(empty)
 
-    private val _postCreated = SingleLiveEvent<Unit>(findNewPosts())
+    private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
-    private val _onLikeError = SingleLiveEvent<Long>(findNewPosts())
+    private val _onLikeError = SingleLiveEvent<Long>()
     val onLikeError: LiveData<Long>
         get() = _onLikeError
 
-    private val _newPosts = SingleLiveEvent<Unit>(findNewPosts())
-    val newPosts: LiveData<Unit>
-        get() = _newPosts
+    private val _onSaveError = SingleLiveEvent<Unit>()
+    val onSaveError: LiveData<Unit>
+        get() = _onSaveError
 
     init {
         loadPosts()
-        findNewPosts()
     }
-
-    fun findNewPosts(){
-        val newPostsCount = data.switchMap { feedModel ->
-            repository.getNewer(feedModel.posts.firstOrNull()?.id?.toInt() ?: 0, feedModel.posts.size)
-                .asLiveData(Dispatchers.Default, 1_000)
-
+    val newPostsCount: LiveData<Int> = data.switchMap { feedModel ->
+        repository.getNewer(feedModel.posts.firstOrNull()?.id?.toInt() ?: 0, feedModel.posts.size)
+            .asLiveData(Dispatchers.Default, 1_000)
     }
-    }
-//    val newPostsCount: LiveData<Int> = data.switchMap { feedModel ->
-//        repository.getNewer(feedModel.posts.firstOrNull()?.id?.toInt() ?: 0, feedModel.posts.size)
-//            .asLiveData(Dispatchers.Default, 1_000)
-
     fun loadPosts() {
         _dataState.value = FeedModelState(loading = true)
 
