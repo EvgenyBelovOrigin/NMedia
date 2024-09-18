@@ -22,19 +22,51 @@
         android:gravity="start|top"
         android:inputType="textMultiLine" />
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
-        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+    <FrameLayout
+        android:id="@+id/photoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/removePhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"/>
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/buttonPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
+        android:layout_gravity="bottom"
+        android:background="?colorPrimary"
+        android:orientation="horizontal">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/description_post_save"
-        app:layout_anchor="@id/bottomAppBar"
-        app:srcCompat="@drawable/ic_ok_24dp" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/pickPhoto"
+            style="@style/Widget.AppTheme.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/common_spacing"
+            app:icon="@drawable/ic_photo_24dp"
+            app:iconTint="?colorOnPrimary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/takePhoto"
+            style="@style/Widget.AppTheme.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/common_spacing"
+            app:icon="@drawable/ic_camera_24dp"
+            app:iconTint="?colorOnPrimary" />
+    </LinearLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
