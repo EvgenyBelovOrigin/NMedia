@@ -46,19 +46,6 @@ class NewPostFragment : Fragment() {
 
         }
 
-        viewModel.onSaveError.observe(viewLifecycleOwner) {
-            binding.progress.isVisible = false
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.error)
-                .setMessage(R.string.error_saving)
-                .setPositiveButton(R.string.return_to_posts) { _, _
-                    ->
-                    findNavController().navigateUp()
-                }
-                .setNegativeButton(R.string.try_again, null)
-                .show()
-            binding.ok.isVisible = true
-        }
         viewModel.postCreated.observe(viewLifecycleOwner) {
             viewModel.loadPosts()
             findNavController().navigateUp()

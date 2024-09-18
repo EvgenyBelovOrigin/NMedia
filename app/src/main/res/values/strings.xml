@@ -27,4 +27,5 @@
     <string name="error_delete">Something goes wrong. Deleting was cancelled. Try again later</string>
     <string name="error_like">Something goes wrong. Your like hasn\'t been registered. Try again later</string>
     <string name="ok">OK</string>
+    <string name="fresh_posts" >Fresh posts found</string>
 </resources>

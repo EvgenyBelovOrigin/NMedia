@@ -11,18 +11,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.viewmodel.PostViewModel
+import kotlin.concurrent.thread
 
 class FeedFragment : Fragment() {
 
     private val viewModel: PostViewModel by activityViewModels()
-    // test
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,6 +34,7 @@ class FeedFragment : Fragment() {
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
+                findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
             }
 
             override fun onLike(post: Post) {
@@ -57,30 +59,61 @@ class FeedFragment : Fragment() {
         })
         binding.list.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
+            val newPost = state.posts.size > adapter.currentList.size && adapter.currentList.size > 0
             adapter.submitList(state.posts)
-            binding.progress.isVisible = state.loading
-            binding.errorGroup.isVisible = state.error
+            if (newPost) {
+                binding.list.smoothScrollToPosition(0)
+            }
             binding.emptyText.isVisible = state.empty
         }
 
-        binding.retryButton.setOnClickListener {
-            viewModel.loadPosts()
+
+        viewModel.newPostsCount.observe(viewLifecycleOwner) {
+            if (it > 0) {
+                binding.refreshPosts.isVisible = true
+            }
         }
 
+        binding.refreshPosts.setOnClickListener {
+            viewModel.makeOld()
+            binding.refreshPosts.isVisible = false
+        }
+
+        viewModel.dataState.observe(viewLifecycleOwner) { state ->
+            binding.progress.isVisible = state.loading
+            if (state.error) {
+                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.retry_loading) {
+                        viewModel.loadPosts()
+                    }
+                    .show()
+            }
+            if (state.onDeleteError) {
+                Toast.makeText(
+                    activity,
+                    R.string.error_delete,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            if (state.onSaveError) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.error)
+                    .setMessage(R.string.error_saving)
+                    .setPositiveButton(R.string.try_again) { _, _
+                        ->
+                        findNavController().navigate(R.id.newPostFragment)
+                    }
+                    .setNegativeButton(R.string.return_to_posts, null)
+                    .show()
+            }
+
+            binding.swiperefresh.isRefreshing = state.refreshing
+        }
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }
         binding.swiperefresh.setOnRefreshListener {
-            viewModel.loadPosts()
-            binding.swiperefresh.isRefreshing = false
-        }
-        viewModel.edited.observe(viewLifecycleOwner) { post ->
-            if (post.id == 0L) {
-                return@observe
-            }
-            findNavController().navigate(
-                R.id.newPostFragment,
-            )
+            viewModel.refresh()
         }
         viewModel.onLikeError.observe(viewLifecycleOwner) { id ->
             MaterialAlertDialogBuilder(requireContext())
@@ -92,15 +125,6 @@ class FeedFragment : Fragment() {
                 .takeIf { it != -1 }
                 ?.let(adapter::notifyItemChanged)
         }
-        viewModel.onDeleteError.observe(viewLifecycleOwner) {
-            Toast.makeText(
-                activity,
-                R.string.error_delete,
-                Toast.LENGTH_LONG
-            ).show()
-        }
-
-
         return binding.root
     }
 }

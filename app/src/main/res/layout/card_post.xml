@@ -131,5 +131,15 @@
             app:icon="@drawable/ic_share_24"
             style="@style/Widget.AppTheme.IconButton"
             />
+        <ImageView
+            android:id="@+id/saving"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_spacing"
+            app:layout_constraintStart_toEndOf="@id/share"
+            app:layout_constraintTop_toBottomOf="@id/footer"
+            app:srcCompat="@drawable/baseline_access_time_24"
+            style="@style/Widget.AppTheme.IconButton"
+            tools:ignore="ContentDescription" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
