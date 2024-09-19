@@ -23,7 +23,7 @@
             <EditText
                 android:id="@+id/edit"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="126dp"
                 android:background="@android:color/transparent"
                 android:inputType="textMultiLine"
                 tools:text="@tools:sample/lorem[100]"

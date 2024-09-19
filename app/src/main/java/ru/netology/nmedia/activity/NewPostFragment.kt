@@ -2,8 +2,12 @@ package ru.netology.nmedia.activity
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -22,7 +26,6 @@ class NewPostFragment : Fragment() {
     }
 
     private val viewModel: PostViewModel by activityViewModels()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,6 +40,25 @@ class NewPostFragment : Fragment() {
         arguments?.textArg
             ?.let(binding.edit::setText)
         binding.edit.requestFocus()
+        requireActivity().addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.menu_new_post, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    if (menuItem.itemId == R.id.save) {
+                        viewModel.changeContent(binding.edit.text.toString())
+                        viewModel.save()
+                        AndroidUtils.hideKeyboard(requireView())
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            viewLifecycleOwner,
+        )
 //        binding.ok.setOnClickListener {
 //            viewModel.changeContent(binding.edit.text.toString())
 //            viewModel.save()
