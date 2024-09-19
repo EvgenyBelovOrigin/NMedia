@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentNewPostBinding
@@ -36,10 +37,38 @@ class NewPostFragment : Fragment() {
             container,
             false
         )
+
+
         binding.edit.setText(viewModel.edited.value?.content)
         arguments?.textArg
             ?.let(binding.edit::setText)
         binding.edit.requestFocus()
+
+        binding.pickPhoto.setOnClickListener{
+            ImagePicker.with(this)
+                .crop()
+                .compress(2048)
+                .cameraOnly()
+                .createIntent {
+
+                }
+        }
+
+        binding.takePhoto.setOnClickListener{
+            ImagePicker.with(this)
+                .crop()
+                .compress(2048)
+                .galleryOnly()
+                .galleryMimeTypes(
+                    arrayOf(
+                        "image/png",
+                        "image/jpg",
+                        "image/jpeg"
+                    )
+                )
+
+        }
+
         requireActivity().addMenuProvider(
             object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
