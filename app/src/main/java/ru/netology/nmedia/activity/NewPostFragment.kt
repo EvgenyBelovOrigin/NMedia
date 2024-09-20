@@ -7,13 +7,14 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toFile
 import androidx.core.view.MenuProvider
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentNewPostBinding
 import ru.netology.nmedia.util.AndroidUtils
@@ -44,17 +45,30 @@ class NewPostFragment : Fragment() {
             ?.let(binding.edit::setText)
         binding.edit.requestFocus()
 
-        binding.pickPhoto.setOnClickListener{
+        val imagePickerLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == ImagePicker.RESULT_ERROR) {
+                    Snackbar.make(
+                        binding.root,
+                        ImagePicker.getError(it.data),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                } else {
+                    val uri = it.data?.data ?: return@registerForActivityResult
+                    viewModel.updatePhoto(uri, uri.toFile())
+                }
+            }
+        binding.takePhoto.setOnClickListener {
             ImagePicker.with(this)
                 .crop()
                 .compress(2048)
                 .cameraOnly()
                 .createIntent {
-
+                    imagePickerLauncher.launch(it)
                 }
         }
 
-        binding.takePhoto.setOnClickListener{
+        binding.pickPhoto.setOnClickListener {
             ImagePicker.with(this)
                 .crop()
                 .compress(2048)
@@ -66,6 +80,7 @@ class NewPostFragment : Fragment() {
                         "image/jpeg"
                     )
                 )
+                .createIntent(imagePickerLauncher::launch)
 
         }
 
