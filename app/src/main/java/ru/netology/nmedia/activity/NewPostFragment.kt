@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toFile
 import androidx.core.view.MenuProvider
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -17,6 +19,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentNewPostBinding
+import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.util.AndroidUtils
 import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.viewmodel.PostViewModel
@@ -31,7 +34,7 @@ class NewPostFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val binding = FragmentNewPostBinding.inflate(
             inflater,
@@ -58,6 +61,17 @@ class NewPostFragment : Fragment() {
                     viewModel.updatePhoto(uri, uri.toFile())
                 }
             }
+        viewModel.photo.observe(viewLifecycleOwner) { photo ->
+            if (photo == null) {
+                binding.photoContainer.isGone = true
+                return@observe
+            }
+            binding.photoContainer.isVisible = true
+            binding.photo.setImageURI(photo.uri)
+        }
+        binding.removePhoto.setOnClickListener {
+            viewModel.clearPhoto()
+        }
         binding.takePhoto.setOnClickListener {
             ImagePicker.with(this)
                 .crop()
