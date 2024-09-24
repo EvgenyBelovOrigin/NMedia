@@ -46,6 +46,7 @@ class NewPostFragment : Fragment() {
         binding.edit.setText(viewModel.edited.value?.content)
         arguments?.textArg
             ?.let(binding.edit::setText)
+
         binding.edit.requestFocus()
 
         val imagePickerLauncher =
@@ -62,7 +63,7 @@ class NewPostFragment : Fragment() {
                 }
             }
         viewModel.photo.observe(viewLifecycleOwner) { photo ->
-            if (photo == null) {
+            if (photo.uri == null) {
                 binding.photoContainer.isGone = true
                 return@observe
             }
