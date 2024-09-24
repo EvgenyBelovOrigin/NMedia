@@ -34,14 +34,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/groupPhotoContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:constraint_referenced_ids="photo,removePhoto">
-
-                </androidx.constraintlayout.widget.Group>
 
                 <ImageView
                     android:id="@+id/photo"
