@@ -46,8 +46,8 @@ class PostViewHolder(
     fun bind(post: Post) {
         binding.apply {
             avatar.loadAvatar("$baseUrl/avatars/${post.authorAvatar}")
-            attachmentImage.isVisible = false
-            attachmentImage.loadAttachmentView("$baseUrl/images/${post.attachment?.url}")
+            attachmentImage.isVisible = !post.attachment?.url.isNullOrBlank()
+            attachmentImage.loadAttachmentView("$baseUrl/media/${post.attachment?.url}")
             author.text = post.author
             published.text = post.published
             content.text = post.content

@@ -9,7 +9,6 @@ data class Post(
     val likes: Int = 0,
     val authorAvatar: String?,
     val isSaved:Boolean,
-    val attachmentIsEnable:Boolean,
     val attachment: Attachment? = null,
 )
 

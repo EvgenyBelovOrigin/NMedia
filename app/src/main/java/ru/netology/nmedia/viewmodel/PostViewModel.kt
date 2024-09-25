@@ -32,7 +32,6 @@ private val empty = Post(
     published = "",
     authorAvatar = "",
     isSaved = true,
-    attachmentIsEnable = false,
     attachment = null
 )
 

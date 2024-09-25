@@ -32,7 +32,6 @@ data class PostEntity(
         likes,
         authorAvataatar,
         isSaved,
-        attachment?.url.isNullOrBlank(),
         attachment = attachment
     )
 
