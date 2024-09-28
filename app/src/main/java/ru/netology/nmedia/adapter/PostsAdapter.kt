@@ -20,6 +20,7 @@ interface OnInteractionListener {
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
     fun onShare(post: Post) {}
+    fun onShowAttachmentViewFullScreen(post: Post) {}
 }
 
 class PostsAdapter(
@@ -82,6 +83,9 @@ class PostViewHolder(
 
             share.setOnClickListener {
                 onInteractionListener.onShare(post)
+            }
+            attachmentImage.setOnClickListener {
+                onInteractionListener.onShowAttachmentViewFullScreen(post)
             }
         }
     }

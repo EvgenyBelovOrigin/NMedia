@@ -1,5 +1,6 @@
 package ru.netology.nmedia.activity
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -7,39 +8,56 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toFile
+import androidx.activity.addCallback
+
 import androidx.core.view.MenuProvider
-import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.github.dhaval2404.imagepicker.ImagePicker
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentAttachmentViewFullScreenBinding
-import ru.netology.nmedia.util.AndroidUtils
+import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.StringArg
+import ru.netology.nmedia.util.loadAttachmentView
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class AttachmentViewFullScreenFragment : Fragment() {
 
-//    companion object {
-//        var Bundle.textArg: String? by StringArg
-//    }
-
-    private val viewModel: PostViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val binding = FragmentAttachmentViewFullScreenBinding.inflate(
-            inflater,
-            container,
-            false
-        )
+        val binding = FragmentAttachmentViewFullScreenBinding.inflate(inflater, container, false)
+        val viewModel: PostViewModel by activityViewModels()
+        val postId = arguments?.textArg?.toLong() ?: { error()}
+//        var post: Post? = null
+        val baseUrl = BuildConfig.BASE_URL
+        viewModel.data.observe(viewLifecycleOwner) { data ->
+            val post = data.posts.firstOrNull { it.id == postId } ?: null
+            if (post == null) {
+                error()
+            }
+            binding.attachmentViewFullScreen
+                .loadAttachmentView("$baseUrl/media/${post?.attachment?.url}")
+            binding.like.isChecked = post?.likedByMe ?: false //?????
+            binding.like.text = "${post?.likes}"
+        }
+
+
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigateUp()
+        }
+//        binding.attachmentViewFullScreen
+//            .loadAttachmentView("$baseUrl/media/${post?.attachment?.url}")
+
+
+
+
+//        binding.like.setOnClickListener()
 
 
 //        binding.edit.setText(viewModel.edited.value?.content)
@@ -47,20 +65,6 @@ class AttachmentViewFullScreenFragment : Fragment() {
 //            ?.let(binding.edit::setText)
 //
 //        binding.edit.requestFocus()
-
-        val imagePickerLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                if (it.resultCode == ImagePicker.RESULT_ERROR) {
-                    Snackbar.make(
-                        binding.root,
-                        ImagePicker.getError(it.data),
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                } else {
-                    val uri = it.data?.data ?: return@registerForActivityResult
-                    viewModel.updatePhoto(uri, uri.toFile())
-                }
-            }
 
 
         requireActivity().addMenuProvider(
@@ -83,10 +87,26 @@ class AttachmentViewFullScreenFragment : Fragment() {
             viewLifecycleOwner,
         )
 
-//        viewModel.postCreated.observe(viewLifecycleOwner) {
+        //        viewModel.postCreated.observe(viewLifecycleOwner) {
 ////            viewModel.loadPosts()
 //            findNavController().navigateUp()
 //        }
+
         return binding.root
+    }
+
+    private fun error() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.error)
+            .setMessage(R.string.error_loading)
+            .setPositiveButton(R.string.ok) {
+                    _, _,
+                ->
+                findNavController().navigateUp()
+            }
+            .show()    }
+
+    companion object {
+        var Bundle.textArg: String? by StringArg
     }
 }

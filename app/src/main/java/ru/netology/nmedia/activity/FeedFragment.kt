@@ -14,6 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import ru.netology.nmedia.R
+import ru.netology.nmedia.activity.AttachmentViewFullScreenFragment.Companion.textArg
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
@@ -55,6 +56,13 @@ class FeedFragment : Fragment() {
                 val shareIntent =
                     Intent.createChooser(intent, getString(R.string.chooser_share_post))
                 startActivity(shareIntent)
+            }
+
+            override fun onShowAttachmentViewFullScreen(post: Post) {
+                findNavController().navigate(R.id.action_feedFragment_to_attachmentViewFullScreen,
+                    Bundle().apply {
+                        textArg = post.id.toString()
+                    })
             }
         })
         binding.list.adapter = adapter

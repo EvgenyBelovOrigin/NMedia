@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBlack"
     tools:context=".activity.NewPostFragment">
 
     <FrameLayout
@@ -40,7 +41,7 @@
         android:id="@+id/buttonPanel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?colorPrimary"
+        android:background="@color/colorBlack"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,8 +53,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
+            app:iconTint="@color/colorWhite"
             android:contentDescription="@string/description_post_like"
             app:icon="@drawable/ic_like_24dp"
+            android:textColor="@color/colorWhite"
             tools:checked="@sample/posts.json/data/likedByMe"
             tools:text="@sample/posts.json/data/likes" />
 
@@ -62,6 +65,8 @@
             style="@style/Widget.AppTheme.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:iconTint="@color/colorWhite"
+            android:textColor="@color/colorWhite"
             android:layout_marginStart="@dimen/common_spacing"
             android:contentDescription="@string/description_post_share"
             app:icon="@drawable/ic_share_24" />
