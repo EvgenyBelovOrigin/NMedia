@@ -28,4 +28,5 @@
     <string name="error_like">Something goes wrong. Your like has not been registered. Try again later</string>
     <string name="ok">OK</string>
     <string name="fresh_posts" >Fresh posts found</string>
+    <string name="close" >Close</string>
 </resources>
