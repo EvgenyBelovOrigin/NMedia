@@ -9,9 +9,15 @@ data class Post(
     val likes: Int = 0,
     val authorAvatar: String?,
     val isSaved:Boolean,
-    val attachmentIsEnable:Boolean,
-    val attachment: Attach?
+    val attachment: Attachment? = null,
 )
 
-data class Attach(val url: String, val description: String, val type: String)
+data class Attachment(
+    val url: String,
+//    val description: String,
+    val type: AttachmentType,
+)
+enum class AttachmentType {
+    IMAGE
+}
 

@@ -25,7 +25,8 @@
     <string name="try_again">Try again</string>
     <string name="return_to_posts">Return to posts</string>
     <string name="error_delete">Something goes wrong. Deleting was cancelled. Try again later</string>
-    <string name="error_like">Something goes wrong. Your like hasn\'t been registered. Try again later</string>
+    <string name="error_like">Something goes wrong. Your like has not been registered. Try again later</string>
     <string name="ok">OK</string>
     <string name="fresh_posts" >Fresh posts found</string>
+    <string name="close" >Close</string>
 </resources>

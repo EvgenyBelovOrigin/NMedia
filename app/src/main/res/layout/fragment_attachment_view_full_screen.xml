@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlack"
+    tools:context=".activity.NewPostFragment">
+
+    <FrameLayout
+        android:id="@+id/photoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <ImageView
+            android:id="@+id/attachmentViewFullScreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="true"
+            android:visibility="visible"
+            tools:ignore="ContentDescription"
+            tools:src="@tools:sample/avatars[15]" />
+    </FrameLayout>
+
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/common_spacing"
+        android:layout_marginEnd="@dimen/common_spacing"
+        app:layout_constraintBottom_toTopOf="@id/buttonPanel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/buttonPanel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlack"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/like"
+            style="@style/Widget.AppTheme.LikeCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            app:iconTint="@color/colorWhite"
+            android:contentDescription="@string/description_post_like"
+            app:icon="@drawable/ic_like_24dp"
+            android:textColor="@color/colorWhite"
+            tools:checked="@sample/posts.json/data/likedByMe"
+            tools:text="@sample/posts.json/data/likes" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/share"
+            style="@style/Widget.AppTheme.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:iconTint="@color/colorWhite"
+            android:textColor="@color/colorWhite"
+            android:layout_marginStart="@dimen/common_spacing"
+            android:contentDescription="@string/description_post_share"
+            app:icon="@drawable/ic_share_24" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
