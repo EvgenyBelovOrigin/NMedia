@@ -30,4 +30,7 @@
     <string name="ok">Хорошо</string>
     <string name="fresh_posts" >Свежие записи</string>
     <string name="close">Закрыть</string>
+    <string name="sign_in">Войти</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="sign_out">Выйти</string>
 </resources>
