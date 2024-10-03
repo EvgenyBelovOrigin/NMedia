@@ -33,4 +33,6 @@
     <string name="sign_in">Войти</string>
     <string name="sign_up">Зарегистрироваться</string>
     <string name="sign_out">Выйти</string>
+    <string name="login">Имя пользователя</string>
+    <string name="password">пароль</string>
 </resources>

@@ -28,20 +28,21 @@ class AppAuth private constructor(context: Context) {
 
     @Synchronized
     fun setAuth(token: Token) {
-        prefs.edit {
+        with( prefs.edit()) {
             putLong(ID_KEY, token.id)
             putString(TOKEN_KEY, token.token)
+            apply()
         }
         _authState.value = token
     }
 
     @Synchronized
     fun clear() {
-        prefs.edit {
+        with( prefs.edit()) {
             clear()
             commit()
         }
-        _authState.value = null
+        _authState.value = Token(0, null.toString())
     }
 
 
