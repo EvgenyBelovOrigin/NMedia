@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.NewPostFragment">
+
+    <LinearLayout
+        android:id="@+id/signInFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_spacing"
+        android:background="@color/colorAccent"
+        android:orientation="vertical"
+        android:padding="@dimen/common_spacing"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/loginText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_spacing"
+            android:text="@string/login"
+            android:textColor="@color/design_default_color_on_secondary">
+
+        </TextView>
+
+        <EditText
+            android:id="@+id/loginEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_spacing"
+            android:background="@color/colorWhite"
+            >
+
+        </EditText>
+
+        <TextView
+            android:id="@+id/passText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_spacing"
+            android:text="@string/password"
+            android:textColor="@color/design_default_color_on_secondary">
+
+        </TextView>
+
+        <EditText
+            android:id="@+id/passEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_spacing"
+            android:background="@color/colorWhite">
+
+        </EditText>
+
+        <Button
+            android:id="@+id/signInButton"
+            android:layout_margin="@dimen/common_spacing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_in">
+
+        </Button>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

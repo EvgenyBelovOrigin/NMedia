@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.netology.nmedia.dto.Media
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.dto.Token
 
 interface PostRepository {
     val posts: Flow<List<Post>>
@@ -18,5 +19,6 @@ interface PostRepository {
     suspend fun removeById(id: Long)
     suspend fun disLikeById(id: Long)
     suspend fun upload(upload: MediaUpload): Media
+    suspend fun signIn(login: String, password:String)
 
 }
