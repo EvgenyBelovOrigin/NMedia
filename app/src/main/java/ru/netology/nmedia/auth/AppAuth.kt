@@ -9,7 +9,7 @@ import ru.netology.nmedia.dto.Token
 
 class AppAuth private constructor(context: Context) {
     private val prefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
-    private val _authState = MutableStateFlow<Token?>(null)
+    private val _authState = MutableStateFlow<Token?>(Token(0, null.toString()))
 
 
     init {
@@ -60,5 +60,6 @@ class AppAuth private constructor(context: Context) {
         fun initApp(context: Context) {
             INSTANCE = AppAuth(context.applicationContext)
         }
+
     }
 }

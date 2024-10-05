@@ -10,6 +10,8 @@
         android:id="@+id/signInFrame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_spacing"
+        android:background="@color/colorAccent"
         android:orientation="vertical"
         android:padding="@dimen/common_spacing"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,7 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_spacing"
-            android:text="@string/login">
+            android:text="@string/login"
+            android:textColor="@color/design_default_color_on_secondary">
 
         </TextView>
 
@@ -32,7 +35,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_spacing"
-            android:background="@drawable/edit_text_border">
+            android:background="@color/colorWhite"
+            >
 
         </EditText>
 
@@ -41,7 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_spacing"
-            android:text="@string/password">
+            android:text="@string/password"
+            android:textColor="@color/design_default_color_on_secondary">
 
         </TextView>
 
@@ -50,10 +55,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_spacing"
-            android:inputType="textVisiblePassword"
-            android:background="@drawable/edit_text_border">
+            android:background="@color/colorWhite">
 
         </EditText>
+
+        <Button
+            android:id="@+id/signInButton"
+            android:layout_margin="@dimen/common_spacing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_in">
+
+        </Button>
     </LinearLayout>
 
 

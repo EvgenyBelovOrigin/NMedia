@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 //import com.example.nmedia.R
 import com.google.android.gms.common.ConnectionResult
@@ -66,10 +67,12 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                     when (menuItem.itemId) {
-                        R.id.signin ->{
-                            AppAuth.getInstance().setAuth(Token(5, "x-token"))
+                        R.id.signin -> {
+                            findNavController(R.id.nav_host_fragment).navigate(R.id.signInFragment)
+//                            AppAuth.getInstance().setAuth(Token(5, "x-token"))
                             true
                         }
+
                         R.id.signup -> {
                             AppAuth.getInstance().setAuth((Token(5, "x-token")))
                             true
@@ -123,3 +126,4 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
         }
     }
 }
+
