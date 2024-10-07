@@ -35,4 +35,5 @@
     <string name="sign_out">Выйти</string>
     <string name="login">Имя пользователя</string>
     <string name="password">пароль</string>
+    <string name="wrongSignInData">неверное имя пользователя или пароль</string>
 </resources>

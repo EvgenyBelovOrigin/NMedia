@@ -9,7 +9,7 @@ import ru.netology.nmedia.dto.Token
 
 class AppAuth private constructor(context: Context) {
     private val prefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
-    private val _authState = MutableStateFlow<Token?>(Token(0, null.toString()))
+    private val _authState = MutableStateFlow<Token?>(Token(0,null))
 
 
     init {
@@ -42,7 +42,7 @@ class AppAuth private constructor(context: Context) {
             clear()
             commit()
         }
-        _authState.value = Token(0, null.toString())
+        _authState.value = Token(0, null)
     }
 
 
@@ -53,13 +53,15 @@ class AppAuth private constructor(context: Context) {
         @Volatile
         private var INSTANCE: AppAuth? = null
 
-        fun getInstance(): AppAuth = requireNotNull(INSTANCE) {
-            "You should call initApp(context) first"
+        fun getInstance(): AppAuth = synchronized(this) {
+            INSTANCE ?: throw IllegalStateException(
+                "AppAuth is not initialized, you must call AppAuth.initializeApp(Context context) first."
+            )
         }
-
-        fun initApp(context: Context) {
-            INSTANCE = AppAuth(context.applicationContext)
+        fun initApp(context: Context): AppAuth = INSTANCE ?: synchronized(this) {
+            INSTANCE ?: buildAuth(context).also { INSTANCE = it }
         }
+        private fun buildAuth(context: Context): AppAuth = AppAuth(context)
+    }
 
     }
-}

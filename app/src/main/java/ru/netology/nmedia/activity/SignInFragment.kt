@@ -1,6 +1,7 @@
 package ru.netology.nmedia.activity
 
 import android.os.Bundle
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,10 +14,12 @@ import androidx.core.net.toFile
 import androidx.core.view.MenuProvider
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentNewPostBinding
@@ -28,10 +31,6 @@ import ru.netology.nmedia.viewmodel.PostViewModel
 import ru.netology.nmedia.viewmodel.SignInViewModel
 
 class SignInFragment : Fragment() {
-
-//    companion object {
-//        var Bundle.textArg: String? by StringArg
-//    }
 
     private val viewModel: SignInViewModel by activityViewModels()
     override fun onCreateView(
@@ -46,100 +45,59 @@ class SignInFragment : Fragment() {
         )
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().navigateUp()
+            binding.loginEdit.requestFocus()
         }
         binding.signInButton.setOnClickListener {
-            viewModel.signIn(binding.loginEdit.toString(), binding.passEdit.toString())
+            viewModel.signIn(binding.loginEdit.text.toString(), binding.passEdit.text.toString())
+            binding.progress.isVisible = true
+            binding.loginEdit.clearFocus()
+            binding.passEdit.clearFocus()
+        }
+        viewModel.signedIn.observe(viewLifecycleOwner) {
+            binding.progress.isVisible = false
+            findNavController().navigateUp()
+        }
+        viewModel.notFoundException.observe(viewLifecycleOwner) {
+            binding.progress.isVisible = false
+            binding.error.isVisible = true
+        }
+        viewModel.exception.observe(viewLifecycleOwner) {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.error)
+                .setMessage(R.string.error_loading)
+                .setPositiveButton(R.string.ok) {
+                        _, _,
+                    ->
+                    findNavController().navigateUp()
+                }
+                .show()
+        }
+
+        binding.loginEdit.setOnFocusChangeListener { _, _ ->
+            binding.error.isVisible = false
+        }
+        binding.passEdit.setOnFocusChangeListener { _, _ ->
+            binding.error.isVisible = false
         }
 
 
-//        binding.edit.setText(viewModel.edited.value?.content)
-//        arguments?.textArg
-//            ?.let(binding.edit::setText)
-//
-//        binding.edit.requestFocus()
-//
-//        val imagePickerLauncher =
-//            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-//                if (it.resultCode == ImagePicker.RESULT_ERROR) {
-//                    Snackbar.make(
-//                        binding.root,
-//                        ImagePicker.getError(it.data),
-//                        Snackbar.LENGTH_LONG
-//                    ).show()
-//                } else {
-//                    val uri = it.data?.data ?: return@registerForActivityResult
-//                    viewModel.updatePhoto(uri, uri.toFile())
-//                }
-//            }
-//        viewModel.photo.observe(viewLifecycleOwner) { photo ->
-//            if (photo.uri == null) {
-//                binding.photoContainer.isGone = true
-//                return@observe
-//            }
-//            binding.photoContainer.isVisible = true
-//            binding.photo.setImageURI(photo.uri)
-//        }
-//        binding.removePhoto.setOnClickListener {
-//            viewModel.clearPhoto()
-//        }
-//        binding.takePhoto.setOnClickListener {
-//            ImagePicker.with(this)
-//                .crop()
-//                .compress(2048)
-//                .cameraOnly()
-//                .createIntent {
-//                    imagePickerLauncher.launch(it)
-//                }
-//        }
-//
-//        binding.pickPhoto.setOnClickListener {
-//            ImagePicker.with(this)
-//                .crop()
-//                .compress(2048)
-//                .galleryOnly()
-//                .galleryMimeTypes(
-//                    arrayOf(
-//                        "image/png",
-//                        "image/jpg",
-//                        "image/jpeg"
-//                    )
-//                )
-//                .createIntent(imagePickerLauncher::launch)
-//
-//        }
-//
-//        requireActivity().addMenuProvider(
-//            object : MenuProvider {
-//                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-//                    menuInflater.inflate(R.menu.menu_new_post, menu)
-//                }
-//
-//                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-//                    if (menuItem.itemId == R.id.save) {
-//                        viewModel.changeContent(binding.edit.text.toString())
-//                        viewModel.save()
-//                        AndroidUtils.hideKeyboard(requireView())
-//                        return true
-//                    } else {
-//                        return false
-//                    }
-//                }
-//            },
-//            viewLifecycleOwner,
-//        )
-////        binding.ok.setOnClickListener {
-////            viewModel.changeContent(binding.edit.text.toString())
-////            viewModel.save()
-////            AndroidUtils.hideKeyboard(requireView())
-////            binding.ok.isVisible = false
-////            binding.progress.isVisible = true
-////
-////        }
-//
-//        viewModel.postCreated.observe(viewLifecycleOwner) {
-////            viewModel.loadPosts()
-//            findNavController().navigateUp()
-//        }
+        requireActivity().addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.menu_close_full_screen_view, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    if (menuItem.itemId == R.id.close) {
+                        findNavController().navigateUp()
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            viewLifecycleOwner,
+        )
         return binding.root
     }
 }

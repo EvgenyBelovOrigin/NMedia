@@ -23,6 +23,8 @@ import ru.netology.nmedia.dto.Token
 import java.util.concurrent.TimeUnit
 
 private const val BASE_URL = "${BuildConfig.BASE_URL}/api/slow/"
+//private const val BASE_URL = "${BuildConfig.BASE_URL}/api/"
+
 
 private val logging = HttpLoggingInterceptor().apply {
     if (BuildConfig.DEBUG) {

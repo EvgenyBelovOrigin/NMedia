@@ -34,4 +34,5 @@
     <string name="sign_out">Sign Out</string>
     <string name="login">Login</string>
     <string name="password">password</string>
+    <string name="wrongSignInData">Wrong login or password</string>
 </resources>

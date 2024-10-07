@@ -20,6 +20,7 @@ import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.error.ApiError
 import ru.netology.nmedia.error.AppError
 import ru.netology.nmedia.error.NetworkError
+import ru.netology.nmedia.error.RunTimeError
 import ru.netology.nmedia.error.UnknownError
 import java.io.IOException
 
@@ -178,6 +179,8 @@ class PostRepositoryImpl(
             AppAuth.getInstance().setAuth(body)
 
 
+        } catch (e: RuntimeException) {
+            throw RunTimeError
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {
