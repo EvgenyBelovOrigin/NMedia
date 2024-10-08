@@ -69,7 +69,6 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                     when (menuItem.itemId) {
                         R.id.signin -> {
                             findNavController(R.id.nav_host_fragment).navigate(R.id.signInFragment)
-//                            AppAuth.getInstance().setAuth(Token(5, "x-token"))
                             true
                         }
 

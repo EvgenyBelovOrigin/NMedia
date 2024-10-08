@@ -19,6 +19,7 @@ import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
 import kotlin.concurrent.thread
 
@@ -28,10 +29,10 @@ class FeedFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val binding = FragmentFeedBinding.inflate(inflater, container, false)
-
+        val authViewModel = AuthViewModel()
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
@@ -67,7 +68,8 @@ class FeedFragment : Fragment() {
         })
         binding.list.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
-            val newPost = state.posts.size > adapter.currentList.size && adapter.currentList.size > 0
+            val newPost =
+                state.posts.size > adapter.currentList.size && adapter.currentList.size > 0
             adapter.submitList(state.posts)
             if (newPost) {
                 binding.list.smoothScrollToPosition(0)
@@ -107,7 +109,8 @@ class FeedFragment : Fragment() {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.error)
                     .setMessage(R.string.error_saving)
-                    .setPositiveButton(R.string.try_again) { _, _
+                    .setPositiveButton(R.string.try_again) {
+                            _, _,
                         ->
                         findNavController().navigate(R.id.newPostFragment)
                     }
@@ -117,9 +120,15 @@ class FeedFragment : Fragment() {
 
             binding.swiperefresh.isRefreshing = state.refreshing
         }
+
         binding.fab.setOnClickListener {
+            if (!authViewModel.authenticated) {
+                requestSignIn()
+            }
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
+
         }
+
         binding.swiperefresh.setOnRefreshListener {
             viewModel.refresh()
         }
@@ -133,6 +142,23 @@ class FeedFragment : Fragment() {
                 .takeIf { it != -1 }
                 ?.let(adapter::notifyItemChanged)
         }
+        viewModel.requestSignIn.observe(viewLifecycleOwner) {
+            requestSignIn()
+        }
+
         return binding.root
+    }
+
+    fun requestSignIn() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.requestSignInTitle)
+            .setMessage(R.string.requestSignInMessage)
+            .setPositiveButton(R.string.ok) {
+                    _, _,
+                ->
+                findNavController().navigate(R.id.signInFragment)
+            }
+            .setNegativeButton(R.string.return_to_posts, null)
+            .show()
     }
 }

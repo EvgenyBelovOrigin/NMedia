@@ -2,6 +2,7 @@ package ru.netology.nmedia.viewmodel
 
 import android.app.Application
 import android.net.Uri
+import androidx.activity.viewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -44,7 +45,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             context = application
         ).postDao(),
     )
-
+    private val authViewModel = AuthViewModel()
 
     val data: LiveData<FeedModel> = AppAuth.getInstance().authState.flatMapLatest { token ->
         repository.posts.map {
@@ -78,9 +79,15 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val _onLikeError = SingleLiveEvent<Long>()
     val onLikeError: LiveData<Long>
         get() = _onLikeError
+
     private val _photo = MutableLiveData<PhotoModel>(noPhoto)
     val photo: LiveData<PhotoModel>
         get() = _photo
+
+    private val _requestSignIn = SingleLiveEvent<Unit>()
+    val requestSignIn: LiveData<Unit>
+        get() = _requestSignIn
+
 
     init {
         loadPosts()
@@ -139,16 +146,21 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun likeById(post: Post) {
-        viewModelScope.launch {
-            try {
-                if (!post.likedByMe) {
-                    repository.likeById(post.id)
-                } else {
-                    repository.disLikeById(post.id)
+        if (!authViewModel.authenticated) {
+            _requestSignIn.value = Unit
+        } else {
+            viewModelScope.launch {
+                try {
+                    if (!post.likedByMe) {
+                        repository.likeById(post.id)
+                    } else {
+                        repository.disLikeById(post.id)
+                    }
+                } catch (e: Exception) {
+                    _onLikeError.value = post.id
                 }
-            } catch (e: Exception) {
-                _onLikeError.value = post.id
             }
+
         }
     }
 

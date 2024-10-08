@@ -36,4 +36,6 @@
     <string name="login">Имя пользователя</string>
     <string name="password">пароль</string>
     <string name="wrongSignInData">неверное имя пользователя или пароль</string>
+    <string name="requestSignInTitle">Вход не выполен</string>
+    <string name="requestSignInMessage">Выполгите вход в приложение чтобы получить больше возможностей</string>
 </resources>
