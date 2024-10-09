@@ -38,4 +38,7 @@
     <string name="wrongSignInData">неверное имя пользователя или пароль</string>
     <string name="requestSignInTitle">Вход не выполен</string>
     <string name="requestSignInMessage">Выполгите вход в приложение чтобы получить больше возможностей</string>
+    <string name="name">Имя</string>
+    <string name="password_confirm">подтвердите пароль</string>
+    <string name="wrong_pass_confirm">Пароль не совпадает</string>
 </resources>

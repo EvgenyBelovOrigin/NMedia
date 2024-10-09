@@ -8,7 +8,7 @@
 
 
     <LinearLayout
-        android:id="@+id/signInFrame"
+        android:id="@+id/signUpFrame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/common_spacing"
@@ -21,20 +21,36 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/signInText"
+            android:id="@+id/signUpText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_spacing"
-            android:text="@string/sign_in"
+            android:text="@string/sign_up"
+            android:textColor="@color/design_default_color_on_primary">
+
+        </TextView>
+        <TextView
+            android:id="@+id/nameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
             android:textColor="@color/design_default_color_on_primary">
 
         </TextView>
 
+        <EditText
+            android:id="@+id/nameEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite">
+
+        </EditText>
         <TextView
             android:id="@+id/loginText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login"
+            android:layout_marginTop="@dimen/common_spacing"
             android:textColor="@color/design_default_color_on_primary">
 
         </TextView>
@@ -65,25 +81,43 @@
             android:inputType="textPassword">
 
         </EditText>
+        <TextView
+            android:id="@+id/passConfirmText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password_confirm"
+            android:layout_marginTop="@dimen/common_spacing"
+            android:textColor="@color/design_default_color_on_primary">
+
+        </TextView>
+
+        <EditText
+            android:id="@+id/passConfirmEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            android:inputType="textPassword">
+
+        </EditText>
 
         <TextView
             android:id="@+id/error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_spacing"
-            android:text="@string/wrongSignInData"
+            android:text="@string/wrong_pass_confirm"
             android:textColor="@color/colorRed"
             android:visibility="gone">
 
         </TextView>
 
         <Button
-            android:id="@+id/signInButton"
+            android:id="@+id/signUpButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_spacing"
             android:backgroundTint="@color/colorAccent"
-            android:text="@string/sign_in"
+            android:text="@string/sign_up"
             android:textColor="@color/design_default_color_on_secondary">
 
         </Button>

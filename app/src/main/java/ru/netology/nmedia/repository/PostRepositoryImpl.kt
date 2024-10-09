@@ -188,6 +188,24 @@ class PostRepositoryImpl(
         }
     }
 
+    override suspend fun signUp(login: String, password: String, name: String) {
+        try {
+            val response = PostsApi.service.signUp(login, password, name)
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+            val body = response.body() ?: throw ApiError(response.code(), response.message())
+            AppAuth.getInstance().setAuth(body)
+
+
+        } catch (e: RuntimeException) {
+            throw RunTimeError
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }    }
+
 }
 
 
