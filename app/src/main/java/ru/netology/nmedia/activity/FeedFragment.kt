@@ -124,9 +124,9 @@ class FeedFragment : Fragment() {
         binding.fab.setOnClickListener {
             if (!authViewModel.authenticated) {
                 requestSignIn()
+            }else {
+                findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
             }
-            findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
-
         }
 
         binding.swiperefresh.setOnRefreshListener {
