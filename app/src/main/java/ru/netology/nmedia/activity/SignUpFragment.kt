@@ -21,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentNewPostBinding
 import ru.netology.nmedia.databinding.FragmentSignInBinding
@@ -50,30 +51,26 @@ class SignUpFragment : Fragment() {
             binding.loginEdit.requestFocus()
         }
         binding.signUpButton.setOnClickListener {
-            if (binding.passEdit.text.toString() != binding.passConfirmEdit.text.toString()){
-                binding.error.isVisible = true
-//                binding.loginEdit.clearFocus()
-//                binding.passEdit.clearFocus()
-//                binding.passConfirmEdit.clearFocus()
-//                binding.nameEdit.clearFocus()
-            } else{
-                viewModel.signUp(
-                    binding.loginEdit.text.toString(),
-                    binding.passEdit.text.toString(),
-                    binding.nameEdit.text.toString()
-                )
-
             binding.progress.isVisible = true
+            viewModel.signUp(
+                binding.loginEdit.text.toString(),
+                binding.passEdit.text.toString(),
+                binding.passConfirmEdit.text.toString(),
+                binding.nameEdit.text.toString()
+            )
 
-        }}
+
+        }
         viewModel.signedUp.observe(viewLifecycleOwner) {
+
             binding.progress.isVisible = false
             findNavController().navigateUp()
         }
-//        viewModel.wrongPassConfirm.observe(viewLifecycleOwner) {
-//            binding.progress.isVisible = false
-//            binding.error.isVisible = true
-//        }
+        viewModel.wrongPassConfirm.observe(viewLifecycleOwner) {
+            binding.signUpFrame.clearFocus()
+            binding.progress.isVisible = false
+            binding.error.isVisible = true
+        }
         viewModel.exception.observe(viewLifecycleOwner) {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.error)
@@ -94,6 +91,7 @@ class SignUpFragment : Fragment() {
         }
         binding.passConfirmEdit.setOnFocusChangeListener { _, _ ->
             binding.error.isVisible = false
+
         }
         binding.nameEdit.setOnFocusChangeListener { _, _ ->
             binding.error.isVisible = false

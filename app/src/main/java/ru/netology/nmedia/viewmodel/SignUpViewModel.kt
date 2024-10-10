@@ -28,16 +28,20 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
         get() = _exception
 
 
-    fun signUp(login: String, password: String, name: String) {
+    fun signUp(login: String, password: String, passConfirm: String, name: String) {
+        if (password != passConfirm) {
+            _wrongPassConfirm.value = Unit
+        } else {
 
-        viewModelScope.launch {
-            try {
+            viewModelScope.launch {
+                try {
                     repository.signUp(login, password, name)
                     _signedUp.value = Unit
 
-            } catch (e: Exception) {
-                _exception.value = Unit
+                } catch (e: Exception) {
+                    _exception.value = Unit
 
+                }
             }
         }
 
