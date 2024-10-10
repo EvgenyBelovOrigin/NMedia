@@ -41,4 +41,5 @@
     <string name="name">Имя</string>
     <string name="password_confirm">подтвердите пароль</string>
     <string name="wrong_pass_confirm">Пароль не совпадает</string>
+    <string name="add_avatar">Добавьте аватар</string>
 </resources>
