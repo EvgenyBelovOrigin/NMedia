@@ -48,10 +48,9 @@ class SignInFragment : Fragment() {
             binding.loginEdit.requestFocus()
         }
         binding.signInButton.setOnClickListener {
-            viewModel.signIn(binding.loginEdit.text.toString(), binding.passEdit.text.toString())
             binding.progress.isVisible = true
-            binding.loginEdit.clearFocus()
-            binding.passEdit.clearFocus()
+            viewModel.signIn(binding.loginEdit.text.toString(), binding.passEdit.text.toString())
+            binding.signInFrame.clearFocus()
         }
         viewModel.signedIn.observe(viewLifecycleOwner) {
             binding.progress.isVisible = false

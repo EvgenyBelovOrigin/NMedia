@@ -5,8 +5,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import ru.netology.nmedia.api.PostsApi
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dao.PostDao
@@ -204,7 +207,36 @@ class PostRepositoryImpl(
             throw NetworkError
         } catch (e: Exception) {
             throw UnknownError
-        }    }
+        }
+    }
+
+    override suspend fun signUpWithAvatar(
+        login: String,
+        password: String,
+        name: String,
+        media: MediaUpload,
+    ) {
+        try {
+            val response = PostsApi.service.signUpWithAvatar(
+                login.toRequestBody("text/plain".toMediaType()),
+                password.toRequestBody("text/plain".toMediaType()),
+                name.toRequestBody("text/plain".toMediaType()),
+                MultipartBody.Part.createFormData("image.png",media.file.name, media.file.asRequestBody()),
+            )
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+            val body = response.body() ?: throw ApiError(response.code(), response.message())
+            AppAuth.getInstance().setAuth(body)
+
+        } catch (e: AppError) {
+            throw e
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
+    }
 
 }
 

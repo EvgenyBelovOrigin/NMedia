@@ -114,7 +114,7 @@
         </TextView>
 
         <ImageView
-            android:id="@+id/photo"
+            android:id="@+id/avatar"
             android:layout_width="@dimen/posts_avatar_size"
             android:layout_height="@dimen/posts_avatar_size"
             android:layout_gravity="start"

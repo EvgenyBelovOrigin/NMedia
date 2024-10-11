@@ -46,6 +46,19 @@ class SignUpFragment : Fragment() {
             container,
             false
         )
+        val imagePickerLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == ImagePicker.RESULT_ERROR) {
+                    Snackbar.make(
+                        binding.root,
+                        ImagePicker.getError(it.data),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                } else {
+                    val uri = it.data?.data ?: return@registerForActivityResult
+                    viewModel.updateAvatar(uri, uri.toFile())
+                }
+            }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().navigateUp()
             binding.loginEdit.requestFocus()
@@ -83,6 +96,15 @@ class SignUpFragment : Fragment() {
                 .show()
         }
 
+        viewModel.avatar.observe(viewLifecycleOwner) { photo ->
+            if (photo.uri == null) {
+                binding.avatar.isGone = true
+                return@observe
+            }
+            binding.avatar.isVisible = true
+            binding.avatar.setImageURI(photo.uri)
+        }
+
         binding.loginEdit.setOnFocusChangeListener { _, _ ->
             binding.error.isVisible = false
         }
@@ -95,6 +117,29 @@ class SignUpFragment : Fragment() {
         }
         binding.nameEdit.setOnFocusChangeListener { _, _ ->
             binding.error.isVisible = false
+        }
+
+        binding.takeAvatar.setOnClickListener {
+            ImagePicker.with(this)
+                .crop()
+                .compress(2048)
+                .cameraOnly()
+                .createIntent {
+                    imagePickerLauncher.launch(it)
+                }
+        }
+        binding.pickAvatar.setOnClickListener {
+            ImagePicker.with(this)
+                .crop()
+                .compress(2048)
+                .galleryOnly()
+                .galleryMimeTypes(
+                    arrayOf(
+                        "image/png",
+                    )
+                )
+                .createIntent(imagePickerLauncher::launch)
+
         }
 
 
