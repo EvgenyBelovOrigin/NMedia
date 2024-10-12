@@ -21,7 +21,7 @@ import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dto.Media
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.dto.Token
-import java.util.concurrent.TimeUnit
+
 
 private const val BASE_URL = "${BuildConfig.BASE_URL}/api/slow/"
 //private const val BASE_URL = "${BuildConfig.BASE_URL}/api/"
@@ -72,6 +72,10 @@ interface PostsApiService {
     @Multipart
     @POST("media")
     suspend fun upload(@Part media: MultipartBody.Part): Response<Media>
+
+    @Multipart
+    @POST("avatars")
+    suspend fun uploadAvatar(@Part media: MultipartBody.Part): Response<Media>
 
     @FormUrlEncoded
     @POST("users/authentication")
