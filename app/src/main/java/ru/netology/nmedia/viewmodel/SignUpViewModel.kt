@@ -64,4 +64,8 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
     fun updateAvatar(uri: Uri, file: File) {
         _avatar.value = PhotoModel(uri, file)
     }
+
+    fun clearAvatar() {
+        _avatar.value = noAvatar
+    }
 }

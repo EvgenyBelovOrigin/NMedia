@@ -73,9 +73,6 @@ interface PostsApiService {
     @POST("media")
     suspend fun upload(@Part media: MultipartBody.Part): Response<Media>
 
-    @Multipart
-    @POST("avatars")
-    suspend fun uploadAvatar(@Part media: MultipartBody.Part): Response<Media>
 
     @FormUrlEncoded
     @POST("users/authentication")

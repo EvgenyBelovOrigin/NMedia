@@ -212,25 +212,6 @@ class PostRepositoryImpl(
         }
     }
 
-    override suspend fun uploadAvatar(upload: MediaUpload): Media {
-        try {
-            val media = MultipartBody.Part.createFormData(
-                "file", upload.file.name, upload.file.asRequestBody()
-
-            )
-
-            val response = PostsApi.service.uploadAvatar(media)
-            if (!response.isSuccessful) {
-                throw ApiError(response.code(), response.message())
-            }
-
-            return response.body() ?: throw ApiError(response.code(), response.message())
-        } catch (e: IOException) {
-            throw NetworkError
-        } catch (e: Exception) {
-            throw UnknownError
-        }
-    }
 
     override suspend fun signUpWithAvatar(
         login: String,
@@ -239,14 +220,14 @@ class PostRepositoryImpl(
         upload: MediaUpload,
     ) {
         try {
-            val media = uploadAvatar(upload)
             val response = PostsApi.service.signUpWithAvatar(
                 login.toRequestBody("text/plain".toMediaType()),
                 password.toRequestBody("text/plain".toMediaType()),
                 name.toRequestBody("text/plain".toMediaType()),
                 MultipartBody.Part.createFormData(
                     "file",
-                    media.id
+                    upload.file.name,
+                    upload.file.asRequestBody()
                 ),
             )
             if (!response.isSuccessful) {

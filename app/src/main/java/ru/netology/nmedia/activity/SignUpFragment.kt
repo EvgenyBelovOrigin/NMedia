@@ -141,6 +141,10 @@ class SignUpFragment : Fragment() {
                 .createIntent(imagePickerLauncher::launch)
 
         }
+        binding.avatar.setOnClickListener{
+            viewModel.clearAvatar()
+
+        }
 
 
 
