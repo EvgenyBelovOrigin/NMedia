@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import ru.netology.nmedia.dto.Media
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.dto.Token
 
 interface PostRepository {
     val posts: Flow<List<Post>>
