@@ -5,8 +5,14 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 //import com.example.nmedia.R
 import com.google.android.gms.common.ConnectionResult
@@ -14,6 +20,9 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.messaging.FirebaseMessaging
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
+import ru.netology.nmedia.auth.AppAuth
+import ru.netology.nmedia.dto.Token
+import ru.netology.nmedia.viewmodel.AuthViewModel
 
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
@@ -41,6 +50,46 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                     }
                 )
         }
+
+        val viewModel by viewModels<AuthViewModel>()
+
+        addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.auth_menu, menu)
+
+                    viewModel.data.observe(this@AppActivity) {
+                        menu.setGroupVisible(R.id.authenticated, viewModel.authenticated)
+                        menu.setGroupVisible(R.id.unauthenticated, !viewModel.authenticated)
+
+                    }
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                    when (menuItem.itemId) {
+                        R.id.signin -> {
+                            findNavController(R.id.nav_host_fragment).navigate(R.id.signInFragment)
+                            true
+                        }
+
+                        R.id.signup -> {
+                            findNavController(R.id.nav_host_fragment).navigate(R.id.signUpFragment)
+
+//                            AppAuth.getInstance().setAuth((Token(5, "x-token")))
+                            true
+                        }
+
+                        R.id.signout -> {
+                            AppAuth.getInstance().clear()
+                            true
+                        }
+
+                        else -> false
+                    }
+
+
+            }
+        )
 
         checkGoogleApiAvailability()
     }
@@ -78,3 +127,4 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
         }
     }
 }
+

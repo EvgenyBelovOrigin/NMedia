@@ -29,4 +29,20 @@
     <string name="ok">OK</string>
     <string name="fresh_posts" >Fresh posts found</string>
     <string name="close" >Close</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="login">Login</string>
+    <string name="password">password</string>
+    <string name="wrongSignInData">Wrong login or password</string>
+    <string name="requestSignInTitle">You are not signed in yet</string>
+    <string name="requestSignInMessage">You should sign in to have much</string>
+    <string name="name">Name</string>
+    <string name="password_confirm">confirm password</string>
+    <string name="wrong_pass_confirm">Passwords are different</string>
+    <string name="add_avatar">Add avatar</string>
+
+
+
+
 </resources>

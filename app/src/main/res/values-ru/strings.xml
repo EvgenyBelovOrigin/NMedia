@@ -30,4 +30,16 @@
     <string name="ok">Хорошо</string>
     <string name="fresh_posts" >Свежие записи</string>
     <string name="close">Закрыть</string>
+    <string name="sign_in">Войти</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="sign_out">Выйти</string>
+    <string name="login">Имя пользователя</string>
+    <string name="password">пароль</string>
+    <string name="wrongSignInData">неверное имя пользователя или пароль</string>
+    <string name="requestSignInTitle">Вход не выполен</string>
+    <string name="requestSignInMessage">Выполгите вход в приложение чтобы получить больше возможностей</string>
+    <string name="name">Имя</string>
+    <string name="password_confirm">подтвердите пароль</string>
+    <string name="wrong_pass_confirm">Пароль не совпадает</string>
+    <string name="add_avatar">Добавьте аватар</string>
 </resources>
