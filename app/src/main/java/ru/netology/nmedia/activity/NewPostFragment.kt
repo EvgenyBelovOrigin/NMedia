@@ -19,7 +19,6 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentNewPostBinding
-import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.util.AndroidUtils
 import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.viewmodel.PostViewModel
@@ -118,17 +117,8 @@ class NewPostFragment : Fragment() {
             },
             viewLifecycleOwner,
         )
-//        binding.ok.setOnClickListener {
-//            viewModel.changeContent(binding.edit.text.toString())
-//            viewModel.save()
-//            AndroidUtils.hideKeyboard(requireView())
-//            binding.ok.isVisible = false
-//            binding.progress.isVisible = true
-//
-//        }
 
         viewModel.postCreated.observe(viewLifecycleOwner) {
-//            viewModel.loadPosts()
             findNavController().navigateUp()
         }
         return binding.root

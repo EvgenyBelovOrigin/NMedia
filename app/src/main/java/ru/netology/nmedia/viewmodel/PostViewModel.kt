@@ -2,6 +2,7 @@ package ru.netology.nmedia.viewmodel
 
 import android.app.Application
 import android.net.Uri
+import androidx.activity.viewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,8 +11,10 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
@@ -27,6 +30,7 @@ private val empty = Post(
     id = 0,
     content = "",
     author = "",
+    authorId = 0L,
     likedByMe = false,
     likes = 0,
     published = "",
@@ -37,14 +41,21 @@ private val empty = Post(
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository = PostRepositoryImpl(
-        AppDb.getInstance(application).postDao()
+        AppDb.getInstance(
+            context = application
+        ).postDao(),
     )
+    private val authViewModel = AuthViewModel()
 
+    val data: LiveData<FeedModel> = AppAuth.getInstance().authState.flatMapLatest { token ->
+        repository.posts.map {
+            FeedModel(it.map { post ->
+                post.copy(ownedByMe = post.authorId == token?.id)
 
-    val data: LiveData<FeedModel> = repository.posts.map {
-        FeedModel(it, it.isEmpty())
-    }.catch {
-        it.printStackTrace()
+            }, it.isEmpty())
+        }.catch {
+            it.printStackTrace()
+        }
     }.asLiveData(Dispatchers.Default)
 
     private val dataWhole: LiveData<FeedModel> = repository.postsWhole.map {
@@ -68,9 +79,15 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val _onLikeError = SingleLiveEvent<Long>()
     val onLikeError: LiveData<Long>
         get() = _onLikeError
+
     private val _photo = MutableLiveData<PhotoModel>(noPhoto)
     val photo: LiveData<PhotoModel>
         get() = _photo
+
+    private val _requestSignIn = SingleLiveEvent<Unit>()
+    val requestSignIn: LiveData<Unit>
+        get() = _requestSignIn
+
 
     init {
         loadPosts()
@@ -129,16 +146,21 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun likeById(post: Post) {
-        viewModelScope.launch {
-            try {
-                if (!post.likedByMe) {
-                    repository.likeById(post.id)
-                } else {
-                    repository.disLikeById(post.id)
+        if (!authViewModel.authenticated) {
+            _requestSignIn.value = Unit
+        } else {
+            viewModelScope.launch {
+                try {
+                    if (!post.likedByMe) {
+                        repository.likeById(post.id)
+                    } else {
+                        repository.disLikeById(post.id)
+                    }
+                } catch (e: Exception) {
+                    _onLikeError.value = post.id
                 }
-            } catch (e: Exception) {
-                _onLikeError.value = post.id
             }
+
         }
     }
 
