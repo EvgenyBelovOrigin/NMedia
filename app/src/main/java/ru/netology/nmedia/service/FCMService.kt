@@ -38,10 +38,10 @@ class FCMService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
 
-        val message = gson.fromJson(message.data[content], Message::class.java)
-        when (message.recipientId) {
-            null -> handleMessage(message)
-            AppAuth.getInstance().authState.value?.id?.toInt() -> handleMessage(message)
+        val messageContent = gson.fromJson(message.data[content], Message::class.java)
+        when (messageContent.recipientId) {
+            null -> handleMessage(messageContent)
+            AppAuth.getInstance().authState.value?.id?.toInt() -> handleMessage(messageContent)
             0 -> AppAuth.getInstance().sendPushToken()
             else -> AppAuth.getInstance().sendPushToken()
         }
