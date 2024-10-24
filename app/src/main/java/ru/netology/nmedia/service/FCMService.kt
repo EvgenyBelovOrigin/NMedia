@@ -13,11 +13,11 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import ru.netology.nmedia.R
+import ru.netology.nmedia.auth.AppAuth
 import kotlin.random.Random
 
 
 class FCMService : FirebaseMessagingService() {
-    private val action = "action"
     private val content = "content"
     private val channelId = "remote"
     private val gson = Gson()
@@ -38,32 +38,33 @@ class FCMService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
 
-        message.data[action]?.let {
-           when (Action.valueOf(it)) {
-              Action.LIKE -> handleLike(gson.fromJson(message.data[content], Like::class.java))
-           }
+        val messageContent = gson.fromJson(message.data[content], Message::class.java)
+        when (messageContent.recipientId) {
+            null -> handleMessage(messageContent)
+            AppAuth.getInstance().authState.value?.id?.toInt() -> handleMessage(messageContent)
+            0 -> AppAuth.getInstance().sendPushToken()
+            else -> AppAuth.getInstance().sendPushToken()
         }
+
     }
 
     override fun onNewToken(token: String) {
-        println(token)
+        AppAuth.getInstance().sendPushToken(token)
     }
 
-    private fun handleLike(content: Like) {
+    private fun handleMessage(message: Message) {
         val notification = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(
-                getString(
-                    R.string.notification_user_liked,
-                    content.userName,
-                    content.postAuthor,
-                )
+                message.content,
             )
+            .setContentText(message.recipientId.toString())
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
 
         notify(notification)
     }
+
 
     private fun notify(notification: Notification) {
         if (
@@ -78,14 +79,9 @@ class FCMService : FirebaseMessagingService() {
     }
 }
 
-enum class Action {
-    LIKE,
-}
 
-data class Like(
-    val userId: Long,
-    val userName: String,
-    val postId: Long,
-    val postAuthor: String,
+data class Message(
+    val recipientId: Int?,
+    val content: String,
 )
 

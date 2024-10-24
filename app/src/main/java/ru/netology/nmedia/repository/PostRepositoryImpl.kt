@@ -9,7 +9,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import ru.netology.nmedia.api.PostsApi
+import ru.netology.nmedia.api.Api
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Attachment
@@ -39,7 +39,7 @@ class PostRepositoryImpl(
         while (true) {
             delay(10_000)
             if (size == dao.count()) {
-                val response = PostsApi.service.getNewer(id.toLong())
+                val response = Api.service.getNewer(id.toLong())
                 if (!response.isSuccessful) {
                     throw ApiError(response.code(), response.message())
                 }
@@ -59,7 +59,7 @@ class PostRepositoryImpl(
 
     override suspend fun getAll() {
         try {
-            val response = PostsApi.service.getAll()
+            val response = Api.service.getAll()
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -79,7 +79,7 @@ class PostRepositoryImpl(
     override suspend fun likeById(id: Long) {
         try {
             dao.likeById(id)
-            val response = PostsApi.service.likeById(id)
+            val response = Api.service.likeById(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -93,7 +93,7 @@ class PostRepositoryImpl(
     override suspend fun save(post: Post) {
         try {
             dao.insert(PostEntity.fromDto(post, false).copy(isSaved = false))
-            val response = PostsApi.service.save(post)
+            val response = Api.service.save(post)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -112,7 +112,7 @@ class PostRepositoryImpl(
     override suspend fun removeById(id: Long) {
         try {
             dao.removeById(id)
-            val response = PostsApi.service.removeById(id)
+            val response = Api.service.removeById(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -126,7 +126,7 @@ class PostRepositoryImpl(
     override suspend fun disLikeById(id: Long) {
         try {
             dao.likeById(id)
-            val response = PostsApi.service.disLikeById(id)
+            val response = Api.service.disLikeById(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -140,7 +140,7 @@ class PostRepositoryImpl(
 
     override suspend fun signIn(login: String, password: String) {
         try {
-            val response = PostsApi.service.signIn(login, password)
+            val response = Api.service.signIn(login, password)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -160,7 +160,7 @@ class PostRepositoryImpl(
 
     override suspend fun signUp(login: String, password: String, name: String) {
         try {
-            val response = PostsApi.service.signUp(login, password, name)
+            val response = Api.service.signUp(login, password, name)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -199,7 +199,7 @@ class PostRepositoryImpl(
 
             )
 
-            val response = PostsApi.service.upload(media)
+            val response = Api.service.upload(media)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -220,7 +220,7 @@ class PostRepositoryImpl(
         upload: MediaUpload,
     ) {
         try {
-            val response = PostsApi.service.signUpWithAvatar(
+            val response = Api.service.signUpWithAvatar(
                 login.toRequestBody("text/plain".toMediaType()),
                 password.toRequestBody("text/plain".toMediaType()),
                 name.toRequestBody("text/plain".toMediaType()),
