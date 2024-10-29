@@ -9,7 +9,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import ru.netology.nmedia.api.Api
+import ru.netology.nmedia.api.ApiService
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Attachment
@@ -27,6 +27,8 @@ import java.io.IOException
 
 class PostRepositoryImpl(
     private val dao: PostDao,
+    private val apiService: ApiService,
+    private val appAuth: AppAuth
 ) : PostRepository {
     override val posts = dao.getAllWithoutNew().map {
         it.map(PostEntity::toDto)
@@ -39,7 +41,7 @@ class PostRepositoryImpl(
         while (true) {
             delay(10_000)
             if (size == dao.count()) {
-                val response = Api.service.getNewer(id.toLong())
+                val response = apiService.getNewer(id.toLong())
                 if (!response.isSuccessful) {
                     throw ApiError(response.code(), response.message())
                 }
@@ -59,7 +61,7 @@ class PostRepositoryImpl(
 
     override suspend fun getAll() {
         try {
-            val response = Api.service.getAll()
+            val response = apiService.getAll()
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -79,7 +81,7 @@ class PostRepositoryImpl(
     override suspend fun likeById(id: Long) {
         try {
             dao.likeById(id)
-            val response = Api.service.likeById(id)
+            val response = apiService.likeById(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -93,7 +95,7 @@ class PostRepositoryImpl(
     override suspend fun save(post: Post) {
         try {
             dao.insert(PostEntity.fromDto(post, false).copy(isSaved = false))
-            val response = Api.service.save(post)
+            val response = apiService.save(post)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -112,7 +114,7 @@ class PostRepositoryImpl(
     override suspend fun removeById(id: Long) {
         try {
             dao.removeById(id)
-            val response = Api.service.removeById(id)
+            val response = apiService.removeById(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -126,7 +128,7 @@ class PostRepositoryImpl(
     override suspend fun disLikeById(id: Long) {
         try {
             dao.likeById(id)
-            val response = Api.service.disLikeById(id)
+            val response = apiService.disLikeById(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -140,12 +142,12 @@ class PostRepositoryImpl(
 
     override suspend fun signIn(login: String, password: String) {
         try {
-            val response = Api.service.signIn(login, password)
+            val response = apiService.signIn(login, password)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
             val body = response.body() ?: throw ApiError(response.code(), response.message())
-            AppAuth.getInstance().setAuth(body)
+            appAuth.setAuth(body)
 
 
         } catch (e: RuntimeException) {
@@ -160,12 +162,12 @@ class PostRepositoryImpl(
 
     override suspend fun signUp(login: String, password: String, name: String) {
         try {
-            val response = Api.service.signUp(login, password, name)
+            val response = apiService.signUp(login, password, name)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
             val body = response.body() ?: throw ApiError(response.code(), response.message())
-            AppAuth.getInstance().setAuth(body)
+            appAuth.setAuth(body)
 
 
         } catch (e: RuntimeException) {
@@ -199,7 +201,7 @@ class PostRepositoryImpl(
 
             )
 
-            val response = Api.service.upload(media)
+            val response = apiService.upload(media)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -220,7 +222,7 @@ class PostRepositoryImpl(
         upload: MediaUpload,
     ) {
         try {
-            val response = Api.service.signUpWithAvatar(
+            val response = apiService.signUpWithAvatar(
                 login.toRequestBody("text/plain".toMediaType()),
                 password.toRequestBody("text/plain".toMediaType()),
                 name.toRequestBody("text/plain".toMediaType()),
@@ -234,7 +236,7 @@ class PostRepositoryImpl(
                 throw ApiError(response.code(), response.message())
             }
             val body = response.body() ?: throw ApiError(response.code(), response.message())
-            AppAuth.getInstance().setAuth(body)
+            appAuth.setAuth(body)
 
         } catch (e: AppError) {
             throw e

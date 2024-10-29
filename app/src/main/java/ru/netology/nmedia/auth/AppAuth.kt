@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import ru.netology.nmedia.api.Api
+import ru.netology.nmedia.di.DependencyContainer
 import ru.netology.nmedia.dto.PushToken
 import ru.netology.nmedia.dto.Token
 
-class AppAuth private constructor(context: Context) {
+class AppAuth(context: Context) {
     private val prefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
     private val _authState = MutableStateFlow<Token?>(Token(0, null))
 
@@ -60,7 +60,7 @@ class AppAuth private constructor(context: Context) {
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 val pushToken = PushToken(token ?: Firebase.messaging.token.await())
-                Api.service.save(pushToken)
+                DependencyContainer.getInstance().apiService.save(pushToken)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -72,20 +72,6 @@ class AppAuth private constructor(context: Context) {
         const val TOKEN_KEY = "TOKEN_KEY"
         const val ID_KEY = "ID_KEY"
 
-        @Volatile
-        private var INSTANCE: AppAuth? = null
-
-        fun getInstance(): AppAuth = synchronized(this) {
-            INSTANCE ?: throw IllegalStateException(
-                "AppAuth is not initialized, you must call AppAuth.initializeApp(Context context) first."
-            )
-        }
-
-        fun initApp(context: Context): AppAuth = INSTANCE ?: synchronized(this) {
-            INSTANCE ?: buildAuth(context).also { INSTANCE = it }
-        }
-
-        private fun buildAuth(context: Context): AppAuth = AppAuth(context)
     }
 
 }
