@@ -2,6 +2,7 @@ package ru.netology.nmedia.util
 
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
 

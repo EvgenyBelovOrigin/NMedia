@@ -12,24 +12,33 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.AttachmentViewFullScreenFragment.Companion.textArg
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.di.DependencyContainer
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.viewmodel.PostViewModel
 import ru.netology.nmedia.viewmodel.ViewModelFactory
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class FeedFragment : Fragment() {
-    private val dependencyContainer = DependencyContainer.getInstance()
-    private val viewModel: PostViewModel by viewModels(
-        ownerProducer = ::requireParentFragment,
-        factoryProducer = {
-            ViewModelFactory(dependencyContainer.repository, dependencyContainer.appAuth)
-        }
-    )
+
+    @Inject
+    lateinit var appAuth: AppAuth
+    //    private val dependencyContainer = DependencyContainer.getInstance()
+    private val viewModel: PostViewModel by viewModels()
+//        ownerProducer = ::requireParentFragment,
+//        factoryProducer = {
+//            ViewModelFactory(dependencyContainer.repository, dependencyContainer.appAuth)
+//        }
+//    )
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -126,7 +135,7 @@ class FeedFragment : Fragment() {
         }
 
         binding.fab.setOnClickListener {
-            if (dependencyContainer.appAuth.authState.value?.id == 0L) {
+            if (appAuth.authState.value?.id == 0L) {
                 requestSignIn()
             } else {
                 findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)

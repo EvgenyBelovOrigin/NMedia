@@ -16,22 +16,28 @@ import androidx.navigation.findNavController
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.messaging.FirebaseMessaging
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
-import ru.netology.nmedia.di.DependencyContainer
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.ViewModelFactory
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
+    @Inject
+    lateinit var appAuth: AppAuth
 
-    private val dependencyContainer = DependencyContainer.getInstance()
-    private val viewModel:AuthViewModel by viewModels(
-        factoryProducer = {
-            ViewModelFactory(
-                dependencyContainer.repository,
-                dependencyContainer.appAuth
-            )
-        })
+//    private val dependencyContainer = DependencyContainer.getInstance()
+    private val viewModel:AuthViewModel by viewModels()
+//    (
+//        factoryProducer = {
+//            ViewModelFactory(
+//                dependencyContainer.repository,
+//                dependencyContainer.appAuth
+//            )
+//        })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +90,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                         }
 
                         R.id.signout -> {
-                            dependencyContainer.appAuth.clear()
+                            appAuth.clear()
                             true
                         }
 

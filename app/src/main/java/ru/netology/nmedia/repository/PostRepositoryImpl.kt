@@ -24,12 +24,16 @@ import ru.netology.nmedia.error.NetworkError
 import ru.netology.nmedia.error.RunTimeError
 import ru.netology.nmedia.error.UnknownError
 import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class PostRepositoryImpl(
+@Singleton
+class PostRepositoryImpl @Inject constructor(
     private val dao: PostDao,
     private val apiService: ApiService,
-    private val appAuth: AppAuth
+    private val appAuth: AppAuth,
 ) : PostRepository {
+
     override val posts = dao.getAllWithoutNew().map {
         it.map(PostEntity::toDto)
     }

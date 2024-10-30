@@ -5,14 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.File
+import javax.inject.Inject
 
-class SignUpViewModel(
+@HiltViewModel
+class SignUpViewModel @Inject constructor(
     private val repository: PostRepository,
 ) : ViewModel() {
     val noAvatar = PhotoModel()
