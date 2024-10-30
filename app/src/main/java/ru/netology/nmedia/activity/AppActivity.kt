@@ -12,19 +12,26 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
-//import com.example.nmedia.R
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.messaging.FirebaseMessaging
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
-import ru.netology.nmedia.auth.AppAuth
-import ru.netology.nmedia.dto.Token
+import ru.netology.nmedia.di.DependencyContainer
 import ru.netology.nmedia.viewmodel.AuthViewModel
+import ru.netology.nmedia.viewmodel.ViewModelFactory
 
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
+
+    private val dependencyContainer = DependencyContainer.getInstance()
+    private val viewModel:AuthViewModel by viewModels(
+        factoryProducer = {
+            ViewModelFactory(
+                dependencyContainer.repository,
+                dependencyContainer.appAuth
+            )
+        })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +58,6 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                 )
         }
 
-        val viewModel by viewModels<AuthViewModel>()
 
         addMenuProvider(
             object : MenuProvider {
@@ -74,13 +80,11 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
                         R.id.signup -> {
                             findNavController(R.id.nav_host_fragment).navigate(R.id.signUpFragment)
-
-//                            AppAuth.getInstance().setAuth((Token(5, "x-token")))
                             true
                         }
 
                         R.id.signout -> {
-                            AppAuth.getInstance().clear()
+                            dependencyContainer.appAuth.clear()
                             true
                         }
 

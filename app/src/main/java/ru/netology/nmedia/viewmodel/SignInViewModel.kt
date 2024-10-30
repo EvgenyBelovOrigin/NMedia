@@ -15,12 +15,10 @@ import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositoryImpl
 import ru.netology.nmedia.util.SingleLiveEvent
 
-class SignInViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositoryImpl(
-        AppDb.getInstance(
-            context = application
-        ).postDao(),
-    )
+class SignInViewModel(
+    private val repository: PostRepository,
+) : ViewModel() {
+
     val _signedIn = SingleLiveEvent<Unit>()
     val signedIn: LiveData<Unit>
         get() = _signedIn
@@ -42,8 +40,7 @@ class SignInViewModel(application: Application) : AndroidViewModel(application) 
                 e: RunTimeError,
             ) {
                 _notFoundException.value = Unit
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 _exception.value = Unit
 
             }

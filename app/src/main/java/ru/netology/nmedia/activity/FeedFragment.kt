@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -18,21 +19,28 @@ import ru.netology.nmedia.activity.AttachmentViewFullScreenFragment.Companion.te
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
+import ru.netology.nmedia.di.DependencyContainer
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
+import ru.netology.nmedia.viewmodel.ViewModelFactory
 import kotlin.concurrent.thread
 
 class FeedFragment : Fragment() {
+    private val dependencyContainer = DependencyContainer.getInstance()
+    private val viewModel: PostViewModel by viewModels(
+        ownerProducer = ::requireParentFragment,
+        factoryProducer = {
+            ViewModelFactory(dependencyContainer.repository, dependencyContainer.appAuth)
+        }
+    )
 
-    private val viewModel: PostViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         val binding = FragmentFeedBinding.inflate(inflater, container, false)
-        val authViewModel = AuthViewModel()
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
@@ -122,9 +130,9 @@ class FeedFragment : Fragment() {
         }
 
         binding.fab.setOnClickListener {
-            if (!authViewModel.authenticated) {
+            if (dependencyContainer.appAuth.authState.value?.id == 0L) {
                 requestSignIn()
-            }else {
+            } else {
                 findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
             }
         }

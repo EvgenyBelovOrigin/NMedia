@@ -15,17 +15,29 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentSignUpBinding
+import ru.netology.nmedia.di.DependencyContainer
 import ru.netology.nmedia.viewmodel.SignUpViewModel
+import ru.netology.nmedia.viewmodel.ViewModelFactory
 
 class SignUpFragment : Fragment() {
+    private val dependencyContainer = DependencyContainer.getInstance()
+    private val viewModel: SignUpViewModel by viewModels(
+        ownerProducer = ::requireParentFragment,
+        factoryProducer = {
+            ViewModelFactory(
+                dependencyContainer.repository,
+                dependencyContainer.appAuth
+            )
+        }
+    )
 
-    private val viewModel: SignUpViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

@@ -1,28 +1,25 @@
 package ru.netology.nmedia.viewmodel
 
-import android.app.Application
 import android.net.Uri
-import androidx.activity.viewModels
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.auth.AppAuth
-import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModel
 import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
-import ru.netology.nmedia.repository.PostRepositoryImpl
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.File
 
@@ -39,15 +36,13 @@ private val empty = Post(
     attachment = null
 )
 
-class PostViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositoryImpl(
-        AppDb.getInstance(
-            context = application
-        ).postDao(),
-    )
-    private val authViewModel = AuthViewModel()
+class PostViewModel(
+    private val repository: PostRepository,
+    private val appAuth: AppAuth,
+) : ViewModel() {
 
-    val data: LiveData<FeedModel> = AppAuth.getInstance().authState.flatMapLatest { token ->
+    @OptIn(ExperimentalCoroutinesApi::class) // new
+    val data: LiveData<FeedModel> = appAuth.authState.flatMapLatest { token ->
         repository.posts.map {
             FeedModel(it.map { post ->
                 post.copy(ownedByMe = post.authorId == token?.id)
@@ -146,7 +141,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun likeById(post: Post) {
-        if (!authViewModel.authenticated) {
+//        if (!authViewModel.authenticated) { - before DI
+//            _requestSignIn.value = Unit
+//        }
+        if (appAuth.authState.value?.id == 0L) {
             _requestSignIn.value = Unit
         } else {
             viewModelScope.launch {
