@@ -37,6 +37,7 @@ private val empty = Post(
     isSaved = true,
     attachment = null
 )
+
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PostViewModel @Inject constructor(
@@ -113,7 +114,6 @@ class PostViewModel @Inject constructor(
 
     fun save() {
         edited.value?.let {
-            _postCreated.value = Unit
             viewModelScope.launch {
                 try {
                     _photo.value?.file?.let { file ->
@@ -123,6 +123,7 @@ class PostViewModel @Inject constructor(
                     _dataState.value = FeedModelState()
                     edited.value = empty
                     _photo.value = noPhoto
+                    _postCreated.value = Unit
 
                 } catch (e: Exception) {
                     _dataState.value = FeedModelState(onSaveError = true)
