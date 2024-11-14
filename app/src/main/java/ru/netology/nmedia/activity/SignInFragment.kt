@@ -17,20 +17,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentSignInBinding
-import ru.netology.nmedia.di.DependencyContainer
 import ru.netology.nmedia.viewmodel.SignInViewModel
-import ru.netology.nmedia.viewmodel.ViewModelFactory
 
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
-//    private val dependencyContainer = DependencyContainer.getInstance()
     private val viewModel: SignInViewModel by viewModels()
-//        ownerProducer = ::requireParentFragment,
-//        factoryProducer = {
-//            ViewModelFactory(dependencyContainer.repository, dependencyContainer.appAuth)
-//        }
-//    )
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

@@ -22,22 +22,11 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentSignUpBinding
-import ru.netology.nmedia.di.DependencyContainer
 import ru.netology.nmedia.viewmodel.SignUpViewModel
-import ru.netology.nmedia.viewmodel.ViewModelFactory
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
-//    private val dependencyContainer = DependencyContainer.getInstance()
     private val viewModel: SignUpViewModel by viewModels()
-//        ownerProducer = ::requireParentFragment,
-//        factoryProducer = {
-//            ViewModelFactory(
-//                dependencyContainer.repository,
-//                dependencyContainer.appAuth
-//            )
-//        }
-//    )
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -1,4 +1,4 @@
-package ru.netology.nmedia
+package ru.netology.nmedia.di
 
 import com.google.android.gms.common.GoogleApiAvailability
 import dagger.Module

@@ -20,11 +20,9 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentNewPostBinding
-import ru.netology.nmedia.di.DependencyContainer
 import ru.netology.nmedia.util.AndroidUtils
 import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.viewmodel.PostViewModel
-import ru.netology.nmedia.viewmodel.ViewModelFactory
 
 @AndroidEntryPoint
 class NewPostFragment : Fragment() {
@@ -33,13 +31,7 @@ class NewPostFragment : Fragment() {
         var Bundle.textArg: String? by StringArg
     }
 
-//    private val dependencyContainer = DependencyContainer.getInstance()
     private val viewModel: PostViewModel by viewModels()
-//        ownerProducer = ::requireParentFragment,
-//        factoryProducer = {
-//            ViewModelFactory(dependencyContainer.repository, dependencyContainer.appAuth)
-//        }
-//    )
 
     override fun onCreateView(
         inflater: LayoutInflater,

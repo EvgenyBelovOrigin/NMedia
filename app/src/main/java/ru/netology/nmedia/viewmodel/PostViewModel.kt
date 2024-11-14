@@ -145,9 +145,6 @@ class PostViewModel @Inject constructor(
     }
 
     fun likeById(post: Post) {
-//        if (!authViewModel.authenticated) { - before DI
-//            _requestSignIn.value = Unit
-//        }
         if (appAuth.authState.value?.id == 0L) {
             _requestSignIn.value = Unit
         } else {
