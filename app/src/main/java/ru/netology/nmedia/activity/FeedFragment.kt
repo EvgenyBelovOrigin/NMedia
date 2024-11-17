@@ -8,31 +8,35 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.delay
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.AttachmentViewFullScreenFragment.Companion.textArg
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
-import kotlin.concurrent.thread
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class FeedFragment : Fragment() {
 
-    private val viewModel: PostViewModel by activityViewModels()
+    @Inject
+    lateinit var appAuth: AppAuth
+    private val viewModel: PostViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         val binding = FragmentFeedBinding.inflate(inflater, container, false)
-        val authViewModel = AuthViewModel()
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
@@ -122,9 +126,9 @@ class FeedFragment : Fragment() {
         }
 
         binding.fab.setOnClickListener {
-            if (!authViewModel.authenticated) {
+            if (appAuth.authState.value?.id == 0L) {
                 requestSignIn()
-            }else {
+            } else {
                 findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
             }
         }

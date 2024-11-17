@@ -5,6 +5,7 @@ plugins {
     id 'com.google.gms.google-services'
 }
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     namespace 'ru.netology.nmedia'
@@ -87,6 +88,8 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttplogging_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     implementation "com.github.dhaval2404:imagepicker:$imagepicker_version"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
 
     testImplementation libs.junit

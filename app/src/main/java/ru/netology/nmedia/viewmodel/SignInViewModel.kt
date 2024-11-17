@@ -1,26 +1,20 @@
 package ru.netology.nmedia.viewmodel
 
-import android.app.Application
-import android.content.res.Resources
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ru.netology.nmedia.auth.AppAuth
-import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.error.RunTimeError
 import ru.netology.nmedia.repository.PostRepository
-import ru.netology.nmedia.repository.PostRepositoryImpl
 import ru.netology.nmedia.util.SingleLiveEvent
+import javax.inject.Inject
 
-class SignInViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositoryImpl(
-        AppDb.getInstance(
-            context = application
-        ).postDao(),
-    )
+@HiltViewModel
+class SignInViewModel @Inject constructor(
+    private val repository: PostRepository,
+) : ViewModel() {
+
     val _signedIn = SingleLiveEvent<Unit>()
     val signedIn: LiveData<Unit>
         get() = _signedIn
@@ -42,8 +36,7 @@ class SignInViewModel(application: Application) : AndroidViewModel(application) 
                 e: RunTimeError,
             ) {
                 _notFoundException.value = Unit
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 _exception.value = Unit
 
             }
