@@ -70,27 +70,24 @@ class FeedFragment : Fragment() {
             override fun onShowAttachmentViewFullScreen(post: Post) {
                 findNavController().navigate(R.id.action_feedFragment_to_attachmentViewFullScreen,
                     Bundle().apply {
-                        textArg = post.id.toString()
+                        textArg = post.attachment?.url
+
                     })
             }
         })
         binding.list.adapter = adapter
-//        viewModel.data.observe(viewLifecycleOwner) { state ->
-//            val newPost =
-//                state.posts.size > adapter.currentList.size && adapter.currentList.size > 0
-//            adapter.submitList(state.posts)
-//            if (newPost) {
-//                binding.list.smoothScrollToPosition(0)
-//            }
-//            binding.emptyText.isVisible = state.empty
-//        }
 
         lifecycleScope.launch {
             viewModel.data.collectLatest {
                 adapter.submitData(it)
             }
         }
-
+        lifecycleScope.launch {
+        appAuth.authState.collectLatest {
+            adapter.refresh()
+//            binding.list.smoothScrollToPosition(0)
+        }
+    }
 
 //        viewModel.newPostsCount.observe(viewLifecycleOwner) {
 //            if (it > 0) {
