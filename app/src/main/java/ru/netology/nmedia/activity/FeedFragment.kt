@@ -9,10 +9,14 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.AttachmentViewFullScreenFragment.Companion.textArg
 import ru.netology.nmedia.adapter.OnInteractionListener
@@ -66,27 +70,30 @@ class FeedFragment : Fragment() {
             override fun onShowAttachmentViewFullScreen(post: Post) {
                 findNavController().navigate(R.id.action_feedFragment_to_attachmentViewFullScreen,
                     Bundle().apply {
-                        textArg = post.id.toString()
+                        textArg = post.attachment?.url
+
                     })
             }
         })
         binding.list.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { state ->
-            val newPost =
-                state.posts.size > adapter.currentList.size && adapter.currentList.size > 0
-            adapter.submitList(state.posts)
-            if (newPost) {
-                binding.list.smoothScrollToPosition(0)
-            }
-            binding.emptyText.isVisible = state.empty
-        }
 
-
-        viewModel.newPostsCount.observe(viewLifecycleOwner) {
-            if (it > 0) {
-                binding.refreshPosts.isVisible = true
+        lifecycleScope.launch {
+            viewModel.data.collectLatest {
+                adapter.submitData(it)
             }
         }
+        lifecycleScope.launch {
+        appAuth.authState.collectLatest {
+            adapter.refresh()
+//            binding.list.smoothScrollToPosition(0)
+        }
+    }
+
+//        viewModel.newPostsCount.observe(viewLifecycleOwner) {
+//            if (it > 0) {
+//                binding.refreshPosts.isVisible = true
+//            }
+//        }
 
         binding.refreshPosts.setOnClickListener {
             viewModel.makeOld()
@@ -132,9 +139,16 @@ class FeedFragment : Fragment() {
                 findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
             }
         }
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest {
+                binding.swiperefresh.isRefreshing = it.refresh is LoadState.Loading
+                        || it.append is LoadState.Loading
+                        || it.prepend is LoadState.Loading
+            }
+        }
 
         binding.swiperefresh.setOnRefreshListener {
-            viewModel.refresh()
+            adapter.refresh()
         }
         viewModel.onLikeError.observe(viewLifecycleOwner) { id ->
             MaterialAlertDialogBuilder(requireContext())
@@ -142,9 +156,9 @@ class FeedFragment : Fragment() {
                 .setMessage(R.string.error_like)
                 .setPositiveButton(R.string.ok, null)
                 .show()
-            adapter.currentList.indexOfFirst { it.id == id }
-                .takeIf { it != -1 }
-                ?.let(adapter::notifyItemChanged)
+//            adapter.currentList.indexOfFirst { it.id == id }
+//                .takeIf { it != -1 }
+//                ?.let(adapter::notifyItemChanged)
         }
         viewModel.requestSignIn.observe(viewLifecycleOwner) {
             requestSignIn()
