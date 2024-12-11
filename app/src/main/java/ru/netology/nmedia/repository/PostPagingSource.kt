@@ -6,8 +6,9 @@ import okio.IOException
 import retrofit2.HttpException
 import ru.netology.nmedia.api.ApiService
 import ru.netology.nmedia.dto.Post
+import javax.inject.Inject
 
-class PostPagingSource(
+class PostPagingSource @Inject constructor(
     private val service: ApiService,
 ) : PagingSource<Long, Post>() {
     override fun getRefreshKey(state: PagingState<Long, Post>): Long? = null
