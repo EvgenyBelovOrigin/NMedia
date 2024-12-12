@@ -24,19 +24,18 @@ data class PostEntity(
     val attachment: Attachment?,
 
     ) {
-//    fun toDto() = Post(
-//        id,
-//        author,
-//        authorId,
-//        content,
-//        published,
-//        likedByMe,
-//        likes,
-//        authorAvataatar,
-//        isSaved,
-//        attachment = attachment
-//    )
-
+    fun toDto() = Post(
+        id,
+        author,
+        authorId,
+        content,
+        published,
+        likedByMe,
+        likes,
+        authorAvataatar,
+        isSaved,
+        attachment = attachment
+    )
 
     companion object {
         fun fromDto(dto: Post, isNewPost: Boolean) =
@@ -53,19 +52,6 @@ data class PostEntity(
                 isNewPost,
                 dto.attachment
             )
-        fun toDto(postEntity: PostEntity) = Post(
-            postEntity.id,
-            postEntity.author,
-            postEntity.authorId,
-            postEntity.content,
-            postEntity.published,
-            postEntity.likedByMe,
-            postEntity.likes,
-            postEntity.authorAvataatar,
-            postEntity.isSaved,
-            attachment = postEntity.attachment
-        )
-
 
     }
 }

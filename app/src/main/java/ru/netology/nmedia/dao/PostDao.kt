@@ -1,6 +1,5 @@
 package ru.netology.nmedia.dao
 
-import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -12,10 +11,6 @@ import ru.netology.nmedia.entity.PostEntity
 interface PostDao {
     @Query("SELECT * FROM PostEntity ORDER BY id DESC")
     fun getAll(): Flow<List<PostEntity>>
-
-    // new
-    @Query("SELECT * FROM PostEntity ORDER BY id DESC")
-    fun getLatest(loadSize: Int): List<PostEntity>
 
     @Query("SELECT * FROM PostEntity WHERE isNewPost=0 ORDER BY id DESC")
     fun getAllWithoutNew(): Flow<List<PostEntity>>
