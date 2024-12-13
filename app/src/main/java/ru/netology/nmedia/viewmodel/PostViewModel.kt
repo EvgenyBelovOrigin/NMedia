@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.PostEntity
@@ -43,40 +42,10 @@ private val empty = Post(
 @HiltViewModel
 class PostViewModel @Inject constructor(
     private val repository: PostRepository,
-    private val appAuth: AppAuth,
 ) : ViewModel() {
 
-    @OptIn(ExperimentalCoroutinesApi::class) // new
-//    val data: LiveData<FeedModel> = appAuth.authState.flatMapLatest { token ->
-//        repository.posts.map {
-//            FeedModel(it.map { post ->
-//                post.copy(ownedByMe = post.authorId == token?.id)
-//
-//            }, it.isEmpty())
-//        }.catch {
-//            it.printStackTrace()
-//        }
-//    }.asLiveData(Dispatchers.Default)
-
-
-//    val data: Flow<PagingData<Post>> = appAuth.authState
-//        .flatMapLatest { token ->
-//            repository.posts.map { pagingData ->
-//                pagingData.map { post ->
-//                    post.copy(ownedByMe = post.authorId == token?.id)
-//                }
-//            }
-//        }.flowOn(Dispatchers.Default)
     val data: Flow<PagingData<Post>> =
         repository.posts
-
-
-//    private val dataWhole: LiveData<FeedModel> = repository.postsWhole.map {
-//        FeedModel(it, it.isEmpty())
-//    }.catch {
-//        it.printStackTrace()
-//    }.asLiveData(Dispatchers.Default)
-
 
     private val _dataState = MutableLiveData(FeedModelState())
     val dataState: LiveData<FeedModelState>
@@ -97,43 +66,11 @@ class PostViewModel @Inject constructor(
     val photo: LiveData<PhotoModel>
         get() = _photo
 
-    private val _requestSignIn = SingleLiveEvent<Unit>()
-    val requestSignIn: LiveData<Unit>
-        get() = _requestSignIn
-
-
-//    init {
-//        loadPosts()
-//    }
-
-//    val newPostsCount: LiveData<Int> = dataWhole.switchMap { feedModel ->
-//        repository.getNewer(feedModel.posts.firstOrNull()?.id?.toInt() ?: 0, feedModel.posts.size)
-//            .asLiveData(Dispatchers.Default, 1_000)
-//    }
-
-//    fun loadPosts() {
-//        _dataState.value = FeedModelState(loading = true)
-//
-//        viewModelScope.launch {
-//
-//            try {
-//                repository.getAll()
-//                _dataState.value = FeedModelState()
-//
-//            } catch (e: Exception) {
-//                _dataState.value = FeedModelState(error = true)
-//            }
-//        }
-//    }
-
     fun save() {
         edited.value?.let {
             viewModelScope.launch {
                 try {
-                    _photo.value?.file?.let { file ->
-                        repository.saveWithAttachment(it, MediaUpload(file))
-                    } ?: repository.save(it)
-
+                    repository.save(it)
                     _dataState.value = FeedModelState()
                     edited.value = empty
                     _photo.value = noPhoto
@@ -159,9 +96,6 @@ class PostViewModel @Inject constructor(
     }
 
     fun likeById(post: Post) {
-        if (appAuth.authState.value?.id == 0L) {
-            _requestSignIn.value = Unit
-        } else {
             viewModelScope.launch {
                 try {
                     if (!post.likedByMe) {
@@ -174,20 +108,7 @@ class PostViewModel @Inject constructor(
                 }
             }
 
-        }
-    }
 
-    fun refresh() {
-        _dataState.value = FeedModelState(refreshing = true)
-
-        viewModelScope.launch {
-            try {
-                repository.getAll()
-                _dataState.value = FeedModelState()
-            } catch (e: Exception) {
-                _dataState.value = FeedModelState(error = true)
-            }
-        }
     }
 
 
@@ -202,22 +123,4 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun makeOld() {
-        viewModelScope.launch {
-            try {
-                repository.makeOld()
-
-            } catch (e: Exception) {
-                _dataState.value = FeedModelState(error = true)
-            }
-        }
-    }
-
-    fun clearPhoto() {
-        _photo.value = noPhoto
-    }
-
-    fun updatePhoto(uri: Uri, file: File) {
-        _photo.value = PhotoModel(uri, file)
-    }
 }

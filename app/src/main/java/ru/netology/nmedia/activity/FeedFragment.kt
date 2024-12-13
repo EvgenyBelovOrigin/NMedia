@@ -18,10 +18,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
-import ru.netology.nmedia.activity.AttachmentViewFullScreenFragment.Companion.textArg
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
-import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.viewmodel.PostViewModel
@@ -31,8 +29,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FeedFragment : Fragment() {
 
-    @Inject
-    lateinit var appAuth: AppAuth
     private val viewModel: PostViewModel by viewModels()
 
     override fun onCreateView(
@@ -67,13 +63,6 @@ class FeedFragment : Fragment() {
                 startActivity(shareIntent)
             }
 
-            override fun onShowAttachmentViewFullScreen(post: Post) {
-                findNavController().navigate(R.id.action_feedFragment_to_attachmentViewFullScreen,
-                    Bundle().apply {
-                        textArg = post.attachment?.url
-
-                    })
-            }
         })
         binding.list.adapter = adapter
 
@@ -82,62 +71,11 @@ class FeedFragment : Fragment() {
                 adapter.submitData(it)
             }
         }
-        lifecycleScope.launch {
-            appAuth.authState.collectLatest {
-                adapter.refresh()
-//            binding.list.smoothScrollToPosition(0)
-            }
-        }
 
-//        viewModel.newPostsCount.observe(viewLifecycleOwner) {
-//            if (it > 0) {
-//                binding.refreshPosts.isVisible = true
-//            }
-//        }
-
-        binding.refreshPosts.setOnClickListener {
-            viewModel.makeOld()
-            binding.refreshPosts.isVisible = false
-        }
-
-//        viewModel.dataState.observe(viewLifecycleOwner) { state ->
-//            binding.progress.isVisible = state.loading
-//            if (state.error) {
-//                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_INDEFINITE)
-//                    .setAction(R.string.retry_loading) {
-//                        viewModel.loadPosts()
-//                    }
-//                    .show()
-//            }
-//            if (state.onDeleteError) {
-//                Toast.makeText(
-//                    activity,
-//                    R.string.error_delete,
-//                    Toast.LENGTH_LONG
-//                ).show()
-//            }
-//            if (state.onSaveError) {
-//                MaterialAlertDialogBuilder(requireContext())
-//                    .setTitle(R.string.error)
-//                    .setMessage(R.string.error_saving)
-//                    .setPositiveButton(R.string.try_again) {
-//                            _, _,
-//                        ->
-//                        findNavController().navigate(R.id.newPostFragment)
-//                    }
-//                    .setNegativeButton(R.string.return_to_posts, null)
-//                    .show()
-//            }
-//
-//            binding.swiperefresh.isRefreshing = state.refreshing
-//        }
 
         binding.fab.setOnClickListener {
-//            if (appAuth.authState.value?.id == 0L) {
-//                requestSignIn()
-//            } else {
-                findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
-//            }
+            findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
+
         }
         lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest {
