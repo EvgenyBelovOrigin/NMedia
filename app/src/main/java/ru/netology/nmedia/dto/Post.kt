@@ -11,7 +11,7 @@ data class Post(
     val authorAvatar: String?,
     val isSaved: Boolean,
     val attachment: Attachment? = null,
-    val ownedByMe: Boolean = false,
+    val ownedByMe: Boolean = true,
 )
 
 data class Attachment(

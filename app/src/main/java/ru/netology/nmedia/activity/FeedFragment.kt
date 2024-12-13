@@ -83,11 +83,11 @@ class FeedFragment : Fragment() {
             }
         }
         lifecycleScope.launch {
-        appAuth.authState.collectLatest {
-            adapter.refresh()
+            appAuth.authState.collectLatest {
+                adapter.refresh()
 //            binding.list.smoothScrollToPosition(0)
+            }
         }
-    }
 
 //        viewModel.newPostsCount.observe(viewLifecycleOwner) {
 //            if (it > 0) {
@@ -100,44 +100,44 @@ class FeedFragment : Fragment() {
             binding.refreshPosts.isVisible = false
         }
 
-        viewModel.dataState.observe(viewLifecycleOwner) { state ->
-            binding.progress.isVisible = state.loading
-            if (state.error) {
-                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.retry_loading) {
-                        viewModel.loadPosts()
-                    }
-                    .show()
-            }
-            if (state.onDeleteError) {
-                Toast.makeText(
-                    activity,
-                    R.string.error_delete,
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-            if (state.onSaveError) {
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.error)
-                    .setMessage(R.string.error_saving)
-                    .setPositiveButton(R.string.try_again) {
-                            _, _,
-                        ->
-                        findNavController().navigate(R.id.newPostFragment)
-                    }
-                    .setNegativeButton(R.string.return_to_posts, null)
-                    .show()
-            }
-
-            binding.swiperefresh.isRefreshing = state.refreshing
-        }
+//        viewModel.dataState.observe(viewLifecycleOwner) { state ->
+//            binding.progress.isVisible = state.loading
+//            if (state.error) {
+//                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_INDEFINITE)
+//                    .setAction(R.string.retry_loading) {
+//                        viewModel.loadPosts()
+//                    }
+//                    .show()
+//            }
+//            if (state.onDeleteError) {
+//                Toast.makeText(
+//                    activity,
+//                    R.string.error_delete,
+//                    Toast.LENGTH_LONG
+//                ).show()
+//            }
+//            if (state.onSaveError) {
+//                MaterialAlertDialogBuilder(requireContext())
+//                    .setTitle(R.string.error)
+//                    .setMessage(R.string.error_saving)
+//                    .setPositiveButton(R.string.try_again) {
+//                            _, _,
+//                        ->
+//                        findNavController().navigate(R.id.newPostFragment)
+//                    }
+//                    .setNegativeButton(R.string.return_to_posts, null)
+//                    .show()
+//            }
+//
+//            binding.swiperefresh.isRefreshing = state.refreshing
+//        }
 
         binding.fab.setOnClickListener {
-            if (appAuth.authState.value?.id == 0L) {
-                requestSignIn()
-            } else {
+//            if (appAuth.authState.value?.id == 0L) {
+//                requestSignIn()
+//            } else {
                 findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
-            }
+//            }
         }
         lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest {
@@ -160,9 +160,9 @@ class FeedFragment : Fragment() {
 //                .takeIf { it != -1 }
 //                ?.let(adapter::notifyItemChanged)
         }
-        viewModel.requestSignIn.observe(viewLifecycleOwner) {
-            requestSignIn()
-        }
+//        viewModel.requestSignIn.observe(viewLifecycleOwner) {
+//            requestSignIn()
+//        }
 
         return binding.root
     }

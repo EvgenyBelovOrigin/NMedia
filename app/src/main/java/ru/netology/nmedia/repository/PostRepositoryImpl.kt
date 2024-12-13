@@ -2,6 +2,7 @@ package ru.netology.nmedia.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -43,11 +44,10 @@ class PostRepositoryImpl @Inject constructor(
 //        it.map(PostEntity::toDto)
 //    }
     override val posts = Pager(
-        config = PagingConfig(pageSize = 10, enablePlaceholders = false),
-        pagingSourceFactory = {
-            PostPagingSource(apiService)
-        }
-    ).flow
+        config = PagingConfig(pageSize = 10, enablePlaceholders = false)
+    ) {
+        dao.getAllPaging()
+    }.flow.map { PostEntity.toDtoPagingData(it) }
 
 //    override val postsWhole = TODO()
 
@@ -82,8 +82,8 @@ class PostRepositoryImpl @Inject constructor(
 
             val body = response.body() ?: throw ApiError(response.code(), response.message())
             dao.insert(body.map { PostEntity.fromDto(it, false) })
-            dao.makeOld()
-            dao.removeByIsSaved()
+//            dao.makeOld()
+//            dao.removeByIsSaved()
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {
@@ -109,14 +109,14 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun save(post: Post) {
         try {
             dao.insert(PostEntity.fromDto(post, false).copy(isSaved = false))
-            val response = apiService.save(post)
-            if (!response.isSuccessful) {
-                throw ApiError(response.code(), response.message())
-            }
-
-            val body = response.body() ?: throw ApiError(response.code(), response.message())
-            dao.insert(PostEntity.fromDto(body, false))
-            dao.removeByIsSaved()
+//            val response = apiService.save(post)
+//            if (!response.isSuccessful) {
+//                throw ApiError(response.code(), response.message())
+//            }
+//
+//            val body = response.body() ?: throw ApiError(response.code(), response.message())
+//            dao.insert(PostEntity.fromDto(body, false))
+//            dao.removeByIsSaved()
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {
