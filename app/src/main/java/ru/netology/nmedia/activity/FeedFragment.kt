@@ -18,8 +18,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
+import ru.netology.nmedia.activity.AttachmentViewFullScreenFragment.Companion.textArg
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.viewmodel.PostViewModel
@@ -29,7 +31,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FeedFragment : Fragment() {
 
-
+    @Inject
+    lateinit var appAuth: AppAuth
     private val viewModel: PostViewModel by viewModels()
 
     override fun onCreateView(
@@ -64,13 +67,13 @@ class FeedFragment : Fragment() {
                 startActivity(shareIntent)
             }
 
-//            override fun onShowAttachmentViewFullScreen(post: Post) {
-//                findNavController().navigate(R.id.action_feedFragment_to_attachmentViewFullScreen,
-//                    Bundle().apply {
-//                        textArg = post.attachment?.url
-//
-//                    })
-//            }
+            override fun onShowAttachmentViewFullScreen(post: Post) {
+                findNavController().navigate(R.id.action_feedFragment_to_attachmentViewFullScreen,
+                    Bundle().apply {
+                        textArg = post.attachment?.url
+
+                    })
+            }
         })
         binding.list.adapter = adapter
 
@@ -79,12 +82,12 @@ class FeedFragment : Fragment() {
                 adapter.submitData(it)
             }
         }
-//        lifecycleScope.launch {
-//            appAuth.authState.collectLatest {
-//                adapter.refresh()
-////            binding.list.smoothScrollToPosition(0)
-//            }
-//        }
+        lifecycleScope.launch {
+            appAuth.authState.collectLatest {
+                adapter.refresh()
+//            binding.list.smoothScrollToPosition(0)
+            }
+        }
 
 //        viewModel.newPostsCount.observe(viewLifecycleOwner) {
 //            if (it > 0) {
@@ -92,10 +95,10 @@ class FeedFragment : Fragment() {
 //            }
 //        }
 
-//        binding.refreshPosts.setOnClickListener {
-//            viewModel.makeOld()
-//            binding.refreshPosts.isVisible = false
-//        }
+        binding.refreshPosts.setOnClickListener {
+            viewModel.makeOld()
+            binding.refreshPosts.isVisible = false
+        }
 
 //        viewModel.dataState.observe(viewLifecycleOwner) { state ->
 //            binding.progress.isVisible = state.loading

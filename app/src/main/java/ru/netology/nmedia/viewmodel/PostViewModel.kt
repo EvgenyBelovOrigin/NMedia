@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.PostEntity
@@ -42,7 +43,7 @@ private val empty = Post(
 @HiltViewModel
 class PostViewModel @Inject constructor(
     private val repository: PostRepository,
-//    private val appAuth: AppAuth,
+    private val appAuth: AppAuth,
 ) : ViewModel() {
 
     @OptIn(ExperimentalCoroutinesApi::class) // new
@@ -129,10 +130,9 @@ class PostViewModel @Inject constructor(
         edited.value?.let {
             viewModelScope.launch {
                 try {
-//                    _photo.value?.file?.let { file ->
-//                        repository.saveWithAttachment(it, MediaUpload(file))
-//                    } ?:
-                    repository.save(it)
+                    _photo.value?.file?.let { file ->
+                        repository.saveWithAttachment(it, MediaUpload(file))
+                    } ?: repository.save(it)
 
                     _dataState.value = FeedModelState()
                     edited.value = empty
@@ -159,9 +159,9 @@ class PostViewModel @Inject constructor(
     }
 
     fun likeById(post: Post) {
-//        if (appAuth.authState.value?.id == 0L) {
-//            _requestSignIn.value = Unit
-//        } else {
+        if (appAuth.authState.value?.id == 0L) {
+            _requestSignIn.value = Unit
+        } else {
             viewModelScope.launch {
                 try {
                     if (!post.likedByMe) {
@@ -174,21 +174,21 @@ class PostViewModel @Inject constructor(
                 }
             }
 
-//        }
+        }
     }
 
-//    fun refresh() {
-//        _dataState.value = FeedModelState(refreshing = true)
-//
-//        viewModelScope.launch {
-//            try {
-//                repository.getAll()
-//                _dataState.value = FeedModelState()
-//            } catch (e: Exception) {
-//                _dataState.value = FeedModelState(error = true)
-//            }
-//        }
-//    }
+    fun refresh() {
+        _dataState.value = FeedModelState(refreshing = true)
+
+        viewModelScope.launch {
+            try {
+                repository.getAll()
+                _dataState.value = FeedModelState()
+            } catch (e: Exception) {
+                _dataState.value = FeedModelState(error = true)
+            }
+        }
+    }
 
 
     fun removeById(id: Long) {
@@ -202,22 +202,22 @@ class PostViewModel @Inject constructor(
         }
     }
 
-//    fun makeOld() {
-//        viewModelScope.launch {
-//            try {
-//                repository.makeOld()
-//
-//            } catch (e: Exception) {
-//                _dataState.value = FeedModelState(error = true)
-//            }
-//        }
-//    }
+    fun makeOld() {
+        viewModelScope.launch {
+            try {
+                repository.makeOld()
 
-//    fun clearPhoto() {
-//        _photo.value = noPhoto
-//    }
-//
-//    fun updatePhoto(uri: Uri, file: File) {
-//        _photo.value = PhotoModel(uri, file)
-//    }
+            } catch (e: Exception) {
+                _dataState.value = FeedModelState(error = true)
+            }
+        }
+    }
+
+    fun clearPhoto() {
+        _photo.value = noPhoto
+    }
+
+    fun updatePhoto(uri: Uri, file: File) {
+        _photo.value = PhotoModel(uri, file)
+    }
 }
