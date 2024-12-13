@@ -51,19 +51,19 @@ class NewPostFragment : Fragment() {
 
         binding.edit.requestFocus()
 
-        val imagePickerLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                if (it.resultCode == ImagePicker.RESULT_ERROR) {
-                    Snackbar.make(
-                        binding.root,
-                        ImagePicker.getError(it.data),
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                } else {
-                    val uri = it.data?.data ?: return@registerForActivityResult
-                    viewModel.updatePhoto(uri, uri.toFile())
-                }
-            }
+//        val imagePickerLauncher =
+//            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+//                if (it.resultCode == ImagePicker.RESULT_ERROR) {
+//                    Snackbar.make(
+//                        binding.root,
+//                        ImagePicker.getError(it.data),
+//                        Snackbar.LENGTH_LONG
+//                    ).show()
+//                } else {
+//                    val uri = it.data?.data ?: return@registerForActivityResult
+//                    viewModel.updatePhoto(uri, uri.toFile())
+//                }
+//            }
         viewModel.photo.observe(viewLifecycleOwner) { photo ->
             if (photo.uri == null) {
                 binding.photoContainer.isGone = true
@@ -72,34 +72,34 @@ class NewPostFragment : Fragment() {
             binding.photoContainer.isVisible = true
             binding.photo.setImageURI(photo.uri)
         }
-        binding.removePhoto.setOnClickListener {
-            viewModel.clearPhoto()
-        }
-        binding.takePhoto.setOnClickListener {
-            ImagePicker.with(this)
-                .crop()
-                .compress(2048)
-                .cameraOnly()
-                .createIntent {
-                    imagePickerLauncher.launch(it)
-                }
-        }
+//        binding.removePhoto.setOnClickListener {
+//            viewModel.clearPhoto()
+//        }
+//        binding.takePhoto.setOnClickListener {
+//            ImagePicker.with(this)
+//                .crop()
+//                .compress(2048)
+//                .cameraOnly()
+//                .createIntent {
+//                    imagePickerLauncher.launch(it)
+//                }
+//        }
 
-        binding.pickPhoto.setOnClickListener {
-            ImagePicker.with(this)
-                .crop()
-                .compress(2048)
-                .galleryOnly()
-                .galleryMimeTypes(
-                    arrayOf(
-                        "image/png",
-                        "image/jpg",
-                        "image/jpeg"
-                    )
-                )
-                .createIntent(imagePickerLauncher::launch)
-
-        }
+//        binding.pickPhoto.setOnClickListener {
+//            ImagePicker.with(this)
+//                .crop()
+//                .compress(2048)
+//                .galleryOnly()
+//                .galleryMimeTypes(
+//                    arrayOf(
+//                        "image/png",
+//                        "image/jpg",
+//                        "image/jpeg"
+//                    )
+//                )
+//                .createIntent(imagePickerLauncher::launch)
+//
+//        }
 
         requireActivity().addMenuProvider(
             object : MenuProvider {

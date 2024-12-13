@@ -19,14 +19,10 @@ import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
-import ru.netology.nmedia.auth.AppAuth
-import ru.netology.nmedia.viewmodel.AuthViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
-    @Inject
-    lateinit var appAuth: AppAuth
 
     @Inject
     lateinit var fcm: FirebaseMessaging
@@ -34,7 +30,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     @Inject
     lateinit var googleApiAvailability: GoogleApiAvailability
 
-    private val viewModel: AuthViewModel by viewModels()
+//    private val viewModel: AuthViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,43 +57,6 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                     }
                 )
         }
-
-
-        addMenuProvider(
-            object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.auth_menu, menu)
-
-                    viewModel.data.observe(this@AppActivity) {
-                        menu.setGroupVisible(R.id.authenticated, viewModel.authenticated)
-                        menu.setGroupVisible(R.id.unauthenticated, !viewModel.authenticated)
-
-                    }
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
-                    when (menuItem.itemId) {
-                        R.id.signin -> {
-                            findNavController(R.id.nav_host_fragment).navigate(R.id.signInFragment)
-                            true
-                        }
-
-                        R.id.signup -> {
-                            findNavController(R.id.nav_host_fragment).navigate(R.id.signUpFragment)
-                            true
-                        }
-
-                        R.id.signout -> {
-                            appAuth.clear()
-                            true
-                        }
-
-                        else -> false
-                    }
-
-
-            }
-        )
 
         checkGoogleApiAvailability()
     }
