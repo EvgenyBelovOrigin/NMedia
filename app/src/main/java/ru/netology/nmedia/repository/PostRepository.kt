@@ -8,10 +8,7 @@ import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.PostEntity
 
 interface PostRepository {
-    //    val posts: Flow<List<Post>>
     val posts: Flow<PagingData<Post>>
-
-//    val postsWhole: Flow<List<Post>>
 
     suspend fun makeOld()
     suspend fun likeById(id: Long)

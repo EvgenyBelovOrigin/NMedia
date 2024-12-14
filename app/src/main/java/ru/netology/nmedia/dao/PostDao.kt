@@ -14,7 +14,7 @@ interface PostDao {
     fun getAll(): Flow<List<PostEntity>>
 
     @Query("SELECT * FROM PostEntity ORDER BY id DESC")
-    fun getAllPaging(): PagingSource<Int,PostEntity>
+    fun getAllPaging(): PagingSource<Int, PostEntity>
 
     @Query("SELECT * FROM PostEntity WHERE isNewPost=0 ORDER BY id DESC")
     fun getAllWithoutNew(): Flow<List<PostEntity>>

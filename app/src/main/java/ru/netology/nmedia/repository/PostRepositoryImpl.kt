@@ -32,13 +32,6 @@ import javax.inject.Singleton
 class PostRepositoryImpl @Inject constructor(
     private val dao: PostDao,
 ) : PostRepository {
-
-    //    override val posts = dao.getAllWithoutNew().map {
-//        it.map(PostEntity::toDto)
-//    }
-//    override val postsWhole = dao.getAll().map {
-//        it.map(PostEntity::toDto)
-//    }
     override val posts = Pager(
         config = PagingConfig(pageSize = 10, enablePlaceholders = false)
     ) {

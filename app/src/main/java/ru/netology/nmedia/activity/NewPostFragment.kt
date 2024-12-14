@@ -13,6 +13,7 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
@@ -31,7 +32,7 @@ class NewPostFragment : Fragment() {
         var Bundle.textArg: String? by StringArg
     }
 
-    private val viewModel: PostViewModel by viewModels()
+    private val viewModel: PostViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,11 +44,15 @@ class NewPostFragment : Fragment() {
             container,
             false
         )
-
-
+//        viewModel.edited.observe(
+//            viewLifecycleOwner
+//        ) {
+//            binding.edit.setText(it.content)
+//        }
         binding.edit.setText(viewModel.edited.value?.content)
-//        arguments?.textArg
-//            ?.let(binding.edit::setText)
+
+        arguments?.textArg
+            ?.let(binding.edit::setText)
 
         binding.edit.requestFocus()
 
@@ -71,6 +76,7 @@ class NewPostFragment : Fragment() {
                     if (menuItem.itemId == R.id.save) {
                         viewModel.changeContent(binding.edit.text.toString())
                         viewModel.save()
+                        viewModel.clearEdited()
                         AndroidUtils.hideKeyboard(requireView())
                         return true
                     } else {

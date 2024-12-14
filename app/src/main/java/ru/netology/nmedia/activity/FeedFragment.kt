@@ -8,8 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -29,7 +32,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FeedFragment : Fragment() {
 
-    private val viewModel: PostViewModel by viewModels()
+    private val viewModel: PostViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,22 +69,37 @@ class FeedFragment : Fragment() {
         })
         binding.list.adapter = adapter
 
-        lifecycleScope.launch {
-            viewModel.data.collectLatest {
-                adapter.submitData(it)
+//        lifecycleScope.launch {
+//            viewModel.data.collectLatest {
+//                adapter.submitData(it)
+//            }
+//        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.data.collectLatest(adapter::submitData)
             }
         }
-
 
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
 
         }
-        lifecycleScope.launch {
-            adapter.loadStateFlow.collectLatest {
-                binding.swiperefresh.isRefreshing = it.refresh is LoadState.Loading
-                        || it.append is LoadState.Loading
-                        || it.prepend is LoadState.Loading
+//        lifecycleScope.launch {
+//            adapter.loadStateFlow.collectLatest {
+//                binding.swiperefresh.isRefreshing = it.refresh is LoadState.Loading
+//                        || it.append is LoadState.Loading
+//                        || it.prepend is LoadState.Loading
+//            }
+//        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                adapter.loadStateFlow.collectLatest { state ->
+                    binding.swiperefresh.isRefreshing =
+                        state.refresh is LoadState.Loading ||
+                                state.prepend is LoadState.Loading ||
+                                state.append is LoadState.Loading
+                }
             }
         }
 
@@ -94,27 +112,9 @@ class FeedFragment : Fragment() {
                 .setMessage(R.string.error_like)
                 .setPositiveButton(R.string.ok, null)
                 .show()
-//            adapter.currentList.indexOfFirst { it.id == id }
-//                .takeIf { it != -1 }
-//                ?.let(adapter::notifyItemChanged)
-        }
-//        viewModel.requestSignIn.observe(viewLifecycleOwner) {
-//            requestSignIn()
-//        }
 
+        }
         return binding.root
     }
 
-    fun requestSignIn() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.requestSignInTitle)
-            .setMessage(R.string.requestSignInMessage)
-            .setPositiveButton(R.string.ok) {
-                    _, _,
-                ->
-                findNavController().navigate(R.id.signInFragment)
-            }
-            .setNegativeButton(R.string.return_to_posts, null)
-            .show()
-    }
 }

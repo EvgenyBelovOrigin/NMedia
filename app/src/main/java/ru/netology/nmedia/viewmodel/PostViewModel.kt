@@ -1,28 +1,19 @@
 package ru.netology.nmedia.viewmodel
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.util.SingleLiveEvent
-import java.io.File
 import javax.inject.Inject
 
 private val empty = Post(
@@ -51,7 +42,10 @@ class PostViewModel @Inject constructor(
     val dataState: LiveData<FeedModelState>
         get() = _dataState
 
-    val edited = MutableLiveData(empty)
+    private val _edited = MutableLiveData(empty)
+    val edited: LiveData<Post>
+        get() = _edited
+
     val noPhoto = PhotoModel()
 
     private val _postCreated = SingleLiveEvent<Unit>()
@@ -67,12 +61,12 @@ class PostViewModel @Inject constructor(
         get() = _photo
 
     fun save() {
-        edited.value?.let {
+        _edited.value?.let {
             viewModelScope.launch {
                 try {
                     repository.save(it)
                     _dataState.value = FeedModelState()
-                    edited.value = empty
+                    _edited.value = empty
                     _photo.value = noPhoto
                     _postCreated.value = Unit
 
@@ -84,29 +78,33 @@ class PostViewModel @Inject constructor(
     }
 
     fun edit(post: Post) {
-        edited.value = post
+        _edited.value = post
     }
 
     fun changeContent(content: String) {
         val text = content.trim()
-        if (edited.value?.content == text) {
+        if (_edited.value?.content == text) {
             return
         }
-        edited.value = edited.value?.copy(content = text)
+        _edited.value = _edited.value?.copy(content = text)
+    }
+
+    fun clearEdited() {
+        _edited.value = empty
     }
 
     fun likeById(post: Post) {
-            viewModelScope.launch {
-                try {
-                    if (!post.likedByMe) {
-                        repository.likeById(post.id)
-                    } else {
-                        repository.disLikeById(post.id)
-                    }
-                } catch (e: Exception) {
-                    _onLikeError.value = post.id
+        viewModelScope.launch {
+            try {
+                if (!post.likedByMe) {
+                    repository.likeById(post.id)
+                } else {
+                    repository.disLikeById(post.id)
                 }
+            } catch (e: Exception) {
+                _onLikeError.value = post.id
             }
+        }
 
 
     }
