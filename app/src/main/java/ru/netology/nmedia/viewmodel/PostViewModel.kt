@@ -45,7 +45,7 @@ class PostViewModel @Inject constructor(
     private val appAuth: AppAuth,
 ) : ViewModel() {
 
-    @OptIn(ExperimentalCoroutinesApi::class) // new
+//    @OptIn(ExperimentalCoroutinesApi::class) // new
 //    val data: LiveData<FeedModel> = appAuth.authState.flatMapLatest { token ->
 //        repository.posts.map {
 //            FeedModel(it.map { post ->
@@ -111,9 +111,9 @@ class PostViewModel @Inject constructor(
         _dataState.value = FeedModelState(loading = true)
 
         viewModelScope.launch {
-
             try {
-                repository.getAll()
+                _dataState.value = FeedModelState(loading = true)
+//                repository.getAll()
                 _dataState.value = FeedModelState()
 
             } catch (e: Exception) {
