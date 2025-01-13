@@ -7,10 +7,8 @@ import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
 
 interface PostRepository {
-    //    val posts: Flow<List<Post>>
     val posts: Flow<PagingData<Post>>
 
-//    val postsWhole: Flow<List<Post>>
 
     fun getNewer(id: Int, size: Int): Flow<Int>
     suspend fun makeOld()

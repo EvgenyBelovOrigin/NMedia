@@ -36,20 +36,12 @@ class PostRepositoryImpl @Inject constructor(
     private val appAuth: AppAuth,
 ) : PostRepository {
 
-    //    override val posts = dao.getAllWithoutNew().map {
-//        it.map(PostEntity::toDto)
-//    }
-//    override val postsWhole = dao.getAll().map {
-//        it.map(PostEntity::toDto)
-//    }
     override val posts = Pager(
         config = PagingConfig(pageSize = 10, enablePlaceholders = false),
         pagingSourceFactory = {
             PostPagingSource(apiService)
         }
     ).flow
-
-//    override val postsWhole = TODO()
 
     override fun getNewer(id: Int, size: Int): Flow<Int> = flow {
         while (true) {

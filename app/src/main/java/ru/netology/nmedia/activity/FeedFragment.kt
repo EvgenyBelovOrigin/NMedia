@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -80,22 +79,12 @@ class FeedFragment : Fragment() {
         })
         binding.list.adapter = adapter
 
-//        lifecycleScope.launch {
-//            viewModel.data.collectLatest {
-//                adapter.submitData(it)
-//            }
-//        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.data.collectLatest(adapter::submitData)
             }
         }
 
-//        lifecycleScope.launch {
-//            appAuth.authState.collectLatest {
-//                adapter.refresh()
-//            }
-//        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
@@ -150,13 +139,7 @@ class FeedFragment : Fragment() {
                 findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
             }
         }
-//        lifecycleScope.launch {
-//            adapter.loadStateFlow.collectLatest {
-//                binding.swiperefresh.isRefreshing = it.refresh is LoadState.Loading
-//                        || it.append is LoadState.Loading
-//                        || it.prepend is LoadState.Loading
-//            }
-//        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 adapter.loadStateFlow.collectLatest { state ->

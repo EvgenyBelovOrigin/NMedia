@@ -34,30 +34,13 @@ class AttachmentViewFullScreenFragment : Fragment(
         savedInstanceState: Bundle?,
     ): View {
         val binding = FragmentAttachmentViewFullScreenBinding.inflate(inflater, container, false)
-//        val postId = arguments?.textArg?.toLong() ?: { error() }
-//        var pagingDataPost: List<Post>? = null
+
         val attachmentUrl = arguments?.textArg
-
-
-//        lifecycleScope.launch {
-//            viewModel.data.collectLatest { posts ->
-//                posts.map { pagingDataPost = pagingDataPost?.plus(it) }
-//            }
-//        }
-//        val post = pagingDataPost?.firstOrNull { it.id == postId }
 
 
         binding.attachmentViewFullScreen
             .loadAttachmentView("$baseUrl/media/$attachmentUrl")
-//        binding.like.isChecked = post?.likedByMe ?: false //?????
-//        binding.like.text = "${post?.likes}"
-//        binding.like.setOnClickListener {
-//            if (post != null) {
-//                viewModel.likeById(post!!)
-//            } else {
-//                error()
-//            }
-//        }
+
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().navigateUp()

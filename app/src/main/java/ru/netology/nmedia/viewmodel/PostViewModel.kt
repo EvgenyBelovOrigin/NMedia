@@ -44,20 +44,6 @@ class PostViewModel @Inject constructor(
     private val repository: PostRepository,
     private val appAuth: AppAuth,
 ) : ViewModel() {
-
-//    @OptIn(ExperimentalCoroutinesApi::class) // new
-//    val data: LiveData<FeedModel> = appAuth.authState.flatMapLatest { token ->
-//        repository.posts.map {
-//            FeedModel(it.map { post ->
-//                post.copy(ownedByMe = post.authorId == token?.id)
-//
-//            }, it.isEmpty())
-//        }.catch {
-//            it.printStackTrace()
-//        }
-//    }.asLiveData(Dispatchers.Default)
-
-
     val data: Flow<PagingData<Post>> = appAuth.authState
         .flatMapLatest { token ->
             repository.posts.map { pagingData ->
@@ -113,7 +99,6 @@ class PostViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _dataState.value = FeedModelState(loading = true)
-//                repository.getAll()
                 _dataState.value = FeedModelState()
 
             } catch (e: Exception) {
