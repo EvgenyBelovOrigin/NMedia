@@ -1,5 +1,8 @@
 package ru.netology.nmedia.entity
 
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.map
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -11,7 +14,7 @@ data class PostEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val author: String,
-    val authorId:Long,
+    val authorId: Long,
     val content: String,
     val published: String,
     val likedByMe: Boolean,
@@ -36,6 +39,7 @@ data class PostEntity(
         isSaved,
         attachment = attachment
     )
+
 
     companion object {
         fun fromDto(dto: Post, isNewPost: Boolean) =
