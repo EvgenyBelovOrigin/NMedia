@@ -158,19 +158,6 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun refresh() {
-        _dataState.value = FeedModelState(refreshing = true)
-
-        viewModelScope.launch {
-            try {
-                repository.getAll()
-                _dataState.value = FeedModelState()
-            } catch (e: Exception) {
-                _dataState.value = FeedModelState(error = true)
-            }
-        }
-    }
-
 
     fun removeById(id: Long) {
 

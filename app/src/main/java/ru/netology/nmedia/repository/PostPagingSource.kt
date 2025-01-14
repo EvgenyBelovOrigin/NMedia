@@ -3,8 +3,6 @@ package ru.netology.nmedia.repository
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import okio.IOException
-import retrofit2.HttpException
-import ru.netology.nmedia.api.ApiService
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
 import javax.inject.Inject

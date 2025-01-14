@@ -23,8 +23,6 @@ import ru.netology.nmedia.viewmodel.PostViewModel
 class AttachmentViewFullScreenFragment : Fragment(
 
 ) {
-
-    private val viewModel: PostViewModel by activityViewModels()
     private val baseUrl = BuildConfig.BASE_URL
 
 
@@ -67,17 +65,6 @@ class AttachmentViewFullScreenFragment : Fragment(
         return binding.root
     }
 
-    private fun error() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.error)
-            .setMessage(R.string.error_loading)
-            .setPositiveButton(R.string.ok) {
-                    _, _,
-                ->
-                findNavController().navigateUp()
-            }
-            .show()
-    }
 
     companion object {
         var Bundle.textArg: String? by StringArg
