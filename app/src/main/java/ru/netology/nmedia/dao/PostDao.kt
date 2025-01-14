@@ -15,6 +15,12 @@ interface PostDao {
     @Query("SELECT * FROM PostEntity WHERE isNewPost=0 ORDER BY id DESC")
     fun getAllWithoutNew(): Flow<List<PostEntity>>
 
+    @Query("SELECT * FROM PostEntity ORDER BY id DESC LIMIT :count")
+    suspend fun getLatest(count: Int): List<PostEntity>
+
+    @Query("SELECT * FROM PostEntity WHERE id<:id ORDER BY id DESC LIMIT :count")
+    suspend fun getBefore(id: Long, count: Int): List<PostEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(post: PostEntity)
 

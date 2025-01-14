@@ -6,7 +6,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -39,7 +38,7 @@ class PostRepositoryImpl @Inject constructor(
     override val posts = Pager(
         config = PagingConfig(pageSize = 10, enablePlaceholders = false),
         pagingSourceFactory = {
-            PostPagingSource(apiService)
+            PostPagingSource(dao)
         }
     ).flow
 
@@ -100,15 +99,15 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun save(post: Post) {
         try {
-            dao.insert(PostEntity.fromDto(post, false).copy(isSaved = false))
-            val response = apiService.save(post)
-            if (!response.isSuccessful) {
-                throw ApiError(response.code(), response.message())
-            }
-
-            val body = response.body() ?: throw ApiError(response.code(), response.message())
-            dao.insert(PostEntity.fromDto(body, false))
-            dao.removeByIsSaved()
+//            dao.insert(PostEntity.fromDto(post, false).copy(isSaved = false))
+//            val response = apiService.save(post)
+//            if (!response.isSuccessful) {
+//                throw ApiError(response.code(), response.message())
+//            }
+//
+//            val body = response.body() ?: throw ApiError(response.code(), response.message())
+            dao.insert(PostEntity.fromDto(post, false))
+//            dao.removeByIsSaved()
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {
@@ -120,10 +119,10 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun removeById(id: Long) {
         try {
             dao.removeById(id)
-            val response = apiService.removeById(id)
-            if (!response.isSuccessful) {
-                throw ApiError(response.code(), response.message())
-            }
+//            val response = apiService.removeById(id)
+//            if (!response.isSuccessful) {
+//                throw ApiError(response.code(), response.message())
+//            }
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {

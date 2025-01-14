@@ -5,11 +5,12 @@ import androidx.paging.PagingState
 import okio.IOException
 import retrofit2.HttpException
 import ru.netology.nmedia.api.ApiService
+import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
 import javax.inject.Inject
 
 class PostPagingSource @Inject constructor(
-    private val service: ApiService,
+    private val dao: PostDao,
 ) : PagingSource<Long, Post>() {
     override fun getRefreshKey(state: PagingState<Long, Post>): Long? = null
 
@@ -17,7 +18,7 @@ class PostPagingSource @Inject constructor(
         try {
             val result = when (params) {
                 is LoadParams.Append -> {
-                    service.getBefore(id = params.key, count = params.loadSize)
+                    dao.getBefore(id = params.key, count = params.loadSize)
                 }
 
                 is LoadParams.Prepend -> return LoadResult.Page(
@@ -26,12 +27,12 @@ class PostPagingSource @Inject constructor(
                     nextKey = null
                 )
 
-                is LoadParams.Refresh -> service.getLatest(params.loadSize)
+                is LoadParams.Refresh -> dao.getLatest(params.loadSize)
             }
-            if (!result.isSuccessful) {
-                throw HttpException(result)
-            }
-            val data = result.body().orEmpty()
+//            if (!result.isSuccessful) {
+//                throw HttpException(result)
+//            }
+            val data = result.map { it.toDto() }.orEmpty()
             return LoadResult.Page(
                 data = data,
                 prevKey = params.key,
