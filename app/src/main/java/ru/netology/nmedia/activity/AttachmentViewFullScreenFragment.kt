@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -21,7 +20,13 @@ import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.util.loadAttachmentView
 import ru.netology.nmedia.viewmodel.PostViewModel
 
-class AttachmentViewFullScreenFragment : Fragment() {
+class AttachmentViewFullScreenFragment : Fragment(
+
+) {
+
+    private val viewModel: PostViewModel by activityViewModels()
+    private val baseUrl = BuildConfig.BASE_URL
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,26 +34,13 @@ class AttachmentViewFullScreenFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         val binding = FragmentAttachmentViewFullScreenBinding.inflate(inflater, container, false)
-        val viewModel: PostViewModel by activityViewModels()
-        val postId = arguments?.textArg?.toLong() ?: { error() }
-        val baseUrl = BuildConfig.BASE_URL
-        viewModel.data.observe(viewLifecycleOwner) { data ->
-            val post = data.posts.firstOrNull { it.id == postId } ?: null
-            if (post == null) {
-                error()
-            }
-            binding.attachmentViewFullScreen
-                .loadAttachmentView("$baseUrl/media/${post?.attachment?.url}")
-            binding.like.isChecked = post?.likedByMe ?: false //?????
-            binding.like.text = "${post?.likes}"
-            binding.like.setOnClickListener {
-                if (post != null) {
-                    viewModel.likeById(post)
-                } else {
-                    error()
-                }
-            }
-        }
+
+        val attachmentUrl = arguments?.textArg
+
+
+        binding.attachmentViewFullScreen
+            .loadAttachmentView("$baseUrl/media/$attachmentUrl")
+
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().navigateUp()
