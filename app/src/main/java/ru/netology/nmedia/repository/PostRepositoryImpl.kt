@@ -45,7 +45,7 @@ class PostRepositoryImpl @Inject constructor(
     @OptIn(ExperimentalPagingApi::class)
     override val posts = Pager(
         config = PagingConfig(pageSize = 10, enablePlaceholders = false),
-        pagingSourceFactory = { dao.getPagingSource() },
+        pagingSourceFactory = dao::getPagingSource,
         remoteMediator = PostRemoteMediator(
             service = apiService,
             dao = dao,
