@@ -35,12 +35,15 @@ class PostRemoteMediator @Inject constructor(
                     service.getBefore(id, state.config.pageSize)
                 }
 
-                LoadType.PREPEND -> {
-                    val id = postRemoteKeyDao.max() ?: return MediatorResult.Success(false)
-                    service.getAfter(id, state.config.pageSize)
+                LoadType.PREPEND -> return MediatorResult.Success(true)
+                LoadType.REFRESH -> {
+                    val id = postRemoteKeyDao.max()
+                    if (id != null) {
+                        service.getNewer(id)
+                    } else {
+                        service.getLatest(state.config.pageSize)
+                    }
                 }
-
-                LoadType.REFRESH -> service.getLatest(state.config.pageSize)
             }
             if (!result.isSuccessful) {
                 throw HttpException(result)
@@ -50,7 +53,6 @@ class PostRemoteMediator @Inject constructor(
             appDb.withTransaction {
                 when (loadType) {
                     LoadType.REFRESH -> {
-                        dao.clear()
                         postRemoteKeyDao.insert(
                             listOf(
                                 PostRemoteKeyEntity(
@@ -83,6 +85,7 @@ class PostRemoteMediator @Inject constructor(
                             )
                         )
                     }
+
                 }
 
                 dao.insert(data.map { PostEntity.fromDto(it, false) })
