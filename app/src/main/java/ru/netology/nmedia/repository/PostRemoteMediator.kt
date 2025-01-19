@@ -68,7 +68,7 @@ class PostRemoteMediator @Inject constructor(
                         )
                     }
 
-                    LoadType.PREPEND -> { 
+                    LoadType.PREPEND -> {
                         postRemoteKeyDao.insert(
                             PostRemoteKeyEntity(
                                 PostRemoteKeyEntity.KeyType.AFTER,
