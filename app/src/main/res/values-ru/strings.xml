@@ -42,4 +42,7 @@
     <string name="password_confirm">подтвердите пароль</string>
     <string name="wrong_pass_confirm">Пароль не совпадает</string>
     <string name="add_avatar">Добавьте аватар</string>
+    <string name="today">Сегодня</string>
+    <string name="yesterday">Вчера</string>
+    <string name="a_week_ago">Неделю назад</string>
 </resources>

@@ -11,9 +11,12 @@ import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardAdBinding
 import ru.netology.nmedia.databinding.CardPostBinding
+import ru.netology.nmedia.databinding.CardTimeSeparatorBinding
 import ru.netology.nmedia.dto.Ad
 import ru.netology.nmedia.dto.FeedItem
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.dto.TimeSeparator
+import ru.netology.nmedia.dto.TimeSeparatorValues
 import ru.netology.nmedia.util.loadAttachmentView
 import ru.netology.nmedia.util.loadAvatar
 
@@ -33,6 +36,7 @@ class PostsAdapter(
         when (getItem(position)) {
             is Ad -> R.layout.card_ad
             is Post -> R.layout.card_post
+            is TimeSeparator -> R.layout.card_time_separator
             null -> error("unknown item type")
         }
 
@@ -51,15 +55,27 @@ class PostsAdapter(
                 AdViewHolder(binding)
             }
 
+            R.layout.card_time_separator -> {
+                val binding =
+                    CardTimeSeparatorBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                TimeSeparatorViewHolder(binding)
+            }
+
             else -> error("unknown view type $viewType")
         }
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (val item = getItem(position)){
+        when (val item = getItem(position)) {
             is Ad -> (holder as? AdViewHolder)?.bind(item)
             is Post -> (holder as? PostViewHolder)?.bind(item)
+            is TimeSeparator -> (holder as? TimeSeparatorViewHolder)?.bind(item)
             null -> error("unknown item type")
+
         }
 
     }
@@ -71,6 +87,21 @@ class AdViewHolder(
     ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(ad: Ad) {
         binding.image.loadAttachmentView("${BuildConfig.BASE_URL}/media/${ad.image}")
+    }
+}
+
+class TimeSeparatorViewHolder(
+    private val binding: CardTimeSeparatorBinding,
+
+    ) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(timeSeparator: TimeSeparator) {
+        binding.timeSeparator.setText(
+            when (timeSeparator.value) {
+                TimeSeparatorValues.TODAY -> R.string.today
+                TimeSeparatorValues.YESTERDAY -> R.string.yesterday
+                TimeSeparatorValues.A_WEEK_AGO -> R.string.a_week_ago
+            }
+        )
     }
 }
 

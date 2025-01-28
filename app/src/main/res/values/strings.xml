@@ -41,6 +41,9 @@
     <string name="password_confirm">confirm password</string>
     <string name="wrong_pass_confirm">Passwords are different</string>
     <string name="add_avatar">Add avatar</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="a_week_ago">A week ago</string>
 
 
 

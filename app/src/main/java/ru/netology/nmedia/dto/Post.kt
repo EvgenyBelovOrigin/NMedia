@@ -23,6 +23,19 @@ data class Ad(
     val image: String,
 ) : FeedItem
 
+data class TimeSeparator(
+    val value: TimeSeparatorValues,
+) : FeedItem {
+    override val id: Long = value.ordinal.toLong()
+
+}
+
+enum class TimeSeparatorValues {
+    TODAY,
+    YESTERDAY,
+    A_WEEK_AGO,
+}
+
 data class Attachment(
     val url: String,
     val type: AttachmentType,
