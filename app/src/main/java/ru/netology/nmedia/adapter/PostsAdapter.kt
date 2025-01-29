@@ -118,7 +118,7 @@ class PostViewHolder(
             attachmentImage.isVisible = !post.attachment?.url.isNullOrBlank()
             attachmentImage.loadAttachmentView("$baseUrl/media/${post.attachment?.url}")
             author.text = post.author
-            published.text = post.published
+            published.text = post.published.toString()
             content.text = post.content
             like.isChecked = post.likedByMe
             like.text = "${post.likes}"
