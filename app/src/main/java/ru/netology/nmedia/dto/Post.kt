@@ -18,6 +18,7 @@ data class Post(
     val ownedByMe: Boolean = false,
 ) : FeedItem
 
+
 data class Ad(
     override val id: Long,
     val image: String,

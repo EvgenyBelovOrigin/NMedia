@@ -1,9 +1,12 @@
 package ru.netology.nmedia.repository
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.TerminalSeparatorType
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import kotlinx.coroutines.delay
@@ -27,6 +30,8 @@ import ru.netology.nmedia.dto.FeedItem
 import ru.netology.nmedia.dto.Media
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.dto.TimeSeparator
+import ru.netology.nmedia.dto.TimeSeparatorValues
 import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.error.ApiError
 import ru.netology.nmedia.error.AppError
@@ -34,6 +39,7 @@ import ru.netology.nmedia.error.NetworkError
 import ru.netology.nmedia.error.RunTimeError
 import ru.netology.nmedia.error.UnknownError
 import java.io.IOException
+import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
@@ -46,7 +52,11 @@ class PostRepositoryImpl @Inject constructor(
     postRemoteKeyDao: PostRemoteKeyDao,
     appDb: AppDb,
 ) : PostRepository {
+    @RequiresApi(Build.VERSION_CODES.O)
+    val nowUnixTime = Instant.now().epochSecond
+    private val oneDayInSeconds = 20L
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalPagingApi::class)
     override val posts: Flow<PagingData<FeedItem>> = Pager(
         config = PagingConfig(pageSize = 10, enablePlaceholders = false),
@@ -60,12 +70,44 @@ class PostRepositoryImpl @Inject constructor(
     ).flow
         .map {
             it.map(PostEntity::toDto)
-                .insertSeparators { previous, _ ->
+                .insertSeparators(
+                    terminalSeparatorType = TerminalSeparatorType.SOURCE_COMPLETE,
+                ) { previous, next ->
+
+
+                    if (previous?.published == null
+                        && next?.published!! > (nowUnixTime - oneDayInSeconds)
+                    ) {
+                        TimeSeparator(
+                            TimeSeparatorValues.TODAY
+
+                        )
+                    }
+//                    else if (previous?.published == (nowUnixTime - oneDayInSeconds)
+//                        && next?.published!! > (nowUnixTime - oneDayInSeconds * 2)
+//                    ) {
+//                        TimeSeparator(TimeSeparatorValues.YESTERDAY)
+//
+//                    }
+//                    else if (previous?.published!! == (nowUnixTime - oneDayInSeconds * 2)
+//                                && next?.published!! < (nowUnixTime - oneDayInSeconds * 2)
+//                    ) {
+//                        TimeSeparator(TimeSeparatorValues.A_WEEK_AGO)
+//
+////                    }
+//                    else {
+//                        null
+//                    }
+
                     if (previous?.id?.rem(5) == 0L) {
                         Ad(Random.nextLong(), "figma.jpg")
-                    } else {
+
+                    }
+                    else {
                         null
                     }
+
+
                 }
         }
 
@@ -280,5 +322,6 @@ class PostRepositoryImpl @Inject constructor(
     }
 
 }
+
 
 
