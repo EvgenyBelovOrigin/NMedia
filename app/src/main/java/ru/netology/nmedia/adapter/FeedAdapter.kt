@@ -29,7 +29,7 @@ interface OnInteractionListener {
     fun onShowAttachmentViewFullScreen(post: Post) {}
 }
 
-class PostsAdapter(
+class FeedAdapter(
     private val onInteractionListener: OnInteractionListener,
 ) : PagingDataAdapter<FeedItem, RecyclerView.ViewHolder>(PostDiffCallback()) {
     override fun getItemViewType(position: Int): Int =
@@ -37,7 +37,7 @@ class PostsAdapter(
             is Ad -> R.layout.card_ad
             is Post -> R.layout.card_post
             is TimeSeparator -> R.layout.card_time_separator
-            null -> error("unknown item type")
+            null -> throw IllegalArgumentException("unknown item type")
         }
 
 
@@ -65,7 +65,7 @@ class PostsAdapter(
                 TimeSeparatorViewHolder(binding)
             }
 
-            else -> error("unknown view type $viewType")
+            else -> throw IllegalArgumentException("unknown item type")
         }
 
 
@@ -74,7 +74,7 @@ class PostsAdapter(
             is Ad -> (holder as? AdViewHolder)?.bind(item)
             is Post -> (holder as? PostViewHolder)?.bind(item)
             is TimeSeparator -> (holder as? TimeSeparatorViewHolder)?.bind(item)
-            null -> error("unknown item type")
+            null -> throw IllegalArgumentException("unknown item type")
 
         }
 

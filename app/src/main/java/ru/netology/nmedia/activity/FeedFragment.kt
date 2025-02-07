@@ -23,7 +23,7 @@ import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.AttachmentViewFullScreenFragment.Companion.textArg
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostLoadingStateAdapter
-import ru.netology.nmedia.adapter.PostsAdapter
+import ru.netology.nmedia.adapter.FeedAdapter
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
@@ -44,7 +44,7 @@ class FeedFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         val binding = FragmentFeedBinding.inflate(inflater, container, false)
-        val adapter = PostsAdapter(object : OnInteractionListener {
+        val adapter = FeedAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
                 findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)

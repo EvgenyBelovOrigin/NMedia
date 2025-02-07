@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.insertSeparators
 import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.auth.AppAuth
+import ru.netology.nmedia.dto.Ad
 import ru.netology.nmedia.dto.FeedItem
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
@@ -25,6 +27,7 @@ import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.File
 import javax.inject.Inject
+import kotlin.random.Random
 
 private val empty = Post(
     id = 0,
@@ -47,15 +50,24 @@ class PostViewModel @Inject constructor(
 ) : ViewModel() {
     val data: Flow<PagingData<FeedItem>> = appAuth.authState
         .flatMapLatest { token ->
-            repository.posts.map { pagingData ->
-                pagingData.map { post ->
-                    if (post is Post) {
-                        post.copy(ownedByMe = post.authorId == token?.id)
+            repository.posts.map { cashed ->
+                cashed.insertSeparators { previous, next ->
+                    if (previous?.id?.rem(5) == 0L) {
+                        Ad(Random.nextLong(), "figma.jpg")
                     } else {
-                        post
+                        null
                     }
                 }
             }
+                .map { pagingData ->
+                    pagingData.map { post ->
+                        if (post is Post) {
+                            post.copy(ownedByMe = post.authorId == token?.id)
+                        } else {
+                            post
+                        }
+                    }
+                }
         }.flowOn(Dispatchers.Default)
 
 //    private val dataWhole: LiveData<FeedModel> = repository.postsWhole.map {

@@ -60,13 +60,6 @@ class PostRepositoryImpl @Inject constructor(
     ).flow
         .map {
             it.map(PostEntity::toDto)
-                .insertSeparators { previous, _ ->
-                    if (previous?.id?.rem(5) == 0L) {
-                        Ad(Random.nextLong(), "figma.jpg")
-                    } else {
-                        null
-                    }
-                }
         }
 
     override fun getNewer(id: Int, size: Int): Flow<Int> = flow {
