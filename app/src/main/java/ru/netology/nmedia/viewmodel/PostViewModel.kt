@@ -1,6 +1,8 @@
 package ru.netology.nmedia.viewmodel
 
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,10 +23,13 @@ import ru.netology.nmedia.dto.Ad
 import ru.netology.nmedia.dto.FeedItem
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.dto.TimeSeparator
+import ru.netology.nmedia.dto.TimeSeparatorValues
 import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.util.SingleLiveEvent
+import ru.netology.nmedia.util.TakePostDate
 import java.io.File
 import javax.inject.Inject
 import kotlin.random.Random
@@ -47,16 +52,25 @@ private val empty = Post(
 class PostViewModel @Inject constructor(
     private val repository: PostRepository,
     private val appAuth: AppAuth,
+    private val takePostDate: TakePostDate = TakePostDate(),
 ) : ViewModel() {
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
     val data: Flow<PagingData<FeedItem>> = appAuth.authState
         .flatMapLatest { token ->
             repository.posts.map { cashed ->
                 cashed.insertSeparators { previous, next ->
-                    if (previous?.id?.rem(5) == 0L) {
+                    if (previous?.id?.rem(20) == 0L) {
                         Ad(Random.nextLong(), "figma.jpg")
                     } else {
-                        null
+                        takePostDate.takePostDate(
+                            if (previous is Post) previous else null,
+                            if (next is Post) next else null
+                        )
                     }
+
+
                 }
             }
                 .map { pagingData ->
