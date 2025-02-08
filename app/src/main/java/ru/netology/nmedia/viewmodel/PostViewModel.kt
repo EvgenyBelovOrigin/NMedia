@@ -61,16 +61,16 @@ class PostViewModel @Inject constructor(
         .flatMapLatest { token ->
             repository.posts.map { cashed ->
                 cashed.insertSeparators { previous, next ->
-                    if (previous?.id?.rem(20) == 0L) {
+                    takePostDate.takePostDate(
+                        if (previous is Post) previous else null,
+                        if (next is Post) next else null
+                    )?.let { return@insertSeparators it }
+
+                    if (previous?.id?.rem(5) == 0L) {
                         Ad(Random.nextLong(), "figma.jpg")
                     } else {
-                        takePostDate.takePostDate(
-                            if (previous is Post) previous else null,
-                            if (next is Post) next else null
-                        )
+                        null
                     }
-
-
                 }
             }
                 .map { pagingData ->

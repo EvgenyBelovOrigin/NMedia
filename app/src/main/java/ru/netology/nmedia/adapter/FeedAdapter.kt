@@ -33,7 +33,7 @@ class FeedAdapter(
     private val onInteractionListener: OnInteractionListener,
 ) : PagingDataAdapter<FeedItem, RecyclerView.ViewHolder>(PostDiffCallback()) {
     override fun getItemViewType(position: Int): Int =
-        when (getItem(position)) {
+        when (getItem(position.coerceAtMost(itemCount-1))) {
             is Ad -> R.layout.card_ad
             is Post -> R.layout.card_post
             is TimeSeparator -> R.layout.card_time_separator

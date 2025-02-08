@@ -9,7 +9,7 @@ import java.time.Instant
 import javax.inject.Inject
 
 class TakePostDate @Inject constructor() {
-    private val oneDayInSeconds = 10L
+    private val oneDayInSeconds = 35L
 
     @RequiresApi(Build.VERSION_CODES.O)
     val today = Instant.now().epochSecond
