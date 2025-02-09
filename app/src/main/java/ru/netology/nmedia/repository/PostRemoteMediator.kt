@@ -5,7 +5,6 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import okio.IOException
 import retrofit2.HttpException
 import ru.netology.nmedia.api.ApiService
 import ru.netology.nmedia.dao.PostDao
@@ -72,14 +71,7 @@ class PostRemoteMediator @Inject constructor(
 
                     }
 
-                    LoadType.PREPEND -> {
-                        postRemoteKeyDao.insert(
-                            PostRemoteKeyEntity(
-                                PostRemoteKeyEntity.KeyType.AFTER,
-                                data.first().id
-                            )
-                        )
-                    }
+                    LoadType.PREPEND -> Unit
 
                     LoadType.APPEND -> {
                         postRemoteKeyDao.insert(
@@ -96,7 +88,7 @@ class PostRemoteMediator @Inject constructor(
             }
             return MediatorResult.Success(data.isEmpty())
 
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             return MediatorResult.Error(e)
         }
 

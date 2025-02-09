@@ -1,11 +1,14 @@
 package ru.netology.nmedia.viewmodel
 
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.insertSeparators
 import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -16,14 +19,18 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.auth.AppAuth
+import ru.netology.nmedia.dto.Ad
+import ru.netology.nmedia.dto.FeedItem
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.util.SingleLiveEvent
+import ru.netology.nmedia.util.TakeDateSeparator
 import java.io.File
 import javax.inject.Inject
+import kotlin.random.Random
 
 private val empty = Post(
     id = 0,
@@ -32,7 +39,7 @@ private val empty = Post(
     authorId = 0L,
     likedByMe = false,
     likes = 0,
-    published = "",
+    published = 0L,
     authorAvatar = "",
     isSaved = true,
     attachment = null
@@ -43,14 +50,35 @@ private val empty = Post(
 class PostViewModel @Inject constructor(
     private val repository: PostRepository,
     private val appAuth: AppAuth,
+    private val takeDateSeparator: TakeDateSeparator = TakeDateSeparator(),
 ) : ViewModel() {
-    val data: Flow<PagingData<Post>> = appAuth.authState
+
+
+    val data: Flow<PagingData<FeedItem>> = appAuth.authState
         .flatMapLatest { token ->
-            repository.posts.map { pagingData ->
-                pagingData.map { post ->
-                    post.copy(ownedByMe = post.authorId == token?.id)
+            repository.posts.map { cashed ->
+                cashed.insertSeparators { previous, next ->
+                    takeDateSeparator.createSeparator(
+                        if (previous is Post) previous else null,
+                        if (next is Post) next else null
+                    )?.let { return@insertSeparators it }
+
+                    if (previous?.id?.rem(5) == 0L) {
+                        Ad(Random.nextLong(), "figma.jpg")
+                    } else {
+                        null
+                    }
                 }
             }
+                .map { pagingData ->
+                    pagingData.map { post ->
+                        if (post is Post) {
+                            post.copy(ownedByMe = post.authorId == token?.id)
+                        } else {
+                            post
+                        }
+                    }
+                }
         }.flowOn(Dispatchers.Default)
 
 //    private val dataWhole: LiveData<FeedModel> = repository.postsWhole.map {
