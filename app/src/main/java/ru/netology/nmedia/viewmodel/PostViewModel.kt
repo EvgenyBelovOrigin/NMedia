@@ -54,7 +54,6 @@ class PostViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     val data: Flow<PagingData<FeedItem>> = appAuth.authState
         .flatMapLatest { token ->
             repository.posts.map { cashed ->
