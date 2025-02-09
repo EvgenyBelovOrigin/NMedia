@@ -23,13 +23,11 @@ import ru.netology.nmedia.dto.Ad
 import ru.netology.nmedia.dto.FeedItem
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.dto.TimeSeparator
-import ru.netology.nmedia.dto.TimeSeparatorValues
 import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.util.SingleLiveEvent
-import ru.netology.nmedia.util.TakePostDate
+import ru.netology.nmedia.util.TakeDateSeparator
 import java.io.File
 import javax.inject.Inject
 import kotlin.random.Random
@@ -52,7 +50,7 @@ private val empty = Post(
 class PostViewModel @Inject constructor(
     private val repository: PostRepository,
     private val appAuth: AppAuth,
-    private val takePostDate: TakePostDate = TakePostDate(),
+    private val takeDateSeparator: TakeDateSeparator = TakeDateSeparator(),
 ) : ViewModel() {
 
 
@@ -61,7 +59,7 @@ class PostViewModel @Inject constructor(
         .flatMapLatest { token ->
             repository.posts.map { cashed ->
                 cashed.insertSeparators { previous, next ->
-                    takePostDate.takePostDate(
+                    takeDateSeparator.createSeparator(
                         if (previous is Post) previous else null,
                         if (next is Post) next else null
                     )?.let { return@insertSeparators it }
