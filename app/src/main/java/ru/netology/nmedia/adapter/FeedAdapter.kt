@@ -1,6 +1,10 @@
 package ru.netology.nmedia.adapter
 
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
+import android.util.Property
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
@@ -33,13 +37,29 @@ class FeedAdapter(
     private val onInteractionListener: OnInteractionListener,
 ) : PagingDataAdapter<FeedItem, RecyclerView.ViewHolder>(PostDiffCallback()) {
     override fun getItemViewType(position: Int): Int =
-        when (getItem(position.coerceAtMost(itemCount-1))) {
+        when (getItem(position.coerceAtMost(itemCount - 1))) {
             is Ad -> R.layout.card_ad
             is Post -> R.layout.card_post
             is TimeSeparator -> R.layout.card_time_separator
             null -> throw IllegalArgumentException("unknown item type")
         }
 
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: List<Any?>,
+    ) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position)
+        } else {
+            payloads.forEach {
+                (it as? PayLoad)?.let { payload ->
+                    (holder as? PostViewHolder)?.bindPayload(payload)
+                }
+
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
@@ -80,6 +100,7 @@ class FeedAdapter(
 
     }
 }
+
 
 class AdViewHolder(
     private val binding: CardAdBinding,
@@ -159,7 +180,39 @@ class PostViewHolder(
             }
         }
     }
+
+
+    fun bindPayload(payload: PayLoad) {
+        payload.likedByMe?.let {
+            binding.like.isChecked = it
+            if (it) {
+                ObjectAnimator.ofPropertyValuesHolder(
+                    binding.like,
+                    PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0F, 1.2F, 1.0F),
+                    PropertyValuesHolder.ofFloat(
+                        View.SCALE_Y, 1.0F, 1.2F, 1.0F
+                    )
+                )
+            } else {
+                ObjectAnimator.ofFloat(binding.like, View.ROTATION, 0F, 360F)
+            }.start()
+        }
+        payload.content?.let {
+            binding.content.text = it
+        }
+        payload.likes?.let {
+            binding.like.text = it.toString()
+        }
+    }
 }
+
+
+data class PayLoad(
+    val likedByMe: Boolean? = null,
+    val content: String? = null,
+    val likes: Int? = null,
+
+    )
 
 class PostDiffCallback : DiffUtil.ItemCallback<FeedItem>() {
     override fun areItemsTheSame(oldItem: FeedItem, newItem: FeedItem): Boolean {
@@ -173,4 +226,16 @@ class PostDiffCallback : DiffUtil.ItemCallback<FeedItem>() {
     override fun areContentsTheSame(oldItem: FeedItem, newItem: FeedItem): Boolean {
         return oldItem == newItem
     }
+
+    override fun getChangePayload(oldItem: FeedItem, newItem: FeedItem): Any? =
+        if (oldItem is Post && newItem is Post) {
+            PayLoad(
+                likedByMe = newItem.likedByMe.takeIf { it != oldItem.likedByMe },
+                content = newItem.content.takeIf { it != oldItem.content },
+                likes = newItem.likes.takeIf { it != oldItem.likes }
+
+            )
+        } else {
+            null
+        }
 }
