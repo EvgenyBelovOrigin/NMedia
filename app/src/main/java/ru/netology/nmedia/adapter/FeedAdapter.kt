@@ -2,10 +2,10 @@ package ru.netology.nmedia.adapter
 
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
-import android.util.Property
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
@@ -185,16 +185,12 @@ class PostViewHolder(
     fun bindPayload(payload: PayLoad) {
         payload.likedByMe?.let {
             binding.like.isChecked = it
-            if (it) {
-                ObjectAnimator.ofPropertyValuesHolder(
-                    binding.like,
-                    PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0F, 1.2F, 1.0F),
-                    PropertyValuesHolder.ofFloat(
-                        View.SCALE_Y, 1.0F, 1.2F, 1.0F
-                    )
-                )
-            } else {
-                ObjectAnimator.ofFloat(binding.like, View.ROTATION, 0F, 360F)
+            val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1F, 1.25F, 1F)
+            val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1F, 1.25F, 1F)
+            ObjectAnimator.ofPropertyValuesHolder(binding.like, scaleX, scaleY).apply {
+                duration = 500
+                repeatCount = 100
+                interpolator = LinearInterpolator()
             }.start()
         }
         payload.content?.let {
@@ -233,7 +229,6 @@ class PostDiffCallback : DiffUtil.ItemCallback<FeedItem>() {
                 likedByMe = newItem.likedByMe.takeIf { it != oldItem.likedByMe },
                 content = newItem.content.takeIf { it != oldItem.content },
                 likes = newItem.likes.takeIf { it != oldItem.likes }
-
             )
         } else {
             null
